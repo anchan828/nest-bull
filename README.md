@@ -77,6 +77,39 @@ export class AppController {
 }
 ```
 
+Override settings
+
+```ts
+@BullQueue({
+  name: APP_QUEUE,
+  options: {
+    redis: {
+      db: 3,
+    },
+  },
+})
+export class AppQueue {
+
+  // queue.add('processorName1', data);
+  @BullQueueProcessor({
+    name: 'processorName1',
+    concurrency: 3,
+  })
+  async process1(job: Job) {
+    throw new Error(`throw error ${JSON.stringify(job.data)}`);
+  }
+
+  // queue.add('processorName2', data);
+  @BullQueueProcessor({
+    name: 'processorName2',
+  })
+  async process2(job: Job) {
+    throw new Error(`throw error ${JSON.stringify(job.data)}`);
+  }
+}
+```
+
+
 See example app: https://github.com/anchan828/nest-bull-example
 
 
