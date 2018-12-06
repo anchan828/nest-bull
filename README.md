@@ -15,7 +15,7 @@ $ npm i --save-dev @types/bull
 
 ### Importing BullModule.
 
-```
+```ts
 import { BullModule } from '@anchan828/nest-bull';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -41,7 +41,7 @@ export class AppModule {}
 
 ### Creating queue class
 
-```
+```ts
 import { BullQueue, BullQueueProcessor } from '@anchan828/nest-bull';
 import { Job } from 'bull';
 import { APP_QUEUE } from './app.constants';
@@ -57,7 +57,7 @@ export class AppQueue {
 
 ### Adding job
 
-```
+```ts
 import { Controller, Get, Inject } from '@nestjs/common';
 import { JobId, Queue } from 'bull';
 import { APP_QUEUE } from './app.constants';
