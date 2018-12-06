@@ -115,4 +115,4 @@ See example app: https://github.com/anchan828/nest-bull-example
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+[MIT](LICENSE).
