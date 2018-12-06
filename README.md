@@ -77,7 +77,7 @@ export class AppController {
 }
 ```
 
-Override settings
+### Override queue settings per queue
 
 ```ts
 @BullQueue({
