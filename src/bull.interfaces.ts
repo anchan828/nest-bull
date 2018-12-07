@@ -18,3 +18,17 @@ export interface BullQueueProcessorOptions {
 export type BullQueue = {
   name: string;
 } & Partial<bull.Queue>;
+
+export type BullQueueEvent =
+  | 'error'
+  | 'waiting'
+  | 'active'
+  | 'stalled'
+  | 'progress'
+  | 'completed'
+  | 'failed'
+  | 'paused'
+  | 'resumed'
+  | 'cleaned'
+  | 'drained'
+  | 'removed';

@@ -1,10 +1,4 @@
-import {
-  DynamicModule,
-  Global,
-  Inject,
-  Module,
-  OnModuleInit,
-} from '@nestjs/common';
+import { DynamicModule, Global, Module, OnModuleInit } from '@nestjs/common';
 import { ValueProvider } from '@nestjs/common/interfaces';
 import { BullConstants } from './bull.constants';
 import { BullModuleOptions } from './bull.interfaces';
@@ -17,11 +11,7 @@ import { getBullQueueToken } from './bull.utils';
   providers: [BullService],
 })
 export class BullCoreModule implements OnModuleInit {
-  constructor(
-    @Inject(BullConstants.BULL_MODULE_OPTIONS)
-    private bullModuleOptions: BullModuleOptions,
-    private readonly bullService: BullService,
-  ) {}
+  constructor(private readonly bullService: BullService) {}
 
   public static forRoot(options: BullModuleOptions): DynamicModule {
     const bullQueueProviders = createQueues(options).map(
@@ -45,7 +35,7 @@ export class BullCoreModule implements OnModuleInit {
     };
   }
 
-  onModuleInit(): any {
-    this.bullService.assignProcessors();
+  onModuleInit(): void {
+    this.bullService.setupQueues();
   }
 }

@@ -4,10 +4,11 @@ import * as deepmerge from 'deepmerge';
 import { BullConstants } from './bull.constants';
 import {
   BullModuleOptions,
+  BullQueue,
   BullQueueOptions,
   BullQueueProcessorOptions,
 } from './bull.interfaces';
-import {getBullQueueToken} from './bull.utils';
+import { getBullQueueToken } from './bull.utils';
 
 @Injectable()
 export class BullService {
@@ -17,7 +18,7 @@ export class BullService {
     private moduleRef: ModuleRef,
   ) {}
 
-  public assignProcessors() {
+  public setupQueues() {
     const modules = this.getModules();
 
     for (const module of modules) {
@@ -37,48 +38,84 @@ export class BullService {
             queueName,
           );
           for (const queueProvider of queueProviders) {
+            const queue = queueProvider.instance;
             const propertyKeys = Object.getOwnPropertyNames(
               bullQueueComponent.metatype.prototype,
             ).filter(key => key !== 'constructor') as string[];
+            this.assignProcessors(
+              target,
+              this.getProcessors(target, propertyKeys),
+              queue,
+            );
 
-            const processors = this.getProcessors(target, propertyKeys);
-
-            if (processors.length === 0) {
-              continue;
-            }
-
-            const queue = queueProvider.instance;
-            let isDefinedDefaultHandler: boolean = false;
-
-            for (const processor of processors) {
-              const processorOptions = this.createProcessorOptions(
-                processor.propertyKey,
-                processor.metadata,
-              );
-
-              queue.process(
-                processorOptions.name,
-                processorOptions.concurrency,
-                target[processor.propertyKey].bind(target),
-              );
-
-              if (!isDefinedDefaultHandler) {
-                queue.process(
-                  processorOptions.concurrency,
-                  target[processor.propertyKey].bind(target),
-                );
-                isDefinedDefaultHandler = true;
-              }
-
-              Logger.log(
-                `${processorOptions.name} (${queue.name}) initialized`,
-                BullConstants.BULL_MODULE,
-                true,
-              );
-            }
+            this.assignEvents(
+              target,
+              this.getEvents(target, propertyKeys),
+              queue,
+            );
           }
         }
       }
+    }
+  }
+
+  public assignEvents(
+    target: object,
+    events: { propertyKey: string; metadata: any }[],
+    queue: BullQueue,
+  ) {
+    if (events.length === 0) {
+      return;
+    }
+
+    for (const event of events) {
+      for (const eventName of event.metadata) {
+        queue.on(eventName, target[event.propertyKey].bind(target));
+        Logger.log(
+          `${eventName} listener on ${queue.name} initialized`,
+          BullConstants.BULL_MODULE,
+          true,
+        );
+      }
+    }
+  }
+
+  public assignProcessors(
+    target: object,
+    processors: { propertyKey: string; metadata: any }[],
+    queue: BullQueue,
+  ): void {
+    if (processors.length === 0) {
+      return;
+    }
+
+    let isDefinedDefaultHandler: boolean = false;
+
+    for (const processor of processors) {
+      const processorOptions = this.createProcessorOptions(
+        processor.propertyKey,
+        processor.metadata,
+      );
+
+      queue.process(
+        processorOptions.name,
+        processorOptions.concurrency,
+        target[processor.propertyKey].bind(target),
+      );
+
+      if (!isDefinedDefaultHandler) {
+        queue.process(
+          processorOptions.concurrency,
+          target[processor.propertyKey].bind(target),
+        );
+        isDefinedDefaultHandler = true;
+      }
+
+      Logger.log(
+        `${processorOptions.name} processor on ${queue.name} initialized`,
+        BullConstants.BULL_MODULE,
+        true,
+      );
     }
   }
 
@@ -140,6 +177,26 @@ export class BullService {
         ? {}
         : processorOptions,
     ]) as BullQueueProcessorOptions;
+  }
+
+  private getEvents(
+    target: any,
+    propertyKeys: string[],
+  ): { propertyKey: string; metadata: any }[] {
+    return propertyKeys
+      .map(propertyKey => {
+        return {
+          propertyKey,
+          metadata: Reflect.getMetadata(
+            BullConstants.BULL_QUEUE_EVENT_DECORATOR,
+            target,
+            propertyKey,
+          ) as BullQueueProcessorOptions,
+        };
+      })
+      .filter(o => {
+        return o.metadata !== null && o.metadata !== undefined;
+      });
   }
 
   private getProcessors(
