@@ -1,4 +1,8 @@
-export { BullQueue, BullQueueProcessor } from './bull.decorator';
+export {
+  BullQueue,
+  BullQueueProcessor,
+  BullQueueInject,
+} from './bull.decorator';
 export {
   BullModuleOptions,
   BullQueueProcessorOptions,

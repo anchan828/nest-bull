@@ -7,6 +7,7 @@ import {
   BullQueueOptions,
   BullQueueProcessorOptions,
 } from './bull.interfaces';
+import {getBullQueueToken} from './bull.utils';
 
 @Injectable()
 export class BullService {
@@ -45,6 +46,7 @@ export class BullService {
             if (processors.length === 0) {
               continue;
             }
+
             const queue = queueProvider.instance;
             let isDefinedDefaultHandler: boolean = false;
 
@@ -100,7 +102,7 @@ export class BullService {
           typeof component.instance !== 'string',
       )
       .filter(component => {
-        return component.name === queueName;
+        return component.name === getBullQueueToken(queueName);
       });
   }
 

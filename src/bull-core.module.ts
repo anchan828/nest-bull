@@ -10,6 +10,7 @@ import { BullConstants } from './bull.constants';
 import { BullModuleOptions } from './bull.interfaces';
 import { createQueues } from './bull.provider';
 import { BullService } from './bull.service';
+import { getBullQueueToken } from './bull.utils';
 
 @Global()
 @Module({
@@ -26,7 +27,7 @@ export class BullCoreModule implements OnModuleInit {
     const bullQueueProviders = createQueues(options).map(
       queue =>
         ({
-          provide: queue.name,
+          provide: getBullQueueToken(queue.name),
           useValue: queue,
         } as ValueProvider),
     );
