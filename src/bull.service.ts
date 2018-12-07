@@ -18,42 +18,51 @@ export class BullService {
     private moduleRef: ModuleRef,
   ) {}
 
+  private getBullQueueData(
+    bullQueueComponent: any,
+  ): { target: any; queueName: string; propertyKeys: string[] } {
+    const target = bullQueueComponent.instance;
+    const queueName = this.createBullQueueName(target, bullQueueComponent.name);
+    const propertyKeys = Object.getOwnPropertyNames(
+      bullQueueComponent.metatype.prototype,
+    ).filter(key => key !== 'constructor') as string[];
+
+    return { target, queueName, propertyKeys };
+  }
+
   public setupQueues() {
     const modules = this.getModules();
 
-    for (const module of modules) {
-      const allComponentInModule = this.getComponents(module);
+    const components: any[][] = modules.map(module =>
+      this.getComponents(module),
+    );
+
+    for (const componentsInModule of components) {
       const bullQueueComponents = this.getBullQueueComponents(
-        allComponentInModule,
+        componentsInModule,
       );
 
       for (const bullQueueComponent of bullQueueComponents) {
-        const name = bullQueueComponent.name;
-        const target = bullQueueComponent.instance;
-        const queueName = this.createBullQueueName(target, name);
+        const { target, queueName, propertyKeys } = this.getBullQueueData(
+          bullQueueComponent,
+        );
 
-        for (const _module of modules) {
-          const queueProviders = this.getBullQueueProviders(
-            this.getComponents(_module),
-            queueName,
+        const providers = this.getBullQueueProviders(components, queueName);
+
+        for (const provider of providers) {
+
+          const queue = provider.instance;
+          this.assignProcessors(
+            target,
+            this.getProcessors(target, propertyKeys),
+            queue,
           );
-          for (const queueProvider of queueProviders) {
-            const queue = queueProvider.instance;
-            const propertyKeys = Object.getOwnPropertyNames(
-              bullQueueComponent.metatype.prototype,
-            ).filter(key => key !== 'constructor') as string[];
-            this.assignProcessors(
-              target,
-              this.getProcessors(target, propertyKeys),
-              queue,
-            );
 
-            this.assignEvents(
-              target,
-              this.getEvents(target, propertyKeys),
-              queue,
-            );
-          }
+          this.assignEvents(
+            target,
+            this.getEvents(target, propertyKeys),
+            queue,
+          );
         }
       }
     }
@@ -129,8 +138,9 @@ export class BullService {
     return Array.from(Map.prototype.values.apply(module.components));
   }
 
-  private getBullQueueProviders(components: any[], queueName: string): any[] {
-    return components
+  private getBullQueueProviders(components: any[][], queueName: string): any[] {
+    const flatComponents = [].concat.apply([], components);
+    return flatComponents
       .filter(
         component =>
           component &&
