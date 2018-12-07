@@ -18,18 +18,6 @@ export class BullService {
     private moduleRef: ModuleRef,
   ) {}
 
-  private getBullQueueData(
-    bullQueueComponent: any,
-  ): { target: any; queueName: string; propertyKeys: string[] } {
-    const target = bullQueueComponent.instance;
-    const queueName = this.createBullQueueName(target, bullQueueComponent.name);
-    const propertyKeys = Object.getOwnPropertyNames(
-      bullQueueComponent.metatype.prototype,
-    ).filter(key => key !== 'constructor') as string[];
-
-    return { target, queueName, propertyKeys };
-  }
-
   public setupQueues() {
     const modules = this.getModules();
 
@@ -50,7 +38,6 @@ export class BullService {
         const providers = this.getBullQueueProviders(components, queueName);
 
         for (const provider of providers) {
-
           const queue = provider.instance;
           this.assignProcessors(
             target,
@@ -68,7 +55,7 @@ export class BullService {
     }
   }
 
-  public assignEvents(
+  private assignEvents(
     target: object,
     events: { propertyKey: string; metadata: any }[],
     queue: BullQueue,
@@ -89,7 +76,7 @@ export class BullService {
     }
   }
 
-  public assignProcessors(
+  private assignProcessors(
     target: object,
     processors: { propertyKey: string; metadata: any }[],
     queue: BullQueue,
@@ -126,6 +113,18 @@ export class BullService {
         true,
       );
     }
+  }
+
+  private getBullQueueData(
+    bullQueueComponent: any,
+  ): { target: any; queueName: string; propertyKeys: string[] } {
+    const target = bullQueueComponent.instance;
+    const queueName = this.createBullQueueName(target, bullQueueComponent.name);
+    const propertyKeys = Object.getOwnPropertyNames(
+      bullQueueComponent.metatype.prototype,
+    ).filter(key => key !== 'constructor') as string[];
+
+    return { target, queueName, propertyKeys };
   }
 
   private getModules() {
