@@ -13,12 +13,13 @@ $ npm i --save-dev @types/bull
 
 ## Quick Start
 
-### Importing BullModule.
+### Importing BullModule and Queue component
 
 ```ts
 import { BullModule } from '@anchan828/nest-bull';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
+import { AppQueue } from './app.queue';
 import { AppService } from './app.service';
 
 @Module({
@@ -33,7 +34,7 @@ import { AppService } from './app.service';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AppQueue],
 })
 export class AppModule {}
 ```
@@ -45,12 +46,14 @@ export class AppModule {}
 import { BullQueue, BullQueueProcessor } from '@anchan828/nest-bull';
 import { Job } from 'bull';
 import { APP_QUEUE } from './app.constants';
+import { AppService } from './app.service';
 
 @BullQueue({ name: APP_QUEUE })
 export class AppQueue {
+  constructor(private readonly service: AppService) {}
   @BullQueueProcessor()
-  async process(job: Job) {
-    console.log('called process', job.data);
+  public async process(job: Job) {
+    console.log('called process', job.data, this.service.root());
   }
 }
 ```

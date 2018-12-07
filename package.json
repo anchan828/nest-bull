@@ -1,6 +1,6 @@
 {
   "name": "@anchan828/nest-bull",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -28,6 +28,7 @@
   "homepage": "https://github.com/anchan828/nest-bull#readme",
   "dependencies": {
     "@nestjs/common": "^5.4.1",
+    "@nestjs/core": "^5.4.1",
     "bull": "^3.5.2",
     "deepmerge": "^3.0.0",
     "glob": "^7.1.3",
