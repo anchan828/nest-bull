@@ -98,25 +98,32 @@ export class BullService {
         processor.metadata,
       );
 
-      queue.process(
-        processorOptions.name,
-        processorOptions.concurrency,
-        target[processor.propertyKey].bind(target),
-      );
-
-      if (!isDefinedDefaultHandler) {
+      try {
         queue.process(
+          processorOptions.name,
           processorOptions.concurrency,
           target[processor.propertyKey].bind(target),
         );
-        isDefinedDefaultHandler = true;
-      }
 
-      Logger.log(
-        `${processorOptions.name} processor on ${queue.name} initialized`,
-        BullConstants.BULL_MODULE,
-        true,
-      );
+        if (!isDefinedDefaultHandler) {
+          queue.process(
+            processorOptions.concurrency,
+            target[processor.propertyKey].bind(target),
+          );
+          isDefinedDefaultHandler = true;
+        }
+
+        Logger.log(
+          `${processorOptions.name} processor on ${queue.name} initialized`,
+          BullConstants.BULL_MODULE,
+          true,
+        );
+      } catch (e) {
+        // There is a problem that handlers are made twice at testing
+        if (process.env.NODE_ENV !== 'test') {
+          Logger.error(e.message, e.stack, BullConstants.BULL_MODULE, true);
+        }
+      }
     }
   }
 
