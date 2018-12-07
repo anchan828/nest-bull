@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
+import { Queue } from 'bull';
 import * as deepmerge from 'deepmerge';
 import { BullConstants } from './bull.constants';
 import {
@@ -19,42 +20,46 @@ export class BullService {
   ) {}
 
   public setupQueues() {
-    const modules = this.getModules();
-
-    const components: any[][] = modules.map(module =>
+    const components: any[][] = this.getModules().map(module =>
       this.getComponents(module),
     );
 
-    for (const componentsInModule of components) {
-      const bullQueueComponents = this.getBullQueueComponents(
-        componentsInModule,
-      );
+    const bullQueueComponents = this.getBullQueueComponents(components);
 
-      for (const bullQueueComponent of bullQueueComponents) {
-        const { target, queueName, propertyKeys } = this.getBullQueueData(
-          bullQueueComponent,
+    const bullQueueData = this.getBullQueueData(bullQueueComponents);
+
+    for (const { target, queueName, propertyKeys } of bullQueueData) {
+      const providers = this.getBullQueueProviders(components, queueName);
+
+      for (const provider of providers) {
+        const queue = provider.instance;
+        this.assignProcessors(
+          target,
+          this.getProcessors(target, propertyKeys),
+          queue,
         );
 
-        const providers = this.getBullQueueProviders(components, queueName);
-
-        for (const provider of providers) {
-          const queue = provider.instance;
-          this.assignProcessors(
-            target,
-            this.getProcessors(target, propertyKeys),
-            queue,
-          );
-
-          this.assignEvents(
-            target,
-            this.getEvents(target, propertyKeys),
-            queue,
-          );
-        }
+        this.assignEvents(target, this.getEvents(target, propertyKeys), queue);
       }
     }
   }
 
+  public async teardownQueues() {
+    const components: any[][] = this.getModules().map(module =>
+      this.getComponents(module),
+    );
+
+    const bullQueueComponents = this.getBullQueueComponents(components);
+    const bullQueueData = this.getBullQueueData(bullQueueComponents);
+    for (const { queueName } of bullQueueData) {
+      const providers = this.getBullQueueProviders(components, queueName);
+
+      for (const provider of providers) {
+        const queue = provider.instance as Queue;
+        await queue.close();
+      }
+    }
+  }
   private assignEvents(
     target: object,
     events: { propertyKey: string; metadata: any }[],
@@ -116,15 +121,20 @@ export class BullService {
   }
 
   private getBullQueueData(
-    bullQueueComponent: any,
-  ): { target: any; queueName: string; propertyKeys: string[] } {
-    const target = bullQueueComponent.instance;
-    const queueName = this.createBullQueueName(target, bullQueueComponent.name);
-    const propertyKeys = Object.getOwnPropertyNames(
-      bullQueueComponent.metatype.prototype,
-    ).filter(key => key !== 'constructor') as string[];
+    bullQueueComponents: any[],
+  ): { target: any; queueName: string; propertyKeys: string[] }[] {
+    return bullQueueComponents.map(bullQueueComponent => {
+      const target = bullQueueComponent.instance;
+      const queueName = this.createBullQueueName(
+        target,
+        bullQueueComponent.name,
+      );
+      const propertyKeys = Object.getOwnPropertyNames(
+        bullQueueComponent.metatype.prototype,
+      ).filter(key => key !== 'constructor') as string[];
 
-    return { target, queueName, propertyKeys };
+      return { target, queueName, propertyKeys };
+    });
   }
 
   private getModules() {
@@ -152,8 +162,10 @@ export class BullService {
       });
   }
 
-  private getBullQueueComponents(components: any[]): any[] {
-    return components
+  private getBullQueueComponents(components: any[][]): any[] {
+    const flatComponents = [].concat.apply([], components);
+
+    return flatComponents
       .filter(
         component =>
           component &&
