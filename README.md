@@ -1,4 +1,4 @@
-# nest-bull
+# @anchan828/nest-bull
 
 ## Description
 
@@ -51,7 +51,7 @@ import { AppService } from './app.service';
 @BullQueue({ name: APP_QUEUE })
 export class AppQueue {
   constructor(private readonly service: AppService) {}
-  
+
   @BullQueueProcess()
   public async process(job: Job) {
     console.log('called process', job.data, this.service.root());
