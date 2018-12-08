@@ -51,6 +51,7 @@ import { AppService } from './app.service';
 @BullQueue({ name: APP_QUEUE })
 export class AppQueue {
   constructor(private readonly service: AppService) {}
+  
   @BullQueueProcess()
   public async process(job: Job) {
     console.log('called process', job.data, this.service.root());
@@ -113,6 +114,34 @@ export class AppQueue {
 }
 ```
 
+Handling events
+
+```ts
+@BullQueue({ name: APP_QUEUE })
+export class AppQueue {
+  constructor(private readonly service: AppService) {}
+
+  @BullQueueProcess()
+  public async process(job: Job) {
+    console.log('called process', job.data, this.service.root());
+  }
+
+  @BullQueueEventProgress()
+  public async progress(job: Job, progress: number) {
+    console.log('progress', job.id, progress);
+  }
+
+  @BullQueueEventCompleted()
+  public async completed(job: Job, result: any) {
+    console.log('completed', job.id, result);
+  }
+
+  @BullQueueEventFailed()
+  public async failed(job: Job, error: Error) {
+    console.error('failed', job.id, error);
+  }
+}
+```
 
 See example app: https://github.com/anchan828/nest-bull-example
 
