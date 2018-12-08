@@ -43,7 +43,7 @@ export class AppModule {}
 ### Creating queue class
 
 ```ts
-import { BullQueue, BullQueueProcessor } from '@anchan828/nest-bull';
+import { BullQueue, BullQueueProcess } from '@anchan828/nest-bull';
 import { Job } from 'bull';
 import { APP_QUEUE } from './app.constants';
 import { AppService } from './app.service';
@@ -51,7 +51,7 @@ import { AppService } from './app.service';
 @BullQueue({ name: APP_QUEUE })
 export class AppQueue {
   constructor(private readonly service: AppService) {}
-  @BullQueueProcessor()
+  @BullQueueProcess()
   public async process(job: Job) {
     console.log('called process', job.data, this.service.root());
   }
@@ -95,7 +95,7 @@ export class AppController {
 export class AppQueue {
 
   // queue.add('processorName1', data);
-  @BullQueueProcessor({
+  @BullQueueProcess({
     name: 'processorName1',
     concurrency: 3,
   })
@@ -104,7 +104,7 @@ export class AppQueue {
   }
 
   // queue.add('processorName2', data);
-  @BullQueueProcessor({
+  @BullQueueProcess({
     name: 'processorName2',
   })
   async process2(job: Job) {
