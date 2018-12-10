@@ -32,14 +32,13 @@ export class BullService {
       const providers = this.getBullQueueProviders(components, queueName);
 
       for (const provider of providers) {
-        const queue = provider.instance;
+        const queue = provider.instance as BullQueue;
+        this.assignEvents(target, this.getEvents(target, propertyKeys), queue);
         this.assignProcessors(
           target,
           this.getProcessors(target, propertyKeys),
           queue,
         );
-
-        this.assignEvents(target, this.getEvents(target, propertyKeys), queue);
       }
     }
   }
@@ -65,6 +64,7 @@ export class BullService {
     events: { propertyKey: string; metadata: any }[],
     queue: BullQueue,
   ) {
+
     if (events.length === 0) {
       return;
     }
@@ -98,32 +98,25 @@ export class BullService {
         processor.metadata,
       );
 
-      try {
+      queue.process(
+        processorOptions.name,
+        processorOptions.concurrency,
+        target[processor.propertyKey].bind(target),
+      );
+
+      if (!isDefinedDefaultHandler) {
         queue.process(
-          processorOptions.name,
           processorOptions.concurrency,
           target[processor.propertyKey].bind(target),
         );
-
-        if (!isDefinedDefaultHandler) {
-          queue.process(
-            processorOptions.concurrency,
-            target[processor.propertyKey].bind(target),
-          );
-          isDefinedDefaultHandler = true;
-        }
-
-        Logger.log(
-          `${processorOptions.name} processor on ${queue.name} initialized`,
-          BullConstants.BULL_MODULE,
-          true,
-        );
-      } catch (e) {
-        // There is a problem that handlers are made twice at testing
-        if (process.env.NODE_ENV !== 'test') {
-          Logger.error(e.message, e.stack, BullConstants.BULL_MODULE, true);
-        }
+        isDefinedDefaultHandler = true;
       }
+
+      Logger.log(
+        `${processorOptions.name} processor on ${queue.name} initialized`,
+        BullConstants.BULL_MODULE,
+        true,
+      );
     }
   }
 
