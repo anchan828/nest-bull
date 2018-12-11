@@ -32,5 +32,5 @@ export {
   BullQueueProcessorOptions,
   BullQueueOptions,
 } from './bull.interfaces';
-
+export { getBullQueueToken } from './bull.utils';
 export { BullModule } from './bull.module';
