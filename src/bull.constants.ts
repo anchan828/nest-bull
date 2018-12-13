@@ -6,4 +6,6 @@ export class BullConstants {
   public static BULL_QUEUE_DECORATOR = 'BullQueue';
   public static BULL_QUEUE_PROCESSOR_DECORATOR = 'BullQueueProcess';
   public static BULL_QUEUE_EVENT_DECORATOR = 'BullQueueEvent';
+
+  public static DEFAULT_CONCURRENCY = 1;
 }

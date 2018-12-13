@@ -1,3 +1,5 @@
+import { BullQueueExtraOptions } from './bull.interfaces';
+
 export {
   BullQueue,
   BullQueueProcess,
@@ -31,6 +33,7 @@ export {
   BullModuleOptions,
   BullQueueProcessorOptions,
   BullQueueOptions,
+  BullQueueExtraOptions,
 } from './bull.interfaces';
 export { getBullQueueToken } from './bull.utils';
 export { BullModule } from './bull.module';

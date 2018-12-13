@@ -1,11 +1,13 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
-import { Queue } from 'bull';
+import { Job, Queue } from 'bull';
 import * as deepmerge from 'deepmerge';
+import { Redis } from 'ioredis';
 import { BullConstants } from './bull.constants';
 import {
   BullModuleOptions,
   BullQueue,
+  BullQueueExtraOptions,
   BullQueueOptions,
   BullQueueProcessorOptions,
 } from './bull.interfaces';
@@ -28,16 +30,22 @@ export class BullService {
 
     const bullQueueData = this.getBullQueueData(bullQueueComponents);
 
-    for (const { target, queueName, propertyKeys } of bullQueueData) {
+    for (const { target, queueName, propertyKeys, extra } of bullQueueData) {
       const providers = this.getBullQueueProviders(components, queueName);
 
       for (const provider of providers) {
         const queue = provider.instance as BullQueue;
-        this.assignEvents(target, this.getEvents(target, propertyKeys), queue);
+        this.assignEvents(
+          target,
+          this.getEvents(target, propertyKeys),
+          queue,
+          extra,
+        );
         this.assignProcessors(
           target,
           this.getProcessors(target, propertyKeys),
           queue,
+          extra,
         );
       }
     }
@@ -63,12 +71,8 @@ export class BullService {
     target: object,
     events: { propertyKey: string; metadata: any }[],
     queue: BullQueue,
+    extra: BullQueueExtraOptions,
   ) {
-
-    if (events.length === 0) {
-      return;
-    }
-
     for (const event of events) {
       for (const eventName of event.metadata) {
         queue.on(eventName, target[event.propertyKey].bind(target));
@@ -79,12 +83,38 @@ export class BullService {
         );
       }
     }
+
+    const setExpire = async (job: Job, expire: number) => {
+      try {
+        // @ts-ignore
+        // const jobKey = `${queue.keyPrefix}:${queue.name}:${job.id}`;
+        const jobKey = `${job.toKey()}${job.id}`;
+        // @ts-ignore
+        const client: Redis = job.queue.clients[0];
+        await client.expire(jobKey, expire);
+      } catch (e) {
+        Logger.error(e.message, e.stack, BullConstants.BULL_MODULE, true);
+      }
+    };
+
+    if (extra.defaultJobOptions.setTTLOnComplete > -1) {
+      queue.on('completed', (job: Job) =>
+        setExpire(job, extra.defaultJobOptions.setTTLOnComplete),
+      );
+    }
+
+    if (extra.defaultJobOptions.setTTLOnFail > -1) {
+      queue.on('failed', (job: Job) =>
+        setExpire(job, extra.defaultJobOptions.setTTLOnFail),
+      );
+    }
   }
 
   private assignProcessors(
     target: object,
     processors: { propertyKey: string; metadata: any }[],
     queue: BullQueue,
+    extra: BullQueueExtraOptions,
   ): void {
     if (processors.length === 0) {
       return;
@@ -96,6 +126,7 @@ export class BullService {
       const processorOptions = this.createProcessorOptions(
         processor.propertyKey,
         processor.metadata,
+        extra,
       );
 
       queue.process(
@@ -122,7 +153,12 @@ export class BullService {
 
   private getBullQueueData(
     bullQueueComponents: any[],
-  ): { target: any; queueName: string; propertyKeys: string[] }[] {
+  ): {
+    target: any;
+    queueName: string;
+    propertyKeys: string[];
+    extra: BullQueueExtraOptions;
+  }[] {
     return bullQueueComponents.map(bullQueueComponent => {
       const target = bullQueueComponent.instance;
       const queueName = this.createBullQueueName(
@@ -133,7 +169,21 @@ export class BullService {
         bullQueueComponent.metatype.prototype,
       ).filter(key => key !== 'constructor') as string[];
 
-      return { target, queueName, propertyKeys };
+      const queueMetadata: BullQueueOptions = Reflect.getMetadata(
+        BullConstants.BULL_QUEUE_DECORATOR,
+        target,
+      );
+
+      const extra: BullQueueExtraOptions = deepmerge.all([
+        {
+          defaultProcessorOptions: {},
+          defaultJobOptions: {},
+        },
+        queueMetadata.extra || {},
+        this.bullModuleOptions.extra || {},
+      ]);
+
+      return { target, queueName, propertyKeys, extra };
     });
   }
 
@@ -191,9 +241,15 @@ export class BullService {
   private createProcessorOptions(
     propertyKey: string,
     processorOptions: BullQueueProcessorOptions,
+    extra: BullQueueExtraOptions,
   ): BullQueueProcessorOptions {
     return deepmerge.all([
-      { name: propertyKey, concurrency: 1 },
+      { name: propertyKey, concurrency: BullConstants.DEFAULT_CONCURRENCY },
+      {
+        concurrency:
+          extra.defaultProcessorOptions.concurrency ||
+          BullConstants.DEFAULT_CONCURRENCY,
+      },
       processorOptions === BullConstants.BULL_QUEUE_PROCESSOR_DECORATOR
         ? {}
         : processorOptions,

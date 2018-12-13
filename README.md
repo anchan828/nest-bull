@@ -146,6 +146,78 @@ export class AppQueue {
 See example app: https://github.com/anchan828/nest-bull-example
 
 
+### Extra
+
+There are extra options.
+
+```ts
+export interface BullQueueExtraOptions {
+  defaultProcessorOptions?: {
+    /**
+     * Bull will then call your handler in parallel respecting this maximum value.
+     */
+    concurrency?: number;
+  };
+
+  defaultJobOptions?: {
+    /**
+     * Set TTL when job in the completed. (Default: -1)
+     */
+    setTTLOnComplete?: number;
+    /**
+     * Set TTL when job in the failed. (Default: -1)
+     */
+    setTTLOnFail?: number;
+  };
+}
+```
+You can set options to module and per queue.
+
+```ts
+@Module({
+  imports: [
+    BullModule.forRoot({
+      queues: [__dirname + '/**/*.queue{.ts,.js}'],
+      options: {
+        redis: {
+          host: '127.0.0.1',
+        },
+      },
+      extra: {
+        defaultProcessorOptions: {
+          concurrency: 3,
+        },
+        defaultJobOptions: {
+          setTTLOnComplete: 30,
+        },
+      },
+    }),
+  ],
+  controllers: [AppController],
+  providers: [AppService, AppQueue],
+})
+export class AppModule {}
+```
+
+```ts
+@BullQueue({
+  name: APP_QUEUE,
+  extra: {
+    defaultJobOptions: {
+      setTTLOnComplete: 300,
+    },
+  },
+})
+export class AppQueue {
+
+  @BullQueueProcess()
+  public async process(job: Job) {
+    return Promise.resolve();
+  }
+}
+```
+
+
 ## License
 
 [MIT](LICENSE).
