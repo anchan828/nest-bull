@@ -121,7 +121,8 @@ export class BullService {
     }
 
     let isDefinedDefaultHandler: boolean = false;
-
+    const handlers =
+      Reflect.getMetadata(BullConstants.BULL_QUEUE_HANDLER_NAMES, queue) || [];
     for (const processor of processors) {
       const processorOptions = this.createProcessorOptions(
         processor.propertyKey,
@@ -129,18 +130,25 @@ export class BullService {
         extra,
       );
 
-      queue.process(
-        processorOptions.name,
-        processorOptions.concurrency,
-        target[processor.propertyKey].bind(target),
-      );
+      if (handlers.indexOf(processorOptions.name) === -1) {
+        queue.process(
+          processorOptions.name,
+          processorOptions.concurrency,
+          target[processor.propertyKey].bind(target),
+        );
+        handlers.push(processorOptions.name);
+      }
 
-      if (!isDefinedDefaultHandler) {
+      if (
+        !isDefinedDefaultHandler &&
+        handlers.indexOf(BullConstants.BULL_QUEUE_HANDLER_NAMES) === -1
+      ) {
         queue.process(
           processorOptions.concurrency,
           target[processor.propertyKey].bind(target),
         );
         isDefinedDefaultHandler = true;
+        handlers.push(BullConstants.BULL_QUEUE_HANDLER_NAMES);
       }
 
       Logger.log(
@@ -149,6 +157,12 @@ export class BullService {
         true,
       );
     }
+
+    Reflect.defineMetadata(
+      BullConstants.BULL_QUEUE_HANDLER_NAMES,
+      handlers,
+      queue,
+    );
   }
 
   private getBullQueueData(
