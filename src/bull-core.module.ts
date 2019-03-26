@@ -4,6 +4,8 @@ import {
   Module,
   OnModuleDestroy,
   OnModuleInit,
+  OnApplicationBootstrap,
+  OnApplicationShutdown,
 } from '@nestjs/common';
 import { ValueProvider } from '@nestjs/common/interfaces';
 import { BullBootstrapService } from './bull-bootstrap.service';
@@ -17,7 +19,7 @@ import { getBullQueueToken } from './bull.utils';
 @Module({
   providers: [BullService, BullBootstrapService],
 })
-export class BullCoreModule implements OnModuleDestroy {
+export class BullCoreModule implements OnModuleDestroy, OnApplicationShutdown {
   constructor(private readonly bullService: BullService) {}
 
   public static forRoot(options: BullModuleOptions): DynamicModule {
@@ -43,6 +45,9 @@ export class BullCoreModule implements OnModuleDestroy {
   }
 
   async onModuleDestroy(): Promise<any> {
+    await this.bullService.teardownQueues();
+  }
+  async onApplicationShutdown(signal?: string) {
     await this.bullService.teardownQueues();
   }
 }

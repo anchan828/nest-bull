@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { ModuleRef } from '@nestjs/core';
+import { ModuleRef, ModulesContainer } from '@nestjs/core';
 import { Job, Queue } from 'bull';
 import * as deepmerge from 'deepmerge';
 import { Redis } from 'ioredis';
@@ -201,10 +201,19 @@ export class BullService {
     });
   }
 
-  private getModules() {
+  private getModulesContainer(): ModulesContainer {
     // @ts-ignore
-    const modulesContainer = this.moduleRef.container.modulesContainer;
-    return Array.from(Map.prototype.values.apply(modulesContainer));
+    let modulesContainer = this.moduleRef.container.modulesContainer;
+    // @ts-ignore
+    if (this.moduleRef.container.getModules) {
+      // @ts-ignore
+      modulesContainer = this.moduleRef.container.getModules();
+    }
+    return modulesContainer;
+  }
+
+  private getModules() {
+    return Array.from(Map.prototype.values.apply(this.getModulesContainer()));
   }
 
   private getComponents(module: any): any[] {
