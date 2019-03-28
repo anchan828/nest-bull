@@ -1,4 +1,7 @@
-import * as bull from 'bull';
+import { Type } from '@nestjs/common';
+import { ModuleMetadata } from '@nestjs/common/interfaces';
+import * as Bull from 'bull';
+import { Redis } from 'ioredis';
 
 export interface BullQueueExtraOptions {
   defaultProcessorOptions?: {
@@ -19,28 +22,50 @@ export interface BullQueueExtraOptions {
     setTTLOnFail?: number;
   };
 }
-
+export type BullQueueType = string | Type<unknown>;
 export interface BullModuleOptions {
-  queues: string[];
-  options?: Partial<bull.QueueOptions>;
+  queues: BullQueueType[];
+  options?: Bull.QueueOptions;
   extra?: BullQueueExtraOptions;
 }
 
-export interface BullQueueOptions {
-  name: string;
-  options?: bull.QueueOptions;
+export type BullModuleAsyncOptions = {
+  useClass?: Type<BullModuleOptionsFactory>;
+  /**
+   * The factory which should be used to provide the Bull options
+   */
+  useFactory?: (
+    ...args: unknown[]
+  ) => Promise<BullModuleOptions> | BullModuleOptions;
+  /**
+   * The providers which should get injected
+   */
+  inject?: unknown[];
+} & Pick<ModuleMetadata, 'imports'>;
+
+export interface BullModuleOptionsFactory {
+  createBullModuleOptions(): Promise<BullModuleOptions> | BullModuleOptions;
+}
+
+export interface BaseBullQueueOptions {}
+
+export interface BullQueueOptions extends BaseBullQueueOptions {
+  name?: string;
+  options?: Bull.QueueOptions;
   extra?: BullQueueExtraOptions;
 }
 
-export interface BullQueueProcessorOptions {
+export interface BullQueueProcessorOptions extends BaseBullQueueOptions {
   name?: string;
   concurrency?: number;
 }
 
-export type BullQueue = {
-  name: string;
-} & Partial<bull.Queue>;
+export interface BullQueueEventOptions extends BaseBullQueueOptions {
+  eventNames: string[];
+}
 
+export type BullQueue = Bull.Queue & { clients: Redis[] };
+export type BullJob = Bull.Job & { toKey: () => string; queue: BullQueue };
 export type BullQueueEvent =
   | 'error'
   | 'waiting'
