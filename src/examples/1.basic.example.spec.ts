@@ -36,7 +36,7 @@ export class BasicExampleModule {}
 @Module({
   imports: [
     BullModule.forRoot({
-      queues: [`${__dirname}/1.basic.example.spec.ts`],
+      queues: [__filename],
     }),
     BasicExampleModule,
   ],

@@ -43,7 +43,7 @@ export class EventExampleModule {}
 @Module({
   imports: [
     BullModule.forRoot({
-      queues: [`${__dirname}/2.event.example.spec.ts`],
+      queues: [__filename],
     }),
     EventExampleModule,
   ],
