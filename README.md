@@ -1,5 +1,10 @@
 # @anchan828/nest-bull
 
+![npm](https://img.shields.io/npm/v/@anchan828/nest-bull.svg)
+![NPM](https://img.shields.io/npm/l/@anchan828/nest-bull.svg)
+[![Maintainability](https://api.codeclimate.com/v1/badges/dfb624755d14e1937a3b/maintainability)](https://codeclimate.com/github/anchan828/nest-bull/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/dfb624755d14e1937a3b/test_coverage)](https://codeclimate.com/github/anchan828/nest-bull/test_coverage)
+
 ## Description
 
 The [Bull](https://github.com/OptimalBits/bull) module for [Nest](https://github.com/nestjs/nest).
