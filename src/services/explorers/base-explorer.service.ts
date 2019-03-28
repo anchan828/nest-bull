@@ -31,13 +31,7 @@ export abstract class BaseExplorerService<Options> {
     const modules = this.getAllModules();
     const bullModule = this.getBullModule(modules);
 
-    const components = flatten(
-      modules
-        .filter(module => module.metatype !== BullCoreModule)
-        .map(module => module.components),
-    ) as Array<Map<string, InstanceWrapper<Injectable>>>;
-
-    components.forEach(component => {
+    this.getComponents(modules).forEach(component => {
       for (const wrapper of component.values()) {
         if (
           wrapper.isNotMetatype ||
@@ -50,10 +44,10 @@ export abstract class BaseExplorerService<Options> {
           BULL_QUEUE_DECORATOR,
           wrapper.metatype,
         ) as BullQueueOptions;
-        const bullQueueName = getBullQueueToken(metadata.name!);
+
         const bullQueueInstanceWrapper = this.getBullQueueProvider(
           bullModule,
-          bullQueueName,
+          getBullQueueToken(metadata.name!),
         );
 
         if (!bullQueueInstanceWrapper) {
@@ -64,6 +58,16 @@ export abstract class BaseExplorerService<Options> {
         this.onBullQueueProcess(bullQueue, wrapper);
       }
     });
+  }
+
+  private getComponents(
+    modules: Module[],
+  ): Array<Map<string, InstanceWrapper<Injectable>>> {
+    return flatten(
+      modules
+        .filter(module => module.metatype !== BullCoreModule)
+        .map(module => module.components),
+    ) as Array<Map<string, InstanceWrapper<Injectable>>>;
   }
   private getBullQueueProvider(
     bullModule: Module,

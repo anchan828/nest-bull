@@ -33,6 +33,7 @@ export const createTestFile = (...classText: string[]): string => {
     filePath,
     [
       `import { Module } from '${modeModulesPath}/@nestjs/common';`,
+      // tslint:disable-next-line: max-line-length
       `import { BullQueue, BullQueueProcess, BullQueueEventError, BullQueueEventWaiting, BullQueueEventActive, BullQueueEventStalled, BullQueueEventProgress, BullQueueEventCompleted, BullQueueEventFailed, BullQueueEventPaused, BullQueueEventResumed, BullQueueEventCleaned, BullQueueEventDrained, BullQueueEventRemoved, BullQueueEventGlobalError, BullQueueEventGlobalWaiting, BullQueueEventGlobalActive, BullQueueEventGlobalStalled, BullQueueEventGlobalProgress, BullQueueEventGlobalCompleted, BullQueueEventGlobalFailed, BullQueueEventGlobalPaused, BullQueueEventGlobalResumed, BullQueueEventGlobalCleaned, BullQueueEventGlobalDrained, BullQueueEventGlobalRemoved } from '${bullDecortatorPath}';`,
       classText.join('\n'),
     ].join('\n'),

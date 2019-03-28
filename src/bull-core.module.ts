@@ -27,14 +27,12 @@ import { BullQueueExplorerService } from './services/explorers/queue-explorer.se
 })
 export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
   async onModuleDestroy() {
-    const bullQueues = this.queueExplorer.getInjectedBullQueues();
-    for (const bullQueue of bullQueues) {
+    for (const bullQueue of this.queueExplorer.getInjectedBullQueues()) {
       await bullQueue.close();
     }
   }
   async onModuleInit() {
-    const bullQueues = this.queueExplorer.getInjectedBullQueues();
-    for (const bullQueue of bullQueues) {
+    for (const bullQueue of this.queueExplorer.getInjectedBullQueues()) {
       await bullQueue.isReady();
     }
   }

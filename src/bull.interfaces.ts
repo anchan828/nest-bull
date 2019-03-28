@@ -47,16 +47,16 @@ export interface BullModuleOptionsFactory {
   createBullModuleOptions(): Promise<BullModuleOptions> | BullModuleOptions;
 }
 
-export interface BaseBullQueueOptions {}
+export interface BaseBullQueueOptions {
+  name?: string;
+}
 
 export interface BullQueueOptions extends BaseBullQueueOptions {
-  name?: string;
   options?: Bull.QueueOptions;
   extra?: BullQueueExtraOptions;
 }
 
 export interface BullQueueProcessorOptions extends BaseBullQueueOptions {
-  name?: string;
   concurrency?: number;
 }
 

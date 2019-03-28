@@ -46,10 +46,7 @@ export const EventHandler = (type: BullQueueEvent, isGlobal: boolean) => {
     );
     if (options.eventNames.indexOf(eventName) !== -1) {
       Logger.warn(
-        `Not allowed multiple event on same function. ${JSON.stringify({
-          propertyName,
-          eventName,
-        })}`,
+        `Not allowed multiple event on same function. ${eventName} on ${propertyName}`,
         BULL_MODULE,
         false,
       );
