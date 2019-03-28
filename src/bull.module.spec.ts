@@ -291,19 +291,4 @@ describe('BullModule', () => {
       );
     });
   });
-
-  describe('forRootAsync', () => {
-    cleanTestFiles();
-    it('should compile', async () => {
-      const app = await Test.createTestingModule({
-        imports: [
-          BullModule.forRootAsync({
-            useFactory: () => ({ queues: [] } as BullModuleOptions),
-          }),
-        ],
-      }).compile();
-      expect(app).toBeDefined();
-      await app.close();
-    });
-  });
 });
