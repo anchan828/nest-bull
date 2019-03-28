@@ -15,7 +15,10 @@ export class ExtraJobOptionsBullQueue {
   public called: boolean = false;
   @BullQueueProcess()
   public async process(job: Job): Promise<{ status: string }> {
-    expect(job.data).toStrictEqual({ test: 'test' });
+    const { throwError } = job.data;
+    if (throwError) {
+      throw new Error('error');
+    }
     return { status: 'ok' };
   }
 }
@@ -27,8 +30,8 @@ export class ExtraJobOptionsService {
     public readonly queue: Queue,
   ) {}
 
-  public async addJob() {
-    return this.queue.add({ test: 'test' });
+  public async addJob(throwError: boolean) {
+    return this.queue.add({ throwError });
   }
 }
 
@@ -41,59 +44,57 @@ export class ExtraJobOptionsModule {}
   imports: [
     BullModule.forRoot({
       queues: [`${__dirname}/3.extra-job-options.example.spec.ts`],
-    }),
-    ExtraJobOptionsModule,
-  ],
-})
-export class ApplicationModule1 {}
-
-@Module({
-  imports: [
-    BullModule.forRoot({
-      queues: [`${__dirname}/3.extra-job-options.example.spec.ts`],
       extra: {
         defaultJobOptions: {
           setTTLOnComplete: 10,
+          setTTLOnFail: 10,
         },
       },
     }),
     ExtraJobOptionsModule,
   ],
 })
-export class ApplicationModule2 {}
+export class ApplicationModule {}
 
 describe('3. Extra Job Options', () => {
   const compileModule = async (metadata: ModuleMetadata) => {
     return Test.createTestingModule(metadata).compile();
   };
-  it('should set ttl to -1', async () => {
-    const app = await compileModule({
-      imports: [ApplicationModule1],
-    });
-    await app.init();
-    const service = app.get<ExtraJobOptionsService>(ExtraJobOptionsService);
-    const job = (await service.addJob()) as BullJob;
-    await new Promise(resolve => setTimeout(() => resolve(), 500));
-    await expect(job.finished()).resolves.toStrictEqual({ status: 'ok' });
-
-    const key = `${job.toKey()}${job.id}`;
-    await expect(job.queue.clients[0].ttl(key)).resolves.toBe(-1);
-    await app.close();
-  });
+  const getTTL = async (job: BullJob) => {
+    return job.queue.clients[0].ttl(`${job.toKey()}${job.id}`);
+  };
 
   it('should set ttl to 10', async () => {
     const app = await compileModule({
-      imports: [ApplicationModule2],
+      imports: [ApplicationModule],
     });
     await app.init();
-    // await new Promise(resolve => setTimeout(() => resolve(), 500));
     const service = app.get<ExtraJobOptionsService>(ExtraJobOptionsService);
-    const job = (await service.addJob()) as BullJob;
-    await new Promise(resolve => setTimeout(() => resolve(), 500));
-    await expect(job.finished()).resolves.toStrictEqual({ status: 'ok' });
-    const ttl = await job.queue.clients[0].ttl(`${job.toKey()}${job.id}`);
-    expect(ttl).toBeGreaterThan(0);
-    expect(ttl).toBeLessThanOrEqual(10);
+    const completedJob = (await service.addJob(false)) as BullJob;
+    const failedJob = (await service.addJob(true)) as BullJob;
+    await expect(completedJob.finished()).resolves.toStrictEqual({
+      status: 'ok',
+    });
+    await expect(failedJob.finished()).rejects.toThrowError('error');
+    await new Promise(resolve => {
+      const interval = setInterval(async () => {
+        if (
+          (await getTTL(completedJob)) !== -1 &&
+          (await getTTL(failedJob)) !== -1
+        ) {
+          clearInterval(interval);
+          resolve();
+        }
+      }, 10);
+    });
+
+    const completedTTL = await getTTL(completedJob);
+    expect(completedTTL).toBeGreaterThan(0);
+    expect(completedTTL).toBeLessThanOrEqual(10);
+
+    const failedTTL = await getTTL(failedJob);
+    expect(failedTTL).toBeGreaterThan(0);
+    expect(failedTTL).toBeLessThanOrEqual(10);
     await app.close();
   });
 });
