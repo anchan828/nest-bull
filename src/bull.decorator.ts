@@ -1,8 +1,15 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
+import * as deepmerge from 'deepmerge';
 import 'reflect-metadata';
-import { BullConstants } from './bull.constants';
+import {
+  BULL_MODULE,
+  BULL_QUEUE_DECORATOR,
+  BULL_QUEUE_EVENT_DECORATOR,
+  BULL_QUEUE_PROCESSOR_DECORATOR,
+} from './bull.constants';
 import {
   BullQueueEvent,
+  BullQueueEventOptions,
   BullQueueOptions,
   BullQueueProcessorOptions,
 } from './bull.interfaces';
@@ -11,52 +18,44 @@ import { getBullQueueToken } from './bull.utils';
 export const BullQueue = (options?: BullQueueOptions) => {
   return (target: any) => {
     Reflect.defineMetadata(
-      BullConstants.BULL_QUEUE_DECORATOR,
-      options,
-      target.prototype,
+      BULL_QUEUE_DECORATOR,
+      deepmerge({ name: target.name }, options || {}),
+      target,
     );
   };
 };
 
 export const BullQueueProcess = (options?: BullQueueProcessorOptions) => {
-  return (
-    target: any,
-    propertyName: string,
-    descriptor: PropertyDescriptor,
-  ) => {
+  return (target: any, propertyName: string) => {
     Reflect.defineMetadata(
-      BullConstants.BULL_QUEUE_PROCESSOR_DECORATOR,
-      options || BullConstants.BULL_QUEUE_PROCESSOR_DECORATOR,
+      BULL_QUEUE_PROCESSOR_DECORATOR,
+      options,
       target,
       propertyName,
     );
   };
 };
 
-export const EventHandler = (
-  type: BullQueueEvent,
-  isGlobal: boolean = false,
-) => {
-  return (
-    target: any,
-    propertyName: string,
-    descriptor: PropertyDescriptor,
-  ) => {
+export const EventHandler = (type: BullQueueEvent, isGlobal: boolean) => {
+  return (target: any, propertyName: string) => {
     const eventName = `${isGlobal ? 'global:' : ''}${type}`;
-    const values: string[] =
-      Reflect.getMetadata(
-        BullConstants.BULL_QUEUE_EVENT_DECORATOR,
-        target,
-        propertyName,
-      ) || [];
-
-    if (values.indexOf(eventName) !== -1) {
+    const options: BullQueueEventOptions = deepmerge(
+      { eventNames: [] },
+      Reflect.getMetadata(BULL_QUEUE_EVENT_DECORATOR, target, propertyName) ||
+        {},
+    );
+    if (options.eventNames.indexOf(eventName) !== -1) {
+      Logger.warn(
+        `Not allowed multiple event on same function. ${eventName} on ${propertyName}`,
+        BULL_MODULE,
+        false,
+      );
       return;
     }
-    values.push(eventName);
+    options.eventNames.push(eventName);
     Reflect.defineMetadata(
-      BullConstants.BULL_QUEUE_EVENT_DECORATOR,
-      values,
+      BULL_QUEUE_EVENT_DECORATOR,
+      options,
       target,
       propertyName,
     );
