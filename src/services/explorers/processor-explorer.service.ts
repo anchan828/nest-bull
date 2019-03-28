@@ -34,10 +34,17 @@ export class BullQueueProcessorExplorerService extends BaseExplorerService<
     prototype: any,
     propertyName: string,
   ): BullQueueProcessorOptions {
+    const options = Reflect.getMetadata(
+      BULL_QUEUE_PROCESSOR_DECORATOR,
+      prototype,
+      propertyName,
+    ) as BullQueueProcessorOptions;
+
     return deepmerge.all([
       {
         name: propertyName,
         concurrency: BULL_QUEUE_PROCESSOR_DEFAULT_CONCURRENCY,
+        isCustomProcessorName: options && options.name,
       },
       this.getExtraProcessorOptions() || {},
       Reflect.getMetadata(
@@ -55,16 +62,17 @@ export class BullQueueProcessorExplorerService extends BaseExplorerService<
     allPropertyNames: string[],
   ): void {
     const processorOptions = this.getOptions(prototype, propertyName);
-
-    if (allPropertyNames.length === 1) {
-      processorOptions.name = BULL_QUEUE_DEFAULT_PROCESSOR_NAME;
-    }
+    const processorName =
+      allPropertyNames.length === 1 && !processorOptions.isCustomProcessorName
+        ? BULL_QUEUE_DEFAULT_PROCESSOR_NAME
+        : processorOptions.name!;
 
     bullQueue.process(
-      processorOptions.name!,
+      processorName,
       processorOptions.concurrency!,
       prototype[propertyName].bind(instance),
     );
+
     Logger.log(
       `${processorOptions.name} processor on ${bullQueue.name} initialized`,
       BULL_MODULE,

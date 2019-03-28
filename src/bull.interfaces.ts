@@ -58,6 +58,7 @@ export interface BullQueueOptions extends BaseBullQueueOptions {
 
 export interface BullQueueProcessorOptions extends BaseBullQueueOptions {
   concurrency?: number;
+  isCustomProcessorName?: boolean;
 }
 
 export interface BullQueueEventOptions extends BaseBullQueueOptions {
