@@ -1,0 +1,60 @@
+import { Injectable, Module } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+import { Job, Queue } from 'bull';
+import {
+  BullQueue,
+  BullQueueInject,
+  BullQueueProcess,
+} from '../bull.decorator';
+import { BullModule } from '../bull.module';
+
+const QUEUE_NAME = Symbol('QUEUE_NAME');
+
+@BullQueue({
+  name: QUEUE_NAME,
+})
+export class SymbolExampleBullQueue {
+  @BullQueueProcess()
+  public async process(job: Job): Promise<{ status: string }> {
+    expect(job.data).toStrictEqual({ test: 'test' });
+    return { status: 'ok' };
+  }
+}
+
+@Injectable()
+export class SymbolExampleService {
+  constructor(@BullQueueInject(QUEUE_NAME) public readonly queue: Queue) {}
+
+  public async addJob() {
+    return this.queue.add({ test: 'test' });
+  }
+}
+
+@Module({
+  providers: [SymbolExampleBullQueue, SymbolExampleService],
+})
+export class SymbolExampleModule {}
+
+@Module({
+  imports: [
+    BullModule.forRoot({
+      queues: [__filename],
+    }),
+    SymbolExampleModule,
+  ],
+})
+export class ApplicationModule {}
+
+describe('6. Symbol Example', () => {
+  it('test', async () => {
+    const app = await Test.createTestingModule({
+      imports: [ApplicationModule],
+    }).compile();
+
+    const service = app.get<SymbolExampleService>(SymbolExampleService);
+    expect(service).toBeDefined();
+    expect(service.queue).toBeDefined();
+    const job = await service.addJob();
+    await expect(job.finished()).resolves.toStrictEqual({ status: 'ok' });
+  });
+});

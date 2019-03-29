@@ -14,6 +14,7 @@ import {
 import { getBullQueueToken } from '../bull.utils';
 
 export class BullQueueService {
+  private queues: BullQueue[] = [];
   constructor(private readonly bullModuleOptions: BullModuleOptions) {}
   public createBullQueueProviders(): ValueProvider[] {
     const providers: ValueProvider[] = [];
@@ -29,9 +30,10 @@ export class BullQueueService {
         Logger.log(`${queue.name} queue initialized`, BULL_MODULE, true);
 
         providers.push({
-          provide: getBullQueueToken(queue.name),
+          provide: getBullQueueToken(options.name!),
           useValue: queue,
         });
+        this.queues.push(queue);
       }
     }
     return providers;
@@ -76,7 +78,7 @@ export class BullQueueService {
   }
 
   private createQueue(target: any, options: BullQueueOptions): BullQueue {
-    return new Bull(options.name!, options.options) as BullQueue;
+    return new Bull(String(options.name), options.options) as BullQueue;
   }
   private getBullQueueOptions(target: any): BullQueueOptions {
     const targetOptions = Reflect.getMetadata(
@@ -118,5 +120,17 @@ export class BullQueueService {
         .map(entry => require(entry.toString()) as { [name: string]: any })
         .map(x => Object.values(x)),
     );
+  }
+
+  public async closeAll(): Promise<void> {
+    for (const queue of this.queues) {
+      await queue.close();
+    }
+  }
+
+  public async isReady(): Promise<void> {
+    for (const queue of this.queues) {
+      await queue.isReady();
+    }
   }
 }

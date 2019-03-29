@@ -1,4 +1,5 @@
 export const BULL_MODULE = 'BullModule';
+export const BULL_MODULE_SERVICE = 'BullModuleService';
 export const BULL_MODULE_OPTIONS = 'BullModuleOptions';
 export const BULL_QUEUE_DECORATOR = 'BullQueue';
 export const BULL_QUEUE_PROCESSOR_DECORATOR = 'BullQueueProcess';

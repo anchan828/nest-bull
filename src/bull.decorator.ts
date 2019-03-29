@@ -8,6 +8,7 @@ import {
   BULL_QUEUE_PROCESSOR_DECORATOR,
 } from './bull.constants';
 import {
+  BullName,
   BullQueueEvent,
   BullQueueEventOptions,
   BullQueueOptions,
@@ -93,5 +94,5 @@ export const BullQueueEventGlobalDrained = () => EventHandler('drained', true);
 export const BullQueueEventGlobalRemoved = () => EventHandler('removed', true);
 
 // Avoid same name with Queue class
-export const BullQueueInject = (name: string) =>
+export const BullQueueInject = (name: BullName) =>
   Inject(getBullQueueToken(name));
