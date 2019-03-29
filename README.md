@@ -150,6 +150,8 @@ export class AppQueue {
 
 See example app: https://github.com/anchan828/nest-bull-example
 
+And more: https://github.com/anchan828/nest-bull/tree/master/src/examples
+
 
 ### Extra
 
