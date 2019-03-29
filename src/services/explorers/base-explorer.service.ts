@@ -51,11 +51,7 @@ export abstract class BaseExplorerService<Options> {
           getBullQueueToken(metadata.name!),
         );
 
-        if (!bullQueueInstanceWrapper) {
-          continue;
-        }
-
-        const bullQueue = bullQueueInstanceWrapper.instance as BullQueue;
+        const bullQueue = bullQueueInstanceWrapper!.instance as BullQueue;
         this.onBullQueueProcess(bullQueue, wrapper);
       }
     });
