@@ -8,6 +8,7 @@ import { BullCoreModule } from '../../bull-core.module';
 import { BULL_QUEUE_DECORATOR } from '../../bull.constants';
 import {
   BullModuleOptions,
+  BullName,
   BullQueue,
   BullQueueOptions,
 } from '../../bull.interfaces';
@@ -50,11 +51,7 @@ export abstract class BaseExplorerService<Options> {
           getBullQueueToken(metadata.name!),
         );
 
-        if (!bullQueueInstanceWrapper) {
-          continue;
-        }
-
-        const bullQueue = bullQueueInstanceWrapper.instance as BullQueue;
+        const bullQueue = bullQueueInstanceWrapper!.instance as BullQueue;
         this.onBullQueueProcess(bullQueue, wrapper);
       }
     });
@@ -71,7 +68,7 @@ export abstract class BaseExplorerService<Options> {
   }
   private getBullQueueProvider(
     bullModule: Module,
-    bullQueueName: string,
+    bullQueueName: BullName,
   ): InstanceWrapper<Injectable> | undefined {
     for (const [name, instance] of bullModule.providers) {
       if (name === bullQueueName) {

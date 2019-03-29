@@ -8,8 +8,12 @@ import {
 } from '../bull.decorator';
 import { BullModule } from '../bull.module';
 
-@BullQueue()
-export class BasicExampleBullQueue {
+const QUEUE_NAME = Symbol('QUEUE_NAME');
+
+@BullQueue({
+  name: QUEUE_NAME,
+})
+export class SymbolExampleBullQueue {
   @BullQueueProcess()
   public async process(job: Job): Promise<{ status: string }> {
     expect(job.data).toStrictEqual({ test: 'test' });
@@ -18,10 +22,8 @@ export class BasicExampleBullQueue {
 }
 
 @Injectable()
-export class BasicExampleService {
-  constructor(
-    @BullQueueInject('BasicExampleBullQueue') public readonly queue: Queue,
-  ) {}
+export class SymbolExampleService {
+  constructor(@BullQueueInject(QUEUE_NAME) public readonly queue: Queue) {}
 
   public async addJob() {
     return this.queue.add({ test: 'test' });
@@ -29,27 +31,27 @@ export class BasicExampleService {
 }
 
 @Module({
-  providers: [BasicExampleBullQueue, BasicExampleService],
+  providers: [SymbolExampleBullQueue, SymbolExampleService],
 })
-export class BasicExampleModule {}
+export class SymbolExampleModule {}
 
 @Module({
   imports: [
     BullModule.forRoot({
       queues: [__filename],
     }),
-    BasicExampleModule,
+    SymbolExampleModule,
   ],
 })
 export class ApplicationModule {}
 
-describe('1. Basic Example', () => {
+describe('6. Symbol Example', () => {
   it('test', async () => {
     const app = await Test.createTestingModule({
       imports: [ApplicationModule],
     }).compile();
 
-    const service = app.get<BasicExampleService>(BasicExampleService);
+    const service = app.get<SymbolExampleService>(SymbolExampleService);
     expect(service).toBeDefined();
     expect(service.queue).toBeDefined();
     const job = await service.addJob();

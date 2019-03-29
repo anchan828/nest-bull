@@ -3,6 +3,7 @@ import { ModuleMetadata } from '@nestjs/common/interfaces';
 import * as Bull from 'bull';
 import { Redis } from 'ioredis';
 
+export type BullName = string | symbol;
 export interface BullQueueExtraOptions {
   defaultProcessorOptions?: {
     /**
@@ -48,7 +49,7 @@ export interface BullModuleOptionsFactory {
 }
 
 export interface BaseBullQueueOptions {
-  name?: string;
+  name?: BullName;
 }
 
 export interface BullQueueOptions extends BaseBullQueueOptions {
@@ -57,6 +58,7 @@ export interface BullQueueOptions extends BaseBullQueueOptions {
 }
 
 export interface BullQueueProcessorOptions extends BaseBullQueueOptions {
+  name?: string;
   concurrency?: number;
   isCustomProcessorName?: boolean;
 }

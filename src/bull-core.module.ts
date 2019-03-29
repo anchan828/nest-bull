@@ -1,50 +1,54 @@
-import { DynamicModule, Module } from '@nestjs/common';
-import { OnModuleDestroy, OnModuleInit } from '@nestjs/common/interfaces';
+import {
+  DynamicModule,
+  Inject,
+  Module,
+  OnModuleDestroy,
+  OnModuleInit,
+} from '@nestjs/common';
 import { MetadataScanner } from '@nestjs/core/metadata-scanner';
-import { BULL_MODULE_OPTIONS } from './bull.constants';
+import { BULL_MODULE_OPTIONS, BULL_MODULE_SERVICE } from './bull.constants';
 import { BullModuleOptions } from './bull.interfaces';
 import { BullQueueService } from './services/bull-queue.service';
 import { BullQueueEventExplorerService } from './services/explorers/event-explorer.service';
 import { BullQueueProcessorExplorerService } from './services/explorers/processor-explorer.service';
-import { BullQueueExplorerService } from './services/explorers/queue-explorer.service';
 
 @Module({
   providers: [
     MetadataScanner,
-    BullQueueExplorerService,
     BullQueueProcessorExplorerService,
     BullQueueEventExplorerService,
   ],
 })
 export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
-  async onModuleDestroy() {
-    for (const bullQueue of this.queueExplorer.getInjectedBullQueues()) {
-      await bullQueue.close();
-    }
-  }
   async onModuleInit() {
-    for (const bullQueue of this.queueExplorer.getInjectedBullQueues()) {
-      await bullQueue.isReady();
-    }
+    await this.bullService.isReady();
   }
+  async onModuleDestroy() {
+    await this.bullService.closeAll();
+  }
+
   constructor(
-    private readonly queueExplorer: BullQueueExplorerService,
     private readonly processorExplorer: BullQueueProcessorExplorerService,
     private readonly eventExplorer: BullQueueEventExplorerService,
+    @Inject(BULL_MODULE_SERVICE)
+    private readonly bullService: BullQueueService,
   ) {
     this.processorExplorer.explore();
     this.eventExplorer.explore();
   }
   public static forRoot(options: BullModuleOptions): DynamicModule {
-    const bullQueueProviders = new BullQueueService(
-      options,
-    ).createBullQueueProviders();
+    const bullService = new BullQueueService(options);
+    const bullQueueProviders = bullService.createBullQueueProviders();
     return {
       module: BullCoreModule,
       providers: [
         {
           provide: BULL_MODULE_OPTIONS,
           useValue: options,
+        },
+        {
+          provide: BULL_MODULE_SERVICE,
+          useValue: bullService,
         },
         ...bullQueueProviders,
       ],

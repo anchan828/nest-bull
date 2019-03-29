@@ -43,7 +43,7 @@ export class ExtraJobOptionsModule {}
 @Module({
   imports: [
     BullModule.forRoot({
-      queues: [`${__dirname}/3.extra-job-options.example.spec.ts`],
+      queues: [__filename],
       extra: {
         defaultJobOptions: {
           setTTLOnComplete: 10,

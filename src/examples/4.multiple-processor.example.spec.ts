@@ -49,7 +49,7 @@ export class MultipleProcessorExampleModule {}
 @Module({
   imports: [
     BullModule.forRoot({
-      queues: [`${__dirname}/4.multiple-processor.example.spec.ts`],
+      queues: [__filename],
     }),
     MultipleProcessorExampleModule,
   ],
