@@ -26,7 +26,7 @@
     "type": "git",
     "url": "git+https://github.com/anchan828/nest-bull.git"
   },
-  "author": "Keigo Ando <anchan828@gmail.com>",
+  "author": "anchan828 <anchan828@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/anchan828/nest-bull/issues"
