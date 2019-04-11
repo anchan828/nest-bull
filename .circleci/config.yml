@@ -12,7 +12,8 @@ jobs:
             - v1-dependencies-{{ checksum "package-lock.json" }}
             - v1-dependencies-
 
-      - run: npm ci
+      - run: npm i
+      - run: npm run bootstrap
 
       - save_cache:
           paths:
