@@ -39,7 +39,6 @@ export class BullHealthIndicator extends HealthIndicator {
   async isHealthy(): Promise<HealthIndicatorResult> {
     try {
       const job = await this.queue.add({});
-      console.log(await job.finished());
       await job.finished();
     } catch (e) {
       throw new HealthCheckError(
