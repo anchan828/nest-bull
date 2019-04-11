@@ -1,7 +1,7 @@
 {
-  "name": "@anchan828/nest-bull",
+  "name": "@anchan828/nest-bull-terminus",
   "version": "0.3.4",
-  "description": "The [Bull](https://github.com/OptimalBits/bull) module for [Nest](https://github.com/nestjs/nest).",
+  "description": "The terminus of [Bull](https://github.com/OptimalBits/bull) module for [Nest](https://github.com/nestjs/nest).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -21,23 +21,27 @@
   "bugs": {
     "url": "https://github.com/anchan828/nest-bull/issues"
   },
-  "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/bull#readme",
+  "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/terminus#readme",
   "dependencies": {
-    "deepmerge": "3.2.0",
-    "fast-glob": "2.2.6"
+    "@anchan828/nest-bull": "^0.3.4"
   },
   "devDependencies": {
+    "@godaddy/terminus": "4.1.0",
     "@nestjs/common": "6.1.0",
     "@nestjs/core": "6.1.0",
+    "@nestjs/platform-express": "^6.1.0",
+    "@nestjs/terminus": "^6.1.0",
     "@nestjs/testing": "6.1.0",
     "@types/bull": "3.5.11",
     "@types/ioredis": "4.0.10",
     "@types/jest": "24.0.11",
     "@types/node": "11.13.4",
+    "@types/supertest": "^2.0.7",
     "bull": "3.7.0",
     "jest": "24.7.1",
     "prettier": "1.16.4",
     "reflect-metadata": "0.1.13",
+    "supertest": "^4.0.2",
     "ts-jest": "24.0.2",
     "typescript": "3.4.3",
     "ulid": "2.3.0"
