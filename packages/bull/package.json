@@ -13,17 +13,6 @@
     "test:watch": "npm run test -- --watch"
 
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.ts": [
-      "prettier --write",
-      "git add"
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/anchan828/nest-bull.git"
@@ -33,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/anchan828/nest-bull/issues"
   },
-  "homepage": "https://github.com/anchan828/nest-bull#readme",
+  "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/bull#readme",
   "dependencies": {
     "deepmerge": "3.2.0",
     "fast-glob": "2.2.6"
