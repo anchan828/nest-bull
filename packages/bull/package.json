@@ -1,17 +1,17 @@
 {
-  "name": "@anchan828/nest-bull-packages",
-  "private": true,
+  "name": "@anchan828/nest-bull",
   "version": "0.3.3",
   "description": "The [Bull](https://github.com/OptimalBits/bull) module for [Nest](https://github.com/nestjs/nest).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "bootstrap": "lerna bootstrap",
-    "build": "lerna run build",
-    "test": "lerna run test",
-    "publish": "lerna publish --yes patch",
-    "publish:minor": "lerna publish --yes minor",
-    "publish:major": "lerna publish --yes major"
+    "prepublishOnly": "rm -rf dist && npm run build && rm -f dist/*.tsbuildinfo && npm run copy:license",
+    "copy:license": "cp ../../LICENSE ./",
+    "build": "tsc -p tsconfig.build.json",
+    "watch": "tsc --watch",
+    "test": "jest --runInBand --coverage --detectOpenHandles --forceExit",
+    "test:watch": "npm run test -- --watch"
+
   },
   "husky": {
     "hooks": {
@@ -35,15 +35,23 @@
   },
   "homepage": "https://github.com/anchan828/nest-bull#readme",
   "dependencies": {
-    "lerna": "3.13.2"
+    "deepmerge": "3.2.0",
+    "fast-glob": "2.2.6"
   },
   "devDependencies": {
+    "@nestjs/common": "6.1.0",
+    "@nestjs/core": "6.1.0",
+    "@nestjs/testing": "6.1.0",
+    "@types/bull": "3.5.11",
+    "@types/ioredis": "4.0.10",
+    "@types/jest": "24.0.11",
     "@types/node": "11.13.4",
-    "husky": "1.3.1",
-    "lint-staged": "8.1.5",
+    "bull": "3.7.0",
+    "jest": "24.7.1",
     "prettier": "1.16.4",
-    "tslint": "5.15.0",
-    "tslint-config-prettier": "1.18.0",
-    "typescript": "3.4.3"
+    "reflect-metadata": "0.1.13",
+    "ts-jest": "24.0.2",
+    "typescript": "3.4.3",
+    "ulid": "2.3.0"
   }
 }

@@ -9,7 +9,9 @@
     "sourceMap": false,
     "strict": true,
     "outDir": "./dist",
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "skipLibCheck": true,
+    "incremental": true
   },
   "exclude": ["node_modules", "dist", "scripts"]
 }
