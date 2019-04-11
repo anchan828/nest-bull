@@ -28,7 +28,7 @@ export const createTestFile = (...classText: string[]): string => {
     filePath,
     resolve('src', 'bull.decorator'),
   );
-  const modeModulesPath = relative(filePath, 'node_modules');
+  const modeModulesPath = relative(filePath, '../../node_modules');
   writeFileSync(
     filePath,
     [
