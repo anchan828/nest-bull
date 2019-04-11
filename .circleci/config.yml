@@ -12,7 +12,8 @@ jobs:
             - v1-dependencies-{{ checksum "package-lock.json" }}
             - v1-dependencies-
 
-      - run: npm ci
+      - run: npm i
+      - run: npm run bootstrap
 
       - save_cache:
           paths:
@@ -27,4 +28,5 @@ jobs:
       
       - run: ./cc-test-reporter before-build
       - run: npm test
+      - run: npx ts-node scripts/merge-coverage.ts
       - run: ./cc-test-reporter after-build --coverage-input-type lcov
