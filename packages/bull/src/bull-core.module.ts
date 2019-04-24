@@ -21,6 +21,8 @@ import { BullQueueProcessorExplorerService } from './services/explorers/processo
 })
 export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
   async onModuleInit() {
+    this.processorExplorer.explore();
+    this.eventExplorer.explore();
     await this.bullService.isReady();
   }
   async onModuleDestroy() {
@@ -32,10 +34,7 @@ export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
     private readonly eventExplorer: BullQueueEventExplorerService,
     @Inject(BULL_MODULE_SERVICE)
     private readonly bullService: BullQueueService,
-  ) {
-    this.processorExplorer.explore();
-    this.eventExplorer.explore();
-  }
+  ) {}
   public static forRoot(options: BullModuleOptions): DynamicModule {
     const bullService = new BullQueueService(options);
     const bullQueueProviders = bullService.createBullQueueProviders();

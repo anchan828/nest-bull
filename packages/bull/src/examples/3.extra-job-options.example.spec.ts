@@ -10,7 +10,13 @@ import {
 import { BullJob } from '../bull.interfaces';
 import { BullModule } from '../bull.module';
 
-@BullQueue()
+@BullQueue({
+  extra: {
+    defaultJobOptions: {
+      setTTLOnComplete: 10,
+    },
+  },
+})
 export class ExtraJobOptionsBullQueue {
   public called: boolean = false;
   @BullQueueProcess()
@@ -46,8 +52,10 @@ export class ExtraJobOptionsModule {}
       queues: [__filename],
       extra: {
         defaultJobOptions: {
-          setTTLOnComplete: 10,
           setTTLOnFail: 10,
+        },
+        defaultProcessorOptions: {
+          concurrency: 2,
         },
       },
     }),

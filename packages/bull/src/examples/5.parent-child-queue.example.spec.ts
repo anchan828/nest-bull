@@ -79,7 +79,7 @@ describe('5. Parent Child Example', () => {
     const app = await Test.createTestingModule({
       imports: [ApplicationModule],
     }).compile();
-
+    await app.init();
     const service = app.get<ParentChildQueueExampleService>(
       ParentChildQueueExampleService,
     );
@@ -90,5 +90,6 @@ describe('5. Parent Child Example', () => {
       child1: 'ok',
       child2: 'ok',
     });
+    await app.close();
   });
 });
