@@ -61,7 +61,7 @@ describe('4. Multiple Processor Example', () => {
     const app = await Test.createTestingModule({
       imports: [ApplicationModule],
     }).compile();
-
+    await app.init();
     const service = app.get<MultipleProcessorExampleService>(
       MultipleProcessorExampleService,
     );
@@ -76,5 +76,6 @@ describe('4. Multiple Processor Example', () => {
     await expect(jobs[1].finished()).resolves.toStrictEqual({
       status: 'process2 ok',
     });
+    await app.close();
   });
 });
