@@ -48,11 +48,12 @@ describe('1. Basic Example', () => {
     const app = await Test.createTestingModule({
       imports: [ApplicationModule],
     }).compile();
-
+    await app.init();
     const service = app.get<BasicExampleService>(BasicExampleService);
     expect(service).toBeDefined();
     expect(service.queue).toBeDefined();
     const job = await service.addJob();
     await expect(job.finished()).resolves.toStrictEqual({ status: 'ok' });
+    await app.close();
   });
 });
