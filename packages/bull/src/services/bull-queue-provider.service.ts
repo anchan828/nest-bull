@@ -126,12 +126,4 @@ export class BullQueueProviderService {
         .map(x => Object.values(x)),
     );
   }
-
-  public async closeAll(): Promise<void> {
-    await this.bullService.closeAll();
-  }
-
-  public async isReady(): Promise<void> {
-    await this.bullService.isReady();
-  }
 }
