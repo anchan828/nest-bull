@@ -8,7 +8,6 @@ import { BullCoreModule } from '../../bull-core.module';
 import { BULL_QUEUE_DECORATOR } from '../../bull.constants';
 import {
   BullModuleOptions,
-  BullName,
   BullQueue,
   BullQueueOptions,
 } from '../../bull.interfaces';
@@ -24,9 +23,6 @@ export abstract class BaseExplorerService<Options> {
 
   protected getAllModules(): Module[] {
     return [...this.modulesContainer.values()];
-  }
-  protected getBullModule(modules: Module[]): Module {
-    return modules.find(m => m.metatype === BullCoreModule)!;
   }
 
   public explore(): void {
@@ -62,16 +58,7 @@ export abstract class BaseExplorerService<Options> {
         .map(module => module.components),
     ) as Array<Map<string, InstanceWrapper<Injectable>>>;
   }
-  private getBullQueueProvider(
-    bullModule: Module,
-    bullQueueName: BullName,
-  ): InstanceWrapper<Injectable> | undefined {
-    for (const [name, instance] of bullModule.providers) {
-      if (name === bullQueueName) {
-        return instance;
-      }
-    }
-  }
+
   private hasBullQueueDecorator(metatype: Type<Injectable>): boolean {
     return Reflect.hasMetadata(BULL_QUEUE_DECORATOR, metatype);
   }
