@@ -8,6 +8,10 @@ import {
 } from '@nestjs/common';
 import { ClassProvider } from '@nestjs/common/interfaces';
 import { ModulesContainer } from '@nestjs/core';
+// import {
+//   CustomValue,
+//   Module as CoreModule,
+// } from '@nestjs/core/injector/module';
 import { MetadataScanner } from '@nestjs/core/metadata-scanner';
 import { BULL_MODULE_OPTIONS, BULL_MODULE_SERVICE } from './bull.constants';
 import {
@@ -34,7 +38,16 @@ export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
         this.options,
         this.bullService,
       );
-      bullProviderService.createBullQueueProviders();
+      // TODO: get value providers, but get injector error before adding BullCoreModule to them.
+      const bullQueueProviders = bullProviderService.createBullQueueProviders();
+      // const bullCoreModule = [...this.container.values()].find(
+      //   module => module.metatype === BullCoreModule,
+      // ) as CoreModule;
+      // for (const provider of (bullQueueProviders as unknown) as CustomValue[]) {
+      //   provider.name = provider.provide;
+      //   bullCoreModule.addProvider(provider);
+      //   bullCoreModule.exports.add(provider.provide);
+      // }
     }
 
     this.processorExplorer.explore();
