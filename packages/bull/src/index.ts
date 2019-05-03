@@ -1,3 +1,4 @@
+export { BULL_MODULE_SERVICE } from './bull.constants';
 export {
   BullQueue,
   BullQueueEventActive,
@@ -37,3 +38,4 @@ export {
 } from './bull.interfaces';
 export { BullModule } from './bull.module';
 export { getBullQueueToken } from './bull.utils';
+export { BullService } from './services/bull.service';
