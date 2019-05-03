@@ -148,6 +148,36 @@ export class AppQueue {
 }
 ```
 
+### Getting Queue using BullService
+
+```ts
+import { Controller, Get, Inject } from '@nestjs/common';
+import { JobId, Queue } from 'bull';
+import { APP_QUEUE } from './app.constants';
+import { BullService, BULL_MODULE_SERVICE } from '@anchan828/nest-bull';
+
+@Controller()
+export class AppController {
+  constructor(
+    @Inject(BULL_MODULE_SERVICE) 
+    private readonly service: BullService
+  ) {}
+
+  @Get()
+  async root(): Promise<JobId> {
+    const job = await this.service.getQueue(APP_QUEUE).add({ text: 'text' });
+    return job.id;
+  }
+}
+
+```
+
+### forRootAsync
+
+This package supports forRootAsync. However, you can only BullService if you want to forRootAsync.
+
+### More examples...
+
 See example app: https://github.com/anchan828/nest-bull-example
 
 And more: https://github.com/anchan828/nest-bull/tree/master/src/examples
