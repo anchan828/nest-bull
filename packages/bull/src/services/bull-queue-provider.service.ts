@@ -1,4 +1,4 @@
-import { flatten, Logger } from '@nestjs/common';
+import { flatten, Injectable, Logger } from '@nestjs/common';
 import { ValueProvider } from '@nestjs/common/interfaces';
 import * as Bull from 'bull';
 import * as deepmerge from 'deepmerge';
@@ -12,10 +12,15 @@ import {
   BullQueueType,
 } from '../bull.interfaces';
 import { getBullQueueToken } from '../bull.utils';
+import { BullService } from './bull.service';
 
-export class BullQueueService {
-  private queues: BullQueue[] = [];
-  constructor(private readonly bullModuleOptions: BullModuleOptions) {}
+@Injectable()
+export class BullQueueProviderService {
+  constructor(
+    private readonly bullModuleOptions: BullModuleOptions,
+    private readonly bullService: BullService,
+  ) {}
+
   public createBullQueueProviders(): ValueProvider[] {
     const providers: ValueProvider[] = [];
     if (!Array.isArray(this.bullModuleOptions.queues)) {
@@ -28,12 +33,12 @@ export class BullQueueService {
         const queue = this.createQueue(target, options);
         this.createExtraJobEvents(queue, options);
         Logger.log(`${queue.name} queue initialized`, BULL_MODULE, true);
-
+        const token = getBullQueueToken(options.name!);
         providers.push({
-          provide: getBullQueueToken(options.name!),
+          provide: token,
           useValue: queue,
         });
-        this.queues.push(queue);
+        this.bullService.addQueue(token, queue);
       }
     }
     return providers;
@@ -120,17 +125,5 @@ export class BullQueueService {
         .map(entry => require(entry.toString()) as { [name: string]: any })
         .map(x => Object.values(x)),
     );
-  }
-
-  public async closeAll(): Promise<void> {
-    for (const queue of this.queues) {
-      await queue.close();
-    }
-  }
-
-  public async isReady(): Promise<void> {
-    for (const queue of this.queues) {
-      await queue.isReady();
-    }
   }
 }

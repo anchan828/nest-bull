@@ -8,15 +8,15 @@ import { BullCoreModule } from '../../bull-core.module';
 import { BULL_QUEUE_DECORATOR } from '../../bull.constants';
 import {
   BullModuleOptions,
-  BullName,
   BullQueue,
   BullQueueOptions,
 } from '../../bull.interfaces';
-import { getBullQueueToken } from '../../bull.utils';
+import { BullService } from '../bull.service';
 
 export abstract class BaseExplorerService<Options> {
   constructor(
     protected readonly options: BullModuleOptions,
+    protected readonly bullService: BullService,
     protected readonly modulesContainer: ModulesContainer,
     protected readonly metadataScanner: MetadataScanner,
   ) {}
@@ -24,13 +24,9 @@ export abstract class BaseExplorerService<Options> {
   protected getAllModules(): Module[] {
     return [...this.modulesContainer.values()];
   }
-  protected getBullModule(modules: Module[]): Module {
-    return modules.find(m => m.metatype === BullCoreModule)!;
-  }
 
   public explore(): void {
     const modules = this.getAllModules();
-    const bullModule = this.getBullModule(modules);
 
     this.getComponents(modules).forEach(component => {
       for (const wrapper of component.values()) {
@@ -45,14 +41,10 @@ export abstract class BaseExplorerService<Options> {
           BULL_QUEUE_DECORATOR,
           wrapper.metatype,
         ) as BullQueueOptions;
-
-        const bullQueueInstanceWrapper = this.getBullQueueProvider(
-          bullModule,
-          getBullQueueToken(metadata.name!),
-        );
-
-        const bullQueue = bullQueueInstanceWrapper!.instance as BullQueue;
-        this.onBullQueueProcess(bullQueue, wrapper);
+        const bullQueue = this.bullService.getQueue(metadata.name!);
+        if (bullQueue) {
+          this.onBullQueueProcess(bullQueue, wrapper);
+        }
       }
     });
   }
@@ -66,16 +58,7 @@ export abstract class BaseExplorerService<Options> {
         .map(module => module.components),
     ) as Array<Map<string, InstanceWrapper<Injectable>>>;
   }
-  private getBullQueueProvider(
-    bullModule: Module,
-    bullQueueName: BullName,
-  ): InstanceWrapper<Injectable> | undefined {
-    for (const [name, instance] of bullModule.providers) {
-      if (name === bullQueueName) {
-        return instance;
-      }
-    }
-  }
+
   private hasBullQueueDecorator(metatype: Type<Injectable>): boolean {
     return Reflect.hasMetadata(BULL_QUEUE_DECORATOR, metatype);
   }
