@@ -38,6 +38,10 @@ export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
   public static forRoot(options: BullModuleOptions): DynamicModule {
     const bullService = new BullQueueService(options);
     const bullQueueProviders = bullService.createBullQueueProviders();
+    const bullServiceProvider = {
+      provide: BULL_MODULE_SERVICE,
+      useValue: bullService,
+    };
     return {
       module: BullCoreModule,
       providers: [
@@ -45,13 +49,10 @@ export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
           provide: BULL_MODULE_OPTIONS,
           useValue: options,
         },
-        {
-          provide: BULL_MODULE_SERVICE,
-          useValue: bullService,
-        },
+        bullServiceProvider,
         ...bullQueueProviders,
       ],
-      exports: [...bullQueueProviders],
+      exports: [bullServiceProvider, ...bullQueueProviders],
     };
   }
   // TODO: I don't know how to create bull queue providers by async...

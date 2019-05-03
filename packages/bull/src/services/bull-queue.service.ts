@@ -20,7 +20,7 @@ export class BullQueueService {
   constructor(private readonly bullModuleOptions: BullModuleOptions) {}
 
   public getQueue(token: BullName): BullQueue | undefined {
-    return this.queues.get(token);
+    return this.queues.get(getBullQueueToken(token));
   }
   public createBullQueueProviders(): ValueProvider[] {
     const providers: ValueProvider[] = [];

@@ -12,7 +12,6 @@ import {
   BullQueue,
   BullQueueOptions,
 } from '../../bull.interfaces';
-import { getBullQueueToken } from '../../bull.utils';
 import { BullQueueService } from '../bull-queue.service';
 
 export abstract class BaseExplorerService<Options> {
@@ -46,9 +45,7 @@ export abstract class BaseExplorerService<Options> {
           BULL_QUEUE_DECORATOR,
           wrapper.metatype,
         ) as BullQueueOptions;
-        const bullQueue = this.bullService.getQueue(
-          getBullQueueToken(metadata.name!),
-        );
+        const bullQueue = this.bullService.getQueue(metadata.name!);
         if (bullQueue) {
           this.onBullQueueProcess(bullQueue, wrapper);
         }
