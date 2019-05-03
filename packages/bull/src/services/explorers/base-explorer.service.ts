@@ -13,10 +13,12 @@ import {
   BullQueueOptions,
 } from '../../bull.interfaces';
 import { getBullQueueToken } from '../../bull.utils';
+import { BullQueueService } from '../bull-queue.service';
 
 export abstract class BaseExplorerService<Options> {
   constructor(
     protected readonly options: BullModuleOptions,
+    protected readonly bullService: BullQueueService,
     protected readonly modulesContainer: ModulesContainer,
     protected readonly metadataScanner: MetadataScanner,
   ) {}
@@ -30,7 +32,6 @@ export abstract class BaseExplorerService<Options> {
 
   public explore(): void {
     const modules = this.getAllModules();
-    const bullModule = this.getBullModule(modules);
 
     this.getComponents(modules).forEach(component => {
       for (const wrapper of component.values()) {
@@ -45,14 +46,12 @@ export abstract class BaseExplorerService<Options> {
           BULL_QUEUE_DECORATOR,
           wrapper.metatype,
         ) as BullQueueOptions;
-
-        const bullQueueInstanceWrapper = this.getBullQueueProvider(
-          bullModule,
+        const bullQueue = this.bullService.getQueue(
           getBullQueueToken(metadata.name!),
         );
-
-        const bullQueue = bullQueueInstanceWrapper!.instance as BullQueue;
-        this.onBullQueueProcess(bullQueue, wrapper);
+        if (bullQueue) {
+          this.onBullQueueProcess(bullQueue, wrapper);
+        }
       }
     });
   }

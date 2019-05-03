@@ -10,6 +10,7 @@ import * as deepmerge from 'deepmerge';
 import {
   BULL_MODULE,
   BULL_MODULE_OPTIONS,
+  BULL_MODULE_SERVICE,
   BULL_QUEUE_DEFAULT_PROCESSOR_NAME,
   BULL_QUEUE_PROCESSOR_DECORATOR,
   BULL_QUEUE_PROCESSOR_DEFAULT_CONCURRENCY,
@@ -19,6 +20,7 @@ import {
   BullQueue,
   BullQueueProcessorOptions,
 } from '../../bull.interfaces';
+import { BullQueueService } from '../bull-queue.service';
 import { BaseExplorerService } from './base-explorer.service';
 
 @InjectableDecorator()
@@ -89,9 +91,11 @@ export class BullQueueProcessorExplorerService extends BaseExplorerService<
   constructor(
     @Inject(BULL_MODULE_OPTIONS)
     readonly options: BullModuleOptions,
+    @Inject(BULL_MODULE_SERVICE)
+    readonly bullService: BullQueueService,
     readonly modulesContainer: ModulesContainer,
     readonly metadataScanner: MetadataScanner,
   ) {
-    super(options, modulesContainer, metadataScanner);
+    super(options, bullService, modulesContainer, metadataScanner);
   }
 }

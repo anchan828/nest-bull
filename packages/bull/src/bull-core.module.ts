@@ -21,9 +21,9 @@ import { BullQueueProcessorExplorerService } from './services/explorers/processo
 })
 export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
   async onModuleInit() {
+    await this.bullService.isReady();
     this.processorExplorer.explore();
     this.eventExplorer.explore();
-    await this.bullService.isReady();
   }
   async onModuleDestroy() {
     await this.bullService.closeAll();
