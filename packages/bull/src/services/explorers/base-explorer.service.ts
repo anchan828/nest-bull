@@ -12,12 +12,12 @@ import {
   BullQueue,
   BullQueueOptions,
 } from '../../bull.interfaces';
-import { BullQueueService } from '../bull-queue.service';
+import { BullService } from '../bull.service';
 
 export abstract class BaseExplorerService<Options> {
   constructor(
     protected readonly options: BullModuleOptions,
-    protected readonly bullService: BullQueueService,
+    protected readonly bullService: BullService,
     protected readonly modulesContainer: ModulesContainer,
     protected readonly metadataScanner: MetadataScanner,
   ) {}

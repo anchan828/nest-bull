@@ -8,7 +8,8 @@ import {
 import { MetadataScanner } from '@nestjs/core/metadata-scanner';
 import { BULL_MODULE_OPTIONS, BULL_MODULE_SERVICE } from './bull.constants';
 import { BullModuleOptions } from './bull.interfaces';
-import { BullQueueService } from './services/bull-queue.service';
+import { BullQueueProviderService } from './services/bull-queue-provider.service';
+import { BullService } from './services/bull.service';
 import { BullQueueEventExplorerService } from './services/explorers/event-explorer.service';
 import { BullQueueProcessorExplorerService } from './services/explorers/processor-explorer.service';
 
@@ -33,12 +34,16 @@ export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
     private readonly processorExplorer: BullQueueProcessorExplorerService,
     private readonly eventExplorer: BullQueueEventExplorerService,
     @Inject(BULL_MODULE_SERVICE)
-    private readonly bullService: BullQueueService,
+    private readonly bullService: BullQueueProviderService,
   ) {}
   public static forRoot(options: BullModuleOptions): DynamicModule {
-    const bullService = new BullQueueService(options);
-    const bullQueueProviders = bullService.createBullQueueProviders();
-    const bullServiceProvider = {
+    const bullService = new BullService();
+    const bullProviderService = new BullQueueProviderService(
+      options,
+      bullService,
+    );
+    const bullQueueProviders = bullProviderService.createBullQueueProviders();
+    const bullQueueServiceProvider = {
       provide: BULL_MODULE_SERVICE,
       useValue: bullService,
     };
@@ -49,10 +54,10 @@ export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
           provide: BULL_MODULE_OPTIONS,
           useValue: options,
         },
-        bullServiceProvider,
+        bullQueueServiceProvider,
         ...bullQueueProviders,
       ],
-      exports: [bullServiceProvider, ...bullQueueProviders],
+      exports: [bullQueueServiceProvider, ...bullQueueProviders],
     };
   }
   // TODO: I don't know how to create bull queue providers by async...

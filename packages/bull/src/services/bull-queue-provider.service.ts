@@ -7,21 +7,20 @@ import { BULL_MODULE, BULL_QUEUE_DECORATOR } from '../bull.constants';
 import {
   BullJob,
   BullModuleOptions,
-  BullName,
   BullQueue,
   BullQueueOptions,
   BullQueueType,
 } from '../bull.interfaces';
 import { getBullQueueToken } from '../bull.utils';
+import { BullService } from './bull.service';
 
 @Injectable()
-export class BullQueueService {
-  private queues: Map<BullName, BullQueue> = new Map<BullName, BullQueue>();
-  constructor(private readonly bullModuleOptions: BullModuleOptions) {}
+export class BullQueueProviderService {
+  constructor(
+    private readonly bullModuleOptions: BullModuleOptions,
+    private readonly bullService: BullService,
+  ) {}
 
-  public getQueue(token: BullName): BullQueue | undefined {
-    return this.queues.get(getBullQueueToken(token));
-  }
   public createBullQueueProviders(): ValueProvider[] {
     const providers: ValueProvider[] = [];
     if (!Array.isArray(this.bullModuleOptions.queues)) {
@@ -39,7 +38,7 @@ export class BullQueueService {
           provide: token,
           useValue: queue,
         });
-        this.queues.set(token, queue);
+        this.bullService.addQueue(token, queue);
       }
     }
     return providers;
@@ -129,14 +128,10 @@ export class BullQueueService {
   }
 
   public async closeAll(): Promise<void> {
-    for (const queue of this.queues.values()) {
-      await queue.close();
-    }
+    await this.bullService.closeAll();
   }
 
   public async isReady(): Promise<void> {
-    for (const queue of this.queues.values()) {
-      await queue.isReady();
-    }
+    await this.bullService.isReady();
   }
 }

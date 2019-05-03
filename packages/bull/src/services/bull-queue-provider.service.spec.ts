@@ -8,11 +8,12 @@ import {
   createTestFile,
   tmpWorkspaceDir,
 } from '../bull.utils.spec';
-import { BullQueueService } from './bull-queue.service';
-describe('BullQueueService', () => {
+import { BullQueueProviderService } from './bull-queue-provider.service';
+import { BullService } from './bull.service';
+describe('BullQueueProviderService', () => {
   const compileService = async (
     options: BullModuleOptions,
-  ): Promise<BullQueueService> => {
+  ): Promise<BullQueueProviderService> => {
     const app = await Test.createTestingModule({
       providers: [
         {
@@ -26,11 +27,11 @@ describe('BullQueueService', () => {
       options,
     );
     await app.close();
-    return new BullQueueService(options);
+    return new BullQueueProviderService(options, new BullService());
   };
 
   it('should be defined', async () => {
-    expect(BullQueueService).toBeDefined();
+    expect(BullQueueProviderService).toBeDefined();
   });
 
   describe('createBullQueueProviders', () => {

@@ -20,7 +20,7 @@ import {
   BullQueue,
   BullQueueProcessorOptions,
 } from '../../bull.interfaces';
-import { BullQueueService } from '../bull-queue.service';
+import { BullService } from '../bull.service';
 import { BaseExplorerService } from './base-explorer.service';
 
 @InjectableDecorator()
@@ -92,7 +92,7 @@ export class BullQueueProcessorExplorerService extends BaseExplorerService<
     @Inject(BULL_MODULE_OPTIONS)
     readonly options: BullModuleOptions,
     @Inject(BULL_MODULE_SERVICE)
-    readonly bullService: BullQueueService,
+    readonly bullService: BullService,
     readonly modulesContainer: ModulesContainer,
     readonly metadataScanner: MetadataScanner,
   ) {

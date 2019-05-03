@@ -4,7 +4,7 @@ import { Job } from 'bull';
 import { BULL_MODULE_SERVICE } from '../bull.constants';
 import { BullQueue, BullQueueProcess } from '../bull.decorator';
 import { BullModule } from '../bull.module';
-import { BullQueueService } from '../services/bull-queue.service';
+import { BullService } from '../services/bull.service';
 
 @BullQueue()
 export class UsingBullQueueServiceExampleBullQueue {
@@ -17,9 +17,7 @@ export class UsingBullQueueServiceExampleBullQueue {
 
 @Injectable()
 export class UsingBullQueueServiceExampleService {
-  constructor(
-    @Inject(BULL_MODULE_SERVICE) public bullService: BullQueueService,
-  ) {}
+  constructor(@Inject(BULL_MODULE_SERVICE) public bullService: BullService) {}
 
   public async addJob() {
     const queue = this.bullService.getQueue(
