@@ -27,6 +27,7 @@ import { BaseExplorerService } from './base-explorer.service';
 export class BullQueueProcessorExplorerService extends BaseExplorerService<
   BullQueueProcessorOptions
 > {
+  private readonly logger = new Logger(BULL_MODULE, true);
   private getExtraProcessorOptions() {
     if (this.options.extra && this.options.extra.defaultProcessorOptions) {
       return this.options.extra.defaultProcessorOptions;
@@ -75,10 +76,8 @@ export class BullQueueProcessorExplorerService extends BaseExplorerService<
       prototype[propertyName].bind(instance),
     );
 
-    Logger.log(
+    this.logger.log(
       `${processorOptions.name} processor on ${bullQueue.name} initialized`,
-      BULL_MODULE,
-      true,
     );
   }
   protected verifyPropertyName(target: any, propertyName: string): boolean {
