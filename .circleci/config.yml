@@ -9,7 +9,7 @@ jobs:
 
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package-lock.json" }}
+            - v1-dependencies-{{ checksum "package-lock.json" }}-{{ checksum "packages/bull/package-lock.json" }}-{{ checksum "packages/terminus/package-lock.json" }}
             - v1-dependencies-
 
       - run: npm i
@@ -18,7 +18,9 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package-lock.json" }}
+            - packages/bull/node_modules
+            - packages/terminus/node_modules
+          key: v1-dependencies-{{ checksum "package-lock.json" }}-{{ checksum "packages/bull/package-lock.json" }}-{{ checksum "packages/terminus/package-lock.json" }}
 
       - run: npm run build
 
