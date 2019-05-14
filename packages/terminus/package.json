@@ -32,7 +32,7 @@
     "@nestjs/platform-express": "6.2.0",
     "@nestjs/terminus": "6.1.4",
     "@nestjs/testing": "6.2.0",
-    "@types/bull": "3.5.13",
+    "@types/bull": "3.5.14",
     "@types/ioredis": "4.0.10",
     "@types/jest": "24.0.13",
     "@types/node": "11.13.10",
