@@ -25,6 +25,7 @@ import { BaseExplorerService } from './base-explorer.service';
 export class BullQueueEventExplorerService extends BaseExplorerService<
   BullQueueEventOptions
 > {
+  private readonly logger = new Logger(BULL_MODULE, true);
   protected onBullQueuePropertyProcess(
     bullQueue: BullQueue,
     instance: Injectable,
@@ -34,11 +35,7 @@ export class BullQueueEventExplorerService extends BaseExplorerService<
     const options = this.getOptions(prototype, propertyName);
     options.eventNames.forEach(eventName => {
       bullQueue.on(eventName, prototype[propertyName].bind(instance));
-      Logger.log(
-        `${eventName} listener on ${bullQueue.name} initialized`,
-        BULL_MODULE,
-        true,
-      );
+      this.logger.log(`${eventName} listener on ${bullQueue.name} initialized`);
     });
   }
   protected verifyPropertyName(target: any, propertyName: string): boolean {
