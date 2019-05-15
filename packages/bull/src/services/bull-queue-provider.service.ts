@@ -16,6 +16,7 @@ import { BullService } from './bull.service';
 
 @Injectable()
 export class BullQueueProviderService {
+  private readonly logger = new Logger(BULL_MODULE, true);
   constructor(
     private readonly bullModuleOptions: BullModuleOptions,
     private readonly bullService: BullService,
@@ -32,7 +33,7 @@ export class BullQueueProviderService {
         const options = this.getBullQueueOptions(target) as BullQueueOptions;
         const queue = this.createQueue(target, options);
         this.createExtraJobEvents(queue, options);
-        Logger.log(`${queue.name} queue initialized`, BULL_MODULE, true);
+        this.logger.log(`${queue.name} queue initialized`);
         const token = getBullQueueToken(options.name!);
         providers.push({
           provide: token,
@@ -49,7 +50,7 @@ export class BullQueueProviderService {
       const client = job.queue.clients[0];
       await client.expire(jobKey, expire);
     } catch (e) {
-      Logger.error(e.message, e.stack, BULL_MODULE, true);
+      this.logger.error(e.message, e.stack);
     }
   }
   private createExtraJobEvents(

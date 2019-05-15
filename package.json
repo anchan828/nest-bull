@@ -1,12 +1,12 @@
 {
   "name": "@anchan828/nest-bull-packages",
   "private": true,
-  "version": "0.3.3",
+  "version": "0.0.0",
   "description": "The [Bull](https://github.com/OptimalBits/bull) module for [Nest](https://github.com/nestjs/nest).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "bootstrap": "lerna bootstrap --hoist",
+    "bootstrap": "lerna bootstrap",
     "build": "lerna run build",
     "test": "lerna run test",
     "publish": "lerna publish --yes patch",
@@ -35,15 +35,15 @@
   },
   "homepage": "https://github.com/anchan828/nest-bull#readme",
   "devDependencies": {
-    "@types/node": "11.13.9",
-    "husky": "2.2.0",
+    "@types/node": "11.13.10",
+    "husky": "2.3.0",
     "lerna": "3.13.4",
-    "lint-staged": "8.1.5",
-    "prettier": "1.17.0",
+    "lint-staged": "8.1.6",
+    "prettier": "1.17.1",
     "ts-node": "8.1.0",
     "tslint": "5.16.0",
     "tslint-config-prettier": "1.18.0",
     "typescript": "3.4.5",
-    "tar": "4.4.2"
+    "tar": "4.4.8"
   }
 }
