@@ -7,7 +7,7 @@ import {
   Provider,
 } from '@nestjs/common';
 import { ClassProvider } from '@nestjs/common/interfaces';
-import { ModulesContainer } from '@nestjs/core';
+// import { ModulesContainer } from '@nestjs/core';
 // import {
 //   CustomValue,
 //   Module as CoreModule,
@@ -65,8 +65,8 @@ export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
     private readonly options: BullModuleOptions,
     @Inject(BULL_MODULE_SERVICE)
     private readonly bullService: BullService,
-    private readonly container: ModulesContainer,
-  ) {}
+  ) // private readonly container: ModulesContainer,
+  {}
   public static forRoot(options: BullModuleOptions): DynamicModule {
     const bullService = new BullService();
     const bullProviderService = new BullQueueProviderService(
