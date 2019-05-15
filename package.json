@@ -1,7 +1,7 @@
 {
   "name": "@anchan828/nest-bull-packages",
   "private": true,
-  "version": "0.3.3",
+  "version": "0.0.0",
   "description": "The [Bull](https://github.com/OptimalBits/bull) module for [Nest](https://github.com/nestjs/nest).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
