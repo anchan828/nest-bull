@@ -59,7 +59,9 @@ export abstract class BaseExplorerService<Options> {
     ) as Array<Map<string, InstanceWrapper<Injectable>>>;
   }
 
-  private hasBullQueueDecorator(metatype: Type<Injectable>): boolean {
+  private hasBullQueueDecorator(
+    metatype: Function | Type<Injectable>,
+  ): boolean {
     return Reflect.hasMetadata(BULL_QUEUE_DECORATOR, metatype);
   }
   protected onBullQueueProcess(
