@@ -15,7 +15,8 @@
     "object-literal-sort-keys": false,
     "max-classes-per-file": false,
     "semicolon": false,
-    "whitespace": false
+    "whitespace": false,
+    "ban-types": false
   },
   "rulesDirectory": []
 }
