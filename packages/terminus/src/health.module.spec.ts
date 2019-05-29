@@ -128,7 +128,11 @@ describe('BullHealthModule', () => {
       return request(app.getHttpServer())
         .get('/health')
         .expect(200)
-        .expect({ status: 'ok', info: { bull: { status: 'up' } } });
+        .expect({
+          status: 'ok',
+          info: { bull: { status: 'up' } },
+          details: { bull: { status: 'up' } },
+        });
     });
 
     it('should return status is down', async () => {
@@ -181,6 +185,7 @@ describe('BullHealthModule', () => {
         .expect({
           status: 'error',
           error: { bull: { status: 'down', message: 'faild' } },
+          details: { bull: { status: 'down', message: 'faild' } },
         });
     });
   });
