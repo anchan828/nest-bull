@@ -34,7 +34,7 @@
     "@types/ioredis": "4.0.11",
     "@types/jest": "24.0.13",
     "@types/node": "11.13.13",
-    "bull": "3.9.1",
+    "bull": "3.10.0",
     "jest": "24.8.0",
     "prettier": "1.17.1",
     "reflect-metadata": "0.1.13",
