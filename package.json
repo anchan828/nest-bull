@@ -36,7 +36,7 @@
   "homepage": "https://github.com/anchan828/nest-bull#readme",
   "devDependencies": {
     "@types/node": "11.13.13",
-    "husky": "2.3.0",
+    "husky": "2.4.0",
     "lerna": "3.14.1",
     "lint-staged": "8.1.7",
     "prettier": "1.17.1",
