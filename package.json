@@ -38,7 +38,7 @@
     "@types/node": "11.13.13",
     "husky": "2.4.0",
     "lerna": "3.14.1",
-    "lint-staged": "8.1.7",
+    "lint-staged": "8.2.0",
     "prettier": "1.17.1",
     "ts-node": "8.2.0",
     "tslint": "5.17.0",
