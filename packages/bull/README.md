@@ -275,7 +275,7 @@ export class Service {
 ```
 
 ```ts
-import { createTestBullProvider } from '@anchan828/nest-bull/testing';
+import { createTestBullProvider } from '@anchan828/nest-bull/dist/testing';
 const app: TestingModule = await Test.createTestingModule({
   providers: [
     Service,
