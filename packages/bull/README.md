@@ -267,21 +267,19 @@ export class Service {
     @BullQueueInject("Queue name")
     private readonly queue: Queue,
   ) {}
+
+  public async someMethod() {
+    await this.queue.add({key: "value"})
+  }
 }
 ```
 
 ```ts
-import { getBullQueueToken } from "@anchan828/nest-bull";
-
+import { createTestBullProvider } from '@anchan828/nest-bull/testing';
 const app: TestingModule = await Test.createTestingModule({
   providers: [
     Service,
-    {
-      provide: getBullQueueToken("Queue name"),
-      useValue: {
-        add: data => data
-      }
-    }
+    createTestBullProvider("Queue name")
   ]
 }).compile();
 ```
