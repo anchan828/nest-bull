@@ -1,1 +1,1 @@
-export { createTestProvider } from './provider';
+export { createTestBullProvider } from './provider';
