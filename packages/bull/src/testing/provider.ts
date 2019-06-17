@@ -3,7 +3,7 @@ import { ClassProvider } from '@nestjs/common/interfaces';
 import { Job, JobOptions } from 'bull';
 import { BullName } from '../bull.interfaces';
 import { getBullQueueToken } from '../bull.utils';
-export const createTestProvider = (name: BullName) => {
+export const createTestBullProvider = (name: BullName) => {
   return {
     provide: getBullQueueToken(name),
     useClass: BullQueueTestProvider,
