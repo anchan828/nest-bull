@@ -253,6 +253,39 @@ export class AppQueue {
   }
 }
 ```
+## Testing
+
+Example for TestingModule
+
+```ts
+import { BullQueueInject } from "@anchan828/nest-bull";
+
+@Injectable()
+export class Service {
+
+  constructor(
+    @BullQueueInject("Queue name")
+    private readonly queue: Queue,
+  ) {}
+}
+```
+
+```ts
+import { getBullQueueToken } from "@anchan828/nest-bull";
+
+const app: TestingModule = await Test.createTestingModule({
+  providers: [
+    Service,
+    {
+      provide: getBullQueueToken("Queue name"),
+      useValue: {
+        add: data => data
+      }
+    }
+  ]
+}).compile();
+```
+
 
 
 ## License
