@@ -24,7 +24,7 @@
   "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/bull#readme",
   "dependencies": {
     "deepmerge": "3.2.1",
-    "fast-glob": "2.2.7"
+    "fast-glob": "3.0.0"
   },
   "devDependencies": {
     "@nestjs/common": "6.2.4",
