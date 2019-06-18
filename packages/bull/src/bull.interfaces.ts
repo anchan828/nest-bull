@@ -24,10 +24,23 @@ export interface BullQueueExtraOptions {
   };
 }
 export type BullQueueType = string | Type<unknown>;
+
+export interface BullQueueMock
+  extends Pick<BullQueue, 'name' | 'add' | 'isReady' | 'close' | 'process'> {
+  on: (listener: string, callback: () => void) => void;
+}
 export interface BullModuleOptions {
   queues: BullQueueType[];
   options?: Bull.QueueOptions;
   extra?: BullQueueExtraOptions;
+
+  /**
+   * Set true if you don't want to create ${@link Queue} object.
+   * If you set to true, module create {@link BullQueueMock} object
+   * @type {boolean}
+   * @memberof BullModuleOptions
+   */
+  mock?: boolean;
 }
 
 export type BullModuleAsyncOptions = {
