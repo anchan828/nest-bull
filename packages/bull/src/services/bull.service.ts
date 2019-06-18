@@ -19,6 +19,7 @@ export class BullService {
     for (const queue of this.queues.values()) {
       await queue.close();
     }
+    this.queues.clear();
   }
 
   public async isReady(): Promise<void> {

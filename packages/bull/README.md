@@ -284,6 +284,20 @@ const app: TestingModule = await Test.createTestingModule({
 }).compile();
 ```
 
+And set `mock: true` if you don't want to create Queue instance.
+BullModule create mock instance instead of Queue.
+
+```ts
+@Module({
+  imports: [
+    BullModule.forRoot({
+      queues: [__filename],
+      mock: true,
+    }),
+  ],
+})
+export class ApplicationModule {}
+```
 
 
 ## License

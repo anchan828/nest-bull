@@ -1,6 +1,6 @@
 {
   "name": "@anchan828/nest-bull",
-  "version": "0.3.13",
+  "version": "0.3.16",
   "description": "The [Bull](https://github.com/OptimalBits/bull) module for [Nest](https://github.com/nestjs/nest).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,7 +24,7 @@
   "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/bull#readme",
   "dependencies": {
     "deepmerge": "3.2.1",
-    "fast-glob": "3.0.0"
+    "fast-glob": "3.0.1"
   },
   "devDependencies": {
     "@nestjs/common": "6.2.4",
