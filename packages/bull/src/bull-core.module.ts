@@ -1,5 +1,6 @@
 import {
   DynamicModule,
+  Global,
   Inject,
   Module,
   OnModuleDestroy,
@@ -24,6 +25,7 @@ import { BullService } from './services/bull.service';
 import { BullQueueEventExplorerService } from './services/explorers/event-explorer.service';
 import { BullQueueProcessorExplorerService } from './services/explorers/processor-explorer.service';
 
+@Global()
 @Module({
   providers: [
     MetadataScanner,
