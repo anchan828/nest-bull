@@ -1,0 +1,59 @@
+import { Injectable, Module } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+import { Job, Queue } from 'bull';
+import {
+  BullQueue,
+  BullQueueInject,
+  BullQueueProcess,
+} from '../bull.decorator';
+import { BullModule } from '../bull.module';
+
+@BullQueue()
+export class MockExampleBullQueue {
+  @BullQueueProcess()
+  public async process(job: Job): Promise<{ status: string }> {
+    return { status: 'not call' };
+  }
+}
+
+@Injectable()
+export class MockExampleService {
+  constructor(
+    @BullQueueInject('MockExampleBullQueue') public readonly queue: Queue,
+  ) {}
+}
+
+@Module({
+  providers: [MockExampleBullQueue, MockExampleService],
+})
+export class MockExampleModule {}
+@Module({
+  imports: [
+    BullModule.forRoot({
+      queues: [__filename],
+      extra: {
+        defaultJobOptions: {
+          setTTLOnComplete: 10,
+        },
+      },
+      mock: true,
+    }),
+    MockExampleModule,
+  ],
+})
+export class ApplicationModule {}
+
+describe('9. Mock Example', () => {
+  it('test', async () => {
+    const app = await Test.createTestingModule({
+      imports: [ApplicationModule],
+    }).compile();
+    await app.init();
+    const service = app.get<MockExampleService>(MockExampleService);
+    expect(service).toBeDefined();
+    expect(service.queue).toBeDefined();
+    const job = await service.queue.add({ data: 'test' });
+    expect(job).toStrictEqual({ data: 'test' });
+    await app.close();
+  });
+});

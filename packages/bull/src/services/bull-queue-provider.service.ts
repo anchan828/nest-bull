@@ -32,6 +32,7 @@ export class BullQueueProviderService {
       for (const target of targets) {
         const options = this.getBullQueueOptions(target) as BullQueueOptions;
         const queue = this.createQueue(target, options);
+
         this.createExtraJobEvents(queue, options);
         this.logger.log(`${queue.name} queue initialized`);
         const token = getBullQueueToken(options.name!);
@@ -84,6 +85,18 @@ export class BullQueueProviderService {
   }
 
   private createQueue(target: any, options: BullQueueOptions): BullQueue {
+    if (this.bullModuleOptions.mock) {
+      return ({
+        name: String(options.name),
+        add: (args: any) => Promise.resolve(args),
+        isReady: () => Promise.resolve(true),
+        close: () => Promise.resolve(),
+        process: () => Promise.resolve(),
+        /* tslint:disable:no-empty */
+        on: () => {},
+      } as any) as BullQueue;
+    }
+
     return new Bull(String(options.name), options.options) as BullQueue;
   }
   private getBullQueueOptions(target: any): BullQueueOptions {

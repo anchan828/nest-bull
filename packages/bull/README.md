@@ -253,7 +253,53 @@ export class AppQueue {
   }
 }
 ```
+## Testing
 
+Example for TestingModule
+
+Set `mock: true` if you don't want to create Queue instance.
+BullModule create mock instance instead of Queue.
+
+```ts
+@Module({
+  imports: [
+    BullModule.forRoot({
+      queues: [__filename],
+      mock: true,
+    }),
+  ],
+})
+export class ApplicationModule {}
+```
+
+Or you can use createTestBullProvider
+
+```ts
+import { BullQueueInject } from "@anchan828/nest-bull";
+
+@Injectable()
+export class Service {
+
+  constructor(
+    @BullQueueInject("Queue name")
+    private readonly queue: Queue,
+  ) {}
+
+  public async someMethod() {
+    await this.queue.add({key: "value"})
+  }
+}
+```
+
+```ts
+import { createTestBullProvider } from '@anchan828/nest-bull/dist/testing';
+const app: TestingModule = await Test.createTestingModule({
+  providers: [
+    Service,
+    createTestBullProvider("Queue name")
+  ]
+}).compile();
+```
 
 ## License
 
