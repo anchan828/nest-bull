@@ -6,7 +6,7 @@ import {
   OnModuleInit,
   Provider,
 } from '@nestjs/common';
-import { ClassProvider } from '@nestjs/common/interfaces';
+import { ClassProvider, FactoryProvider } from '@nestjs/common/interfaces';
 // import { ModulesContainer } from '@nestjs/core';
 // import {
 //   CustomValue,
@@ -65,8 +65,7 @@ export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
     private readonly options: BullModuleOptions,
     @Inject(BULL_MODULE_SERVICE)
     private readonly bullService: BullService,
-  ) // private readonly container: ModulesContainer,
-  {}
+  ) {}
   public static forRoot(options: BullModuleOptions): DynamicModule {
     const bullService = new BullService();
     const bullProviderService = new BullQueueProviderService(
@@ -126,7 +125,7 @@ export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
 
   private static createAsyncOptionsProvider(
     options: BullModuleAsyncOptions,
-  ): Provider {
+  ): FactoryProvider {
     if (options.useFactory) {
       return {
         provide: BULL_MODULE_OPTIONS,
@@ -138,7 +137,7 @@ export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
       provide: BULL_MODULE_OPTIONS,
       useFactory: async (optionsFactory: BullModuleOptionsFactory) =>
         await optionsFactory.createBullModuleOptions(),
-      inject: [options.useClass],
+      inject: options.useClass ? [options.useClass] : [],
     };
   }
 }
