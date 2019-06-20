@@ -54,7 +54,7 @@ export type BullModuleAsyncOptions = {
   /**
    * The providers which should get injected
    */
-  inject?: unknown[];
+  inject?: Array<Type<any> | string | any>;
 } & Pick<ModuleMetadata, 'imports'>;
 
 export interface BullModuleOptionsFactory {

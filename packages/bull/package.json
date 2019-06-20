@@ -1,6 +1,6 @@
 {
   "name": "@anchan828/nest-bull",
-  "version": "0.3.16",
+  "version": "0.3.17",
   "description": "The [Bull](https://github.com/OptimalBits/bull) module for [Nest](https://github.com/nestjs/nest).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -27,9 +27,9 @@
     "fast-glob": "3.0.1"
   },
   "devDependencies": {
-    "@nestjs/common": "6.2.4",
-    "@nestjs/core": "6.2.4",
-    "@nestjs/testing": "6.2.4",
+    "@nestjs/common": "6.3.1",
+    "@nestjs/core": "6.3.1",
+    "@nestjs/testing": "6.3.1",
     "@types/bull": "3.5.14",
     "@types/ioredis": "4.0.12",
     "@types/jest": "24.0.15",
