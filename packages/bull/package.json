@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/bull#readme",
   "dependencies": {
-    "deepmerge": "3.2.1",
+    "deepmerge": "3.3.0",
     "fast-glob": "3.0.1"
   },
   "devDependencies": {
