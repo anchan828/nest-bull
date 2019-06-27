@@ -30,7 +30,7 @@
     "@nestjs/common": "6.3.2",
     "@nestjs/core": "6.3.2",
     "@nestjs/testing": "6.3.2",
-    "@types/bull": "3.5.14",
+    "@types/bull": "3.5.15",
     "@types/ioredis": "4.0.12",
     "@types/jest": "24.0.15",
     "@types/node": "11.13.15",
