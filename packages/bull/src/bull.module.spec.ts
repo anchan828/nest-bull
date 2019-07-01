@@ -101,6 +101,7 @@ describe('BullModule', () => {
         extra: {
           defaultProcessorOptions: {
             concurrency: 2,
+            skip: true
           },
         },
       })
@@ -135,6 +136,7 @@ describe('BullModule', () => {
         extra: {
           defaultProcessorOptions: {
             concurrency: 2,
+            skip: true,
           },
         },
       });

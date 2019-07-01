@@ -48,6 +48,7 @@ export class BullQueueProcessorExplorerService extends BaseExplorerService<
         name: propertyName,
         concurrency: BULL_QUEUE_PROCESSOR_DEFAULT_CONCURRENCY,
         isCustomProcessorName: options && options.name,
+        skip: options && options.skip,
       },
       this.getExtraProcessorOptions() || {},
       Reflect.getMetadata(
@@ -65,6 +66,11 @@ export class BullQueueProcessorExplorerService extends BaseExplorerService<
     allPropertyNames: string[],
   ): void {
     const processorOptions = this.getOptions(prototype, propertyName);
+
+    if (processorOptions.skip) {
+      return;
+    }
+
     const processorName =
       allPropertyNames.length === 1 && !processorOptions.isCustomProcessorName
         ? BULL_QUEUE_DEFAULT_PROCESSOR_NAME
