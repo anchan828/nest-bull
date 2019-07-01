@@ -10,6 +10,11 @@ export interface BullQueueExtraOptions {
      * Bull will then call your handler in parallel respecting this maximum value.
      */
     concurrency?: number;
+
+    /**
+     * Skip call this processor if true.
+     */
+    skip?: boolean;
   };
 
   defaultJobOptions?: {
@@ -73,6 +78,11 @@ export interface BullQueueOptions extends BaseBullQueueOptions {
 export interface BullQueueProcessorOptions extends BaseBullQueueOptions {
   name?: string;
   concurrency?: number;
+
+  /**
+   * Skip call this processor if true.
+   */
+  skip?: boolean;
   isCustomProcessorName?: boolean;
 }
 
