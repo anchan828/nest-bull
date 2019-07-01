@@ -45,7 +45,7 @@ export class AsyncBasicExampleModule {}
 })
 export class ApplicationModule {}
 
-describe('1. Basic Example', () => {
+describe('8. Async Basic Example', () => {
   it('test', async () => {
     const app = await Test.createTestingModule({
       imports: [ApplicationModule],
