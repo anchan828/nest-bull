@@ -39,7 +39,7 @@
     "prettier": "1.18.2",
     "reflect-metadata": "0.1.13",
     "ts-jest": "24.0.2",
-    "typescript": "3.5.2",
+    "typescript": "3.5.3",
     "ulid": "2.3.0"
   }
 }
