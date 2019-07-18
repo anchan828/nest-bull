@@ -27,9 +27,9 @@
     "fast-glob": "3.0.4"
   },
   "devDependencies": {
-    "@nestjs/common": "6.5.2",
-    "@nestjs/core": "6.5.2",
-    "@nestjs/testing": "6.5.2",
+    "@nestjs/common": "6.5.3",
+    "@nestjs/core": "6.5.3",
+    "@nestjs/testing": "6.5.3",
     "@types/bull": "3.10.0",
     "@types/ioredis": "4.0.13",
     "@types/jest": "24.0.15",
