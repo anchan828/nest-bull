@@ -32,7 +32,7 @@
     "@nestjs/testing": "6.5.3",
     "@types/bull": "3.10.1",
     "@types/ioredis": "4.0.13",
-    "@types/jest": "24.0.15",
+    "@types/jest": "24.0.16",
     "@types/node": "11.13.18",
     "bull": "3.10.0",
     "jest": "24.8.0",
