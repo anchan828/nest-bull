@@ -35,7 +35,7 @@
     "@types/bull": "3.10.2",
     "@types/ioredis": "4.0.13",
     "@types/jest": "24.0.17",
-    "@types/node": "11.13.18",
+    "@types/node": "11.13.19",
     "@types/supertest": "2.0.8",
     "bull": "3.10.0",
     "jest": "24.8.0",
