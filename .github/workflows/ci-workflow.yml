@@ -7,8 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: node:lts
-      env:
-        REDIS_HOST: ${{ jobs.services.redis.ports['6379'] }}
     services: 
       redis:
         image: redis
@@ -19,7 +17,8 @@ jobs:
         with:
           fetch-depth: 1
       - name: check host
-        run: echo $REDIS_HOST
+        run: ping -c 10 redis
+        
       # - name: Install npm packages
       #   run: npm ci
       # - name: Bootstrap monorepo packages
