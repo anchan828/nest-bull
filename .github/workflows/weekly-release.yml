@@ -2,7 +2,7 @@ name: Weekly Release
 
 on:
   schedule:
-    - cron: "20 11 * * 3"
+    - cron: "25 11 * * 3"
       branches:
         - master
 
@@ -13,8 +13,8 @@ jobs:
       image: node:lts
     steps:
       - uses: actions/checkout@master
-        with:
-          ref: refs/heads/master
+      - name: Checkout master
+        run: git checkout master
       - name: Install npm packages
         run: npm ci
       - name: Bootstrap monorepo packages
