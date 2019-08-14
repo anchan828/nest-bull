@@ -9,8 +9,6 @@ jobs:
       image: node:lts
       env:
         REDIS_HOST: redis
-        GIT_COMMIT_SHA: ${GITHUB_SHA}
-        GIT_BRANCH: ${GITHUB_REF}
     services: 
       redis:
         image: redis
