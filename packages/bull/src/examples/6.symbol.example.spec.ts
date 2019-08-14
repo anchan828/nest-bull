@@ -7,6 +7,7 @@ import {
   BullQueueProcess,
 } from '../bull.decorator';
 import { BullModule } from '../bull.module';
+import { REDIS_HOST } from '../bull.utils.spec';
 
 const QUEUE_NAME = Symbol('QUEUE_NAME');
 
@@ -39,6 +40,11 @@ export class SymbolExampleModule {}
   imports: [
     BullModule.forRoot({
       queues: [__filename],
+      options: {
+        redis: {
+          host: REDIS_HOST,
+        },
+      },
     }),
     SymbolExampleModule,
   ],

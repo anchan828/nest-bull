@@ -4,6 +4,7 @@ import { Job } from 'bull';
 import { BULL_MODULE_SERVICE } from '../bull.constants';
 import { BullQueue, BullQueueProcess } from '../bull.decorator';
 import { BullModule } from '../bull.module';
+import { REDIS_HOST } from '../bull.utils.spec';
 import { BullService } from '../services/bull.service';
 
 @BullQueue()
@@ -39,6 +40,11 @@ export class UsingBullQueueServiceExampleModule {}
   imports: [
     BullModule.forRoot({
       queues: [__filename],
+      options: {
+        redis: {
+          host: REDIS_HOST,
+        },
+      },
     }),
     UsingBullQueueServiceExampleModule,
   ],

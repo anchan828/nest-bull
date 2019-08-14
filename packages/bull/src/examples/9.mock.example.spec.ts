@@ -7,6 +7,7 @@ import {
   BullQueueProcess,
 } from '../bull.decorator';
 import { BullModule } from '../bull.module';
+import { REDIS_HOST } from '../bull.utils.spec';
 
 @BullQueue()
 export class MockExampleBullQueue {
@@ -31,6 +32,11 @@ export class MockExampleModule {}
   imports: [
     BullModule.forRoot({
       queues: [__filename],
+      options: {
+        redis: {
+          host: REDIS_HOST,
+        },
+      },
       extra: {
         defaultJobOptions: {
           setTTLOnComplete: 10,

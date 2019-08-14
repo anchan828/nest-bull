@@ -9,6 +9,7 @@ import {
 } from '../bull.decorator';
 import { BullJob } from '../bull.interfaces';
 import { BullModule } from '../bull.module';
+import { REDIS_HOST } from '../bull.utils.spec';
 
 @BullQueue({
   extra: {
@@ -50,6 +51,11 @@ export class ExtraJobOptionsModule {}
   imports: [
     BullModule.forRoot({
       queues: [__filename],
+      options: {
+        redis: {
+          host: REDIS_HOST,
+        },
+      },
       extra: {
         defaultJobOptions: {
           setTTLOnFail: 10,
