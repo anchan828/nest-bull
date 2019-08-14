@@ -2,9 +2,9 @@ name: Weekly Release
 
 on:
   schedule:
-    - cron: "45 9 * * 3"
+    - cron: "0 10 * * 3"
       branches:
-        - schedule-test
+        - master
 
 jobs:
   publish:
