@@ -18,7 +18,7 @@ jobs:
         with:
           version: 11.x
       - name: Install npm packages
-        run: npm install
+        run: npm ci
       - name: Bootstrap monorepo packages
         run: npm run bootstrap
       - name: Test monorepo packages
