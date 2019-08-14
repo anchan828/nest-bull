@@ -26,7 +26,9 @@ jobs:
           echo "//registry.npmjs.org/:_authtoken=$NPM_TOKEN" >> ~/.npmrc
           git config --global user.email "anchan828@gmail.com"
           git config --global user.name "anchan828"
+          git remote set-url origin https://$GITHUB_TOKEN:x-oauth-basic@github.com/$REPOSITORY.git
           npm run publish
         env:
+          REPOSITORY: anchan828/nest-bull
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
