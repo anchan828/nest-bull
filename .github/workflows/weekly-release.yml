@@ -2,7 +2,7 @@ name: Weekly Release
 
 on:
   schedule:
-    - cron: "30 10 * * 3"
+    - cron: "40 10 * * 3"
       branches:
         - master
 
@@ -22,6 +22,9 @@ jobs:
           npm run bootstrap
           npm run build
       - name: Publish monorepo packages
-        run: npm run publish
+        run: |
+          echo "//registry.npmjs.org/:_authtoken=$NPM_TOKEN" >> ~/.npmrc
+          npm run publish
         env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
