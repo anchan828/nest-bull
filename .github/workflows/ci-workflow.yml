@@ -3,15 +3,24 @@ name: Node CI
 on: [push]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+    container:
+      image: node:lts
+    services: 
+      redis:
+        image: redis
+        ports: 
+          - "6379:6379"
     steps:
       - uses: actions/checkout@master
-      - name: Use Node.js 11.x
-        uses: actions/setup-node@v1
         with:
-          version: 11.x
+          fetch-depth: 1
       - name: Install npm packages
         run: npm install
       - name: Bootstrap monorepo packages
         run: npm run bootstrap
+      - name: Test monorepo packages
+        run: npm test
+
+      
