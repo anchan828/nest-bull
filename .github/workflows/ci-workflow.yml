@@ -9,6 +9,9 @@ jobs:
       image: node:lts
       env:
         REDIS_HOST: redis
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        GIT_COMMIT_SHA: ${GITHUB_SHA}
+        GIT_BRANCH: ${GITHUB_REF}
     services: 
       redis:
         image: redis
@@ -24,7 +27,16 @@ jobs:
         run: |
           npm run bootstrap
           npm run build
+      - name: Setup cc-test-reporter
+        run: |
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          ./cc-test-reporter before-build
       - name: Test monorepo packages
-        run: npm test
+        run: | 
+          npm test
+          npx ts-node scripts/merge-coverage.ts
+      - name: Report coverage
+        run: ./cc-test-reporter after-build --coverage-input-type lcov
 
       
