@@ -16,7 +16,7 @@ jobs:
           echo "//registry.npmjs.org/:_authtoken=$NPM_TOKEN" >> ~/.npmrc
           git config --global user.email "anchan828@gmail.com"
           git config --global user.name "anchan828"
-          git remote set-url origin "https://anchan828:${PERSONAL_GITHUB_TOKEN}@github.com/${REPOSITORY}.git"
+          git remote set-url origin "https://anchan828:${GITHUB_TOKEN}@github.com/${REPOSITORY}.git"
           git tag test
           git push origin test
         env:
