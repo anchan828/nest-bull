@@ -11,7 +11,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           version: 11.x
-      - name: npm install, build, and test
-        run: |
-          npm install
-          npm run bootstrap
+      - name: Install npm packages
+        run: npm install
+      - name: Bootstrap monorepo packages
+        run: npm run bootstrap
