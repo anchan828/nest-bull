@@ -7,6 +7,7 @@ import {
   BullQueueProcess,
 } from '../bull.decorator';
 import { BullModule } from '../bull.module';
+import { REDIS_HOST } from '../bull.utils.spec';
 
 @BullQueue()
 export class MultipleProcessorExampleBullQueue {
@@ -50,6 +51,11 @@ export class MultipleProcessorExampleModule {}
   imports: [
     BullModule.forRoot({
       queues: [__filename],
+      options: {
+        redis: {
+          host: REDIS_HOST,
+        },
+      },
     }),
     MultipleProcessorExampleModule,
   ],

@@ -1,0 +1,27 @@
+name: Weekly Release
+
+on:
+  schedule:
+    - cron: "0 3 * * 0"
+      branches:
+        - master
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    container:
+      image: node:lts
+    steps:
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+      - name: Install npm packages
+        run: npm ci
+      - name: Bootstrap monorepo packages
+        run: |
+          npm run bootstrap
+          npm run build
+      - name: Publish monorepo packages
+        run: npm run publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
