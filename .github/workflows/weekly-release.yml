@@ -2,7 +2,7 @@ name: Weekly Release
 
 on:
   schedule:
-    - cron: "10 11 * * 3"
+    - cron: "15 11 * * 3"
       branches:
         - master
 
@@ -13,8 +13,8 @@ jobs:
       image: node:lts
     steps:
       - uses: actions/checkout@master
-      - name: Checkout master
-        run: git checkout master
+        with:
+          ref: $GITHUB_REF
       - name: Install npm packages
         run: npm ci
       - name: Bootstrap monorepo packages
@@ -24,6 +24,8 @@ jobs:
       - name: Publish monorepo packages
         run: |
           echo "//registry.npmjs.org/:_authtoken=$NPM_TOKEN" >> ~/.npmrc
+          git config --global user.email "anchan828@gmail.com"
+          git config --global user.name "Keigo Ando"
           npm run publish
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
