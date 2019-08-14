@@ -2,7 +2,7 @@ name: Weekly Release
 
 on:
   schedule:
-    - cron: "37 9 * * 3"
+    - cron: "45 9 * * 3"
       branches:
         - schedule-test
 
