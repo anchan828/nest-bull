@@ -22,4 +22,4 @@ jobs:
         env:
           REPOSITORY: anchan828/nest-bull
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          PERSONAL_GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
