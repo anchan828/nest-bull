@@ -9,7 +9,6 @@ jobs:
       image: node:lts
       env:
         REDIS_HOST: redis
-        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         GIT_COMMIT_SHA: ${GITHUB_SHA}
         GIT_BRANCH: ${GITHUB_REF}
     services: 
