@@ -36,6 +36,6 @@ jobs:
           npm test
           npx ts-node scripts/merge-coverage.ts
       - name: Report coverage
-        run: ./cc-test-reporter after-build --coverage-input-type lcov
+        run: ./cc-test-reporter after-build -r ${{ secrets.CC_TEST_REPORTER_ID }} --coverage-input-type lcov
 
       
