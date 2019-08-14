@@ -11,7 +11,7 @@ jobs:
       redis:
         image: redis
         ports: 
-          - "6379:6379"
+          - 6379/tcp
     steps:
       - uses: actions/checkout@master
         with:
