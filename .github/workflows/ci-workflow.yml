@@ -21,12 +21,10 @@ jobs:
       - name: Install npm packages
         run: npm ci
       - name: Bootstrap monorepo packages
-        run: npm run bootstrap
-      - name: Check
         run: |
-          ls -la packages/terminus/node_modules/@anchan828/
-          ls -la packages/terminus/node_modules/@anchan828/nest-bull
-      # - name: Test monorepo packages
-      #   run: npm test
+          npm run bootstrap
+          npm run build
+      - name: Test monorepo packages
+        run: npm test
 
       
