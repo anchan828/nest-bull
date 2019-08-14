@@ -1,11 +1,15 @@
 {
-  "packages": ["packages/*"],
+  "packages": [
+    "packages/*"
+  ],
   "command": {
     "publish": {
-      "ignoreChanges": ["dist/**/*"],
+      "ignoreChanges": [
+        "dist/**/*"
+      ],
       "message": "chore(release): publish",
       "conventionalCommits": true
     }
   },
-  "version": "0.3.20"
+  "version": "0.3.21"
 }
