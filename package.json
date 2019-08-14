@@ -44,6 +44,8 @@
     "tslint": "5.18.0",
     "tslint-config-prettier": "1.18.0",
     "typescript": "3.5.3",
-    "tar": "4.4.10"
+    "tar": "4.4.10",
+    "@commitlint/cli": "8.1.0",
+    "@commitlint/config-conventional": "8.1.0"
   }
 }
