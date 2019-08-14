@@ -5,6 +5,10 @@ on: [push]
 jobs:
   test:
     runs-on: ubuntu-latest
+    container:
+      image: node:lts
+      env:
+        REDIS_HOST: ${{ jobs.services.redis.ports['6379'] }}
     services: 
       redis:
         image: redis
@@ -14,14 +18,13 @@ jobs:
       - uses: actions/checkout@master
         with:
           fetch-depth: 1
-      - uses: actions/setup-node@v1
-        with:
-          version: 11.x
-      - name: Install npm packages
-        run: npm ci
-      - name: Bootstrap monorepo packages
-        run: npm run bootstrap
-      - name: Test monorepo packages
-        run: npm test
+      - name: check host
+        run: echo $REDIS_HOST
+      # - name: Install npm packages
+      #   run: npm ci
+      # - name: Bootstrap monorepo packages
+      #   run: npm run bootstrap
+      # - name: Test monorepo packages
+      #   run: npm test
 
       
