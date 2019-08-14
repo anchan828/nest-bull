@@ -13,8 +13,8 @@ jobs:
       image: node:lts
     steps:
       - uses: actions/checkout@master
-        with:
-          ref: master
+      - name: Checkout master
+        run: git checkout master
       - name: Install npm packages
         run: npm ci
       - name: Bootstrap monorepo packages
