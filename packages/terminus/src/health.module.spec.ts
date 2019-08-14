@@ -7,6 +7,8 @@ import * as request from 'supertest';
 import { BullHealthCheckQueue, BullHealthIndicator } from './bull.health';
 import { QUEUE_NAME } from './constants';
 import { BullHealthModule } from './health.module';
+
+const REDIS_HOST = process.env.REDIS_HOST;
 describe('BullHealthModule', () => {
   it('should compile module', async () => {
     await expect(
@@ -14,6 +16,11 @@ describe('BullHealthModule', () => {
         imports: [
           BullModule.forRoot({
             queues: [BullHealthCheckQueue],
+            options: {
+              redis: {
+                host: REDIS_HOST,
+              },
+            },
           }),
           BullHealthModule,
         ],
@@ -48,6 +55,11 @@ describe('BullHealthModule', () => {
         imports: [
           BullModule.forRoot({
             queues: [BullHealthCheckQueue],
+            options: {
+              redis: {
+                host: REDIS_HOST,
+              },
+            },
           }),
           HealthModule,
         ],
@@ -82,6 +94,11 @@ describe('BullHealthModule', () => {
         imports: [
           BullModule.forRoot({
             queues: [BullHealthCheckQueue],
+            options: {
+              redis: {
+                host: REDIS_HOST,
+              },
+            },
           }),
           HealthModule,
         ],
@@ -118,6 +135,11 @@ describe('BullHealthModule', () => {
         imports: [
           BullModule.forRoot({
             queues: [BullHealthCheckQueue],
+            options: {
+              redis: {
+                host: REDIS_HOST,
+              },
+            },
           }),
           HealthModule,
         ],
@@ -161,6 +183,11 @@ describe('BullHealthModule', () => {
         imports: [
           BullModule.forRoot({
             queues: [BullHealthCheckQueue],
+            options: {
+              redis: {
+                host: REDIS_HOST,
+              },
+            },
           }),
           HealthModule,
         ],
