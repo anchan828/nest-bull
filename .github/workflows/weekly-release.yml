@@ -2,7 +2,7 @@ name: Weekly Release
 
 on:
   schedule:
-    - cron: "47 12 * * 3"
+    - cron: "10 13 * * 3"
       branches:
         - master
 
@@ -23,12 +23,13 @@ jobs:
           npm run build
       - name: Publish monorepo packages
         run: |
-          echo "//registry.npmjs.org/:_authtoken=$NPM_TOKEN" >> ~/.npmrc
-          git config --global user.email "anchan828@gmail.com"
-          git config --global user.name "anchan828"
-          git remote set-url origin "https://anchan828:${GITHUB_TOKEN}@github.com/${REPOSITORY}.git"
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+          git config --global user.email "${USERNAME}@gmail.com"
+          git config --global user.name "${USERNAME}"
+          git remote set-url origin "https://${USERNAME}:${GITHUB_TOKEN}@github.com/${USERNAME}/${REPOSITORY}.git"
           npm run publish
         env:
-          REPOSITORY: anchan828/nest-bull
+          USERNAME: anchan828
+          REPOSITORY: nest-bull
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
