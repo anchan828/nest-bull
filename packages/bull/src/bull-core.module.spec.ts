@@ -1,16 +1,16 @@
-import { Injectable, Module } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
-import { BullCoreModule } from './bull-core.module';
-import { BULL_MODULE_OPTIONS } from './bull.constants';
-import { BullModuleOptions, BullModuleOptionsFactory } from './bull.interfaces';
-describe('Bull', () => {
-  describe('forRoot', () => {
-    it('should compile', async () => {
+import { Injectable, Module } from "@nestjs/common";
+import { Test } from "@nestjs/testing";
+import { BullCoreModule } from "./bull-core.module";
+import { BULL_MODULE_OPTIONS } from "./bull.constants";
+import { BullModuleOptions, BullModuleOptionsFactory } from "./bull.interfaces";
+describe("Bull", () => {
+  describe("forRoot", () => {
+    it("should compile", async () => {
       await expect(
         Test.createTestingModule({
           imports: [
             BullCoreModule.forRoot({
-              queues: ['test'],
+              queues: ["test"],
             }),
           ],
         }).compile(),
@@ -18,13 +18,13 @@ describe('Bull', () => {
     });
   });
 
-  describe('forRootAsync', () => {
-    it('should compile using useClass', async () => {
+  describe("forRootAsync", () => {
+    it("should compile using useClass", async () => {
       @Injectable()
       class TestBullModuleOptionsFactory implements BullModuleOptionsFactory {
         createBullModuleOptions(): BullModuleOptions {
           return {
-            queues: ['test'],
+            queues: ["test"],
           };
         }
       }
@@ -38,31 +38,31 @@ describe('Bull', () => {
       }).compile();
       expect(app).toBeDefined();
       expect(app.get<BullModuleOptions>(BULL_MODULE_OPTIONS)).toStrictEqual({
-        queues: ['test'],
+        queues: ["test"],
       });
       await app.close();
     });
 
-    it('should compile using useFactory', async () => {
+    it("should compile using useFactory", async () => {
       const app = await Test.createTestingModule({
         imports: [
           BullCoreModule.forRootAsync({
             imports: [],
-            useFactory: () => ({ queues: ['test'] }),
+            useFactory: () => ({ queues: ["test"] }),
           }),
         ],
       }).compile();
       expect(app).toBeDefined();
       expect(app.get<BullModuleOptions>(BULL_MODULE_OPTIONS)).toStrictEqual({
-        queues: ['test'],
+        queues: ["test"],
       });
       await app.close();
     });
 
-    it('should compile using imports and inject', async () => {
+    it("should compile using imports and inject", async () => {
       @Injectable()
       class TestEnv {
-        test: string = 'test';
+        test = "test";
       }
       @Module({
         providers: [TestEnv],
@@ -75,14 +75,13 @@ describe('Bull', () => {
           BullCoreModule.forRootAsync({
             imports: [TestModule],
             inject: [TestEnv],
-            useFactory: (env: any) =>
-              ({ queues: [env.test] } as BullModuleOptions),
+            useFactory: (env: any) => ({ queues: [env.test] } as BullModuleOptions),
           }),
         ],
       }).compile();
       expect(app).toBeDefined();
       expect(app.get<BullModuleOptions>(BULL_MODULE_OPTIONS)).toStrictEqual({
-        queues: ['test'],
+        queues: ["test"],
       });
       await app.close();
     });

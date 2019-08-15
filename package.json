@@ -6,23 +6,16 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "postinstall": "npm run bootstrap && npm run build",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build",
-    "test": "lerna run test",
+    "format": "prettier --write '**/*.{js,json,yml,yaml,md}'",
+    "lint": "eslint --ignore-pattern packages '**/*.ts' && lerna run --parallel lint",
+    "lint:fix": "eslint --ignore-pattern packages --fix '**/*.ts' && lerna run --parallel lint:fix",
     "publish": "lerna publish --yes patch",
     "publish:minor": "lerna publish --yes minor",
-    "publish:major": "lerna publish --yes major"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.ts": [
-      "prettier --write",
-      "git add"
-    ]
+    "publish:major": "lerna publish --yes major",
+    "test": "lerna run test"
   },
   "repository": {
     "type": "git",
@@ -35,17 +28,31 @@
   },
   "homepage": "https://github.com/anchan828/nest-bull#readme",
   "devDependencies": {
+    "@commitlint/cli": "8.1.0",
+    "@commitlint/config-conventional": "8.1.0",
+    "@nestjs/common": "6.5.3",
+    "@nestjs/core": "6.5.3",
+    "@nestjs/platform-express": "6.5.3",
+    "@nestjs/testing": "6.5.3",
+    "@types/bull": "3.10.2",
+    "@types/ioredis": "4.0.14",
+    "@types/jest": "24.0.17",
     "@types/node": "11.13.19",
+    "@typescript-eslint/eslint-plugin": "2.0.0",
+    "@typescript-eslint/parser": "2.0.0",
+    "bull": "3.10.0",
+    "eslint": "6.1.0",
+    "eslint-config-prettier": "6.0.0",
+    "eslint-plugin-prettier": "3.1.0",
     "husky": "3.0.3",
+    "jest": "24.8.0",
     "lerna": "3.16.4",
     "lint-staged": "9.2.1",
     "prettier": "1.18.2",
+    "reflect-metadata": "0.1.13",
+    "ts-jest": "24.0.2",
     "ts-node": "8.3.0",
-    "tslint": "5.18.0",
-    "tslint-config-prettier": "1.18.0",
     "typescript": "3.5.3",
-    "tar": "4.4.10",
-    "@commitlint/cli": "8.1.0",
-    "@commitlint/config-conventional": "8.1.0"
+    "ulid": "2.3.0"
   }
 }

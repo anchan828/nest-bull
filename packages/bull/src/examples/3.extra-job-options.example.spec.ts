@@ -1,15 +1,11 @@
-import { Injectable, Module } from '@nestjs/common';
-import { ModuleMetadata } from '@nestjs/common/interfaces';
-import { Test } from '@nestjs/testing';
-import { Job, Queue } from 'bull';
-import {
-  BullQueue,
-  BullQueueInject,
-  BullQueueProcess,
-} from '../bull.decorator';
-import { BullJob } from '../bull.interfaces';
-import { BullModule } from '../bull.module';
-import { REDIS_HOST } from '../bull.utils.spec';
+import { Injectable, Module } from "@nestjs/common";
+import { ModuleMetadata } from "@nestjs/common/interfaces";
+import { Test, TestingModule } from "@nestjs/testing";
+import { Job, Queue } from "bull";
+import { BullQueue, BullQueueInject, BullQueueProcess } from "../bull.decorator";
+import { BullJob } from "../bull.interfaces";
+import { BullModule } from "../bull.module";
+import { REDIS_HOST } from "../bull.utils.spec";
 
 @BullQueue({
   extra: {
@@ -19,25 +15,26 @@ import { REDIS_HOST } from '../bull.utils.spec';
   },
 })
 export class ExtraJobOptionsBullQueue {
-  public called: boolean = false;
+  public called = false;
+
   @BullQueueProcess()
   public async process(job: Job): Promise<{ status: string }> {
     const { throwError } = job.data;
     if (throwError) {
-      throw new Error('error');
+      throw new Error("error");
     }
-    return { status: 'ok' };
+    return { status: "ok" };
   }
 }
 
 @Injectable()
 export class ExtraJobOptionsService {
   constructor(
-    @BullQueueInject('ExtraJobOptionsBullQueue')
+    @BullQueueInject("ExtraJobOptionsBullQueue")
     public readonly queue: Queue,
   ) {}
 
-  public async addJob(throwError: boolean) {
+  public async addJob(throwError: boolean): Promise<Job<any>> {
     return this.queue.add({ throwError });
   }
 }
@@ -70,15 +67,15 @@ export class ExtraJobOptionsModule {}
 })
 export class ApplicationModule {}
 
-describe('3. Extra Job Options', () => {
-  const compileModule = async (metadata: ModuleMetadata) => {
+describe("3. Extra Job Options", () => {
+  const compileModule = async (metadata: ModuleMetadata): Promise<TestingModule> => {
     return Test.createTestingModule(metadata).compile();
   };
-  const getTTL = async (job: BullJob) => {
+  const getTTL = async (job: BullJob): Promise<number> => {
     return job.queue.clients[0].ttl(`${job.toKey()}${job.id}`);
   };
 
-  it('should set ttl to 10', async () => {
+  it("should set ttl to 10", async () => {
     const app = await compileModule({
       imports: [ApplicationModule],
     });
@@ -87,15 +84,12 @@ describe('3. Extra Job Options', () => {
     const completedJob = (await service.addJob(false)) as BullJob;
     const failedJob = (await service.addJob(true)) as BullJob;
     await expect(completedJob.finished()).resolves.toStrictEqual({
-      status: 'ok',
+      status: "ok",
     });
-    await expect(failedJob.finished()).rejects.toThrowError('error');
-    await new Promise(resolve => {
-      const interval = setInterval(async () => {
-        if (
-          (await getTTL(completedJob)) !== -1 &&
-          (await getTTL(failedJob)) !== -1
-        ) {
+    await expect(failedJob.finished()).rejects.toThrowError("error");
+    await new Promise((resolve): void => {
+      const interval = setInterval(async (): Promise<void> => {
+        if ((await getTTL(completedJob)) !== -1 && (await getTTL(failedJob)) !== -1) {
           clearInterval(interval);
           resolve();
         }

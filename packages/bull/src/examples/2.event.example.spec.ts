@@ -1,25 +1,22 @@
-import { Injectable, Module } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
-import { Job, Queue } from 'bull';
-import {
-  BullQueue,
-  BullQueueEventCompleted,
-  BullQueueInject,
-  BullQueueProcess,
-} from '../bull.decorator';
-import { BullModule } from '../bull.module';
-import { REDIS_HOST } from '../bull.utils.spec';
+import { Injectable, Module } from "@nestjs/common";
+import { Test } from "@nestjs/testing";
+import { Job, Queue } from "bull";
+import { BullQueue, BullQueueEventCompleted, BullQueueInject, BullQueueProcess } from "../bull.decorator";
+import { BullModule } from "../bull.module";
+import { REDIS_HOST, wait } from "../bull.utils.spec";
 
 @BullQueue()
 export class EventExampleBullQueue {
-  public called: boolean = false;
+  public called = false;
+
   @BullQueueProcess()
   public async process(job: Job): Promise<{ status: string }> {
-    expect(job.data).toStrictEqual({ test: 'test' });
-    return { status: 'ok' };
+    expect(job.data).toStrictEqual({ test: "test" });
+    return { status: "ok" };
   }
+
   @BullQueueEventCompleted()
-  public completed(job: Job): void {
+  public completed(): void {
     this.called = true;
   }
 }
@@ -27,12 +24,12 @@ export class EventExampleBullQueue {
 @Injectable()
 export class EventExampleService {
   constructor(
-    @BullQueueInject('EventExampleBullQueue')
+    @BullQueueInject("EventExampleBullQueue")
     public readonly queue: Queue,
   ) {}
 
-  public async addJob() {
-    return this.queue.add({ test: 'test' });
+  public async addJob(): Promise<Job<any>> {
+    return this.queue.add({ test: "test" });
   }
 }
 
@@ -56,8 +53,8 @@ export class EventExampleModule {}
 })
 export class ApplicationModule {}
 
-describe('2. Event Example', () => {
-  it('test', async () => {
+describe("2. Event Example", () => {
+  it("test", async () => {
     const app = await Test.createTestingModule({
       imports: [ApplicationModule],
     }).compile();
@@ -70,8 +67,8 @@ describe('2. Event Example', () => {
     expect(service).toBeDefined();
     expect(service.queue).toBeDefined();
     const job = await service.addJob();
-    await expect(job.finished()).resolves.toStrictEqual({ status: 'ok' });
-    await new Promise(resolve => setTimeout(() => resolve(), 100));
+    await expect(job.finished()).resolves.toStrictEqual({ status: "ok" });
+    await wait(100);
     expect(queueClass.called).toBeTruthy();
     await app.close();
   });

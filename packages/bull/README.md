@@ -21,19 +21,19 @@ $ npm i --save-dev @types/bull
 ### Importing BullModule and Queue component
 
 ```ts
-import { BullModule } from '@anchan828/nest-bull';
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppQueue } from './app.queue';
-import { AppService } from './app.service';
+import { BullModule } from "@anchan828/nest-bull";
+import { Module } from "@nestjs/common";
+import { AppController } from "./app.controller";
+import { AppQueue } from "./app.queue";
+import { AppService } from "./app.service";
 
 @Module({
   imports: [
     BullModule.forRoot({
-      queues: [__dirname + '/**/*.queue{.ts,.js}'],
+      queues: [__dirname + "/**/*.queue{.ts,.js}"],
       options: {
         redis: {
-          host: '127.0.0.1',
+          host: "127.0.0.1",
         },
       },
     }),
@@ -44,14 +44,13 @@ import { AppService } from './app.service';
 export class AppModule {}
 ```
 
-
 ### Creating queue class
 
 ```ts
-import { BullQueue, BullQueueProcess } from '@anchan828/nest-bull';
-import { Job } from 'bull';
-import { APP_QUEUE } from './app.constants';
-import { AppService } from './app.service';
+import { BullQueue, BullQueueProcess } from "@anchan828/nest-bull";
+import { Job } from "bull";
+import { APP_QUEUE } from "./app.constants";
+import { AppService } from "./app.service";
 
 @BullQueue({ name: APP_QUEUE })
 export class AppQueue {
@@ -59,7 +58,7 @@ export class AppQueue {
 
   @BullQueueProcess()
   public async process(job: Job) {
-    console.log('called process', job.data, this.service.root());
+    console.log("called process", job.data, this.service.root());
   }
 }
 ```
@@ -67,10 +66,10 @@ export class AppQueue {
 ### Adding job
 
 ```ts
-import { Controller, Get, Inject } from '@nestjs/common';
-import { JobId, Queue } from 'bull';
-import { APP_QUEUE } from './app.constants';
-import { BullQueueInject } from '@anchan828/nest-bull';
+import { Controller, Get, Inject } from "@nestjs/common";
+import { JobId, Queue } from "bull";
+import { APP_QUEUE } from "./app.constants";
+import { BullQueueInject } from "@anchan828/nest-bull";
 
 @Controller()
 export class AppController {
@@ -81,7 +80,7 @@ export class AppController {
 
   @Get()
   async root(): Promise<JobId> {
-    const job = await this.queue.add({ text: 'text' });
+    const job = await this.queue.add({ text: "text" });
     return job.id;
   }
 }
@@ -99,10 +98,9 @@ export class AppController {
   },
 })
 export class AppQueue {
-
   // queue.add('processorName1', data);
   @BullQueueProcess({
-    name: 'processorName1',
+    name: "processorName1",
     concurrency: 3,
   })
   async process1(job: Job) {
@@ -111,7 +109,7 @@ export class AppQueue {
 
   // queue.add('processorName2', data);
   @BullQueueProcess({
-    name: 'processorName2',
+    name: "processorName2",
   })
   async process2(job: Job) {
     throw new Error(`throw error ${JSON.stringify(job.data)}`);
@@ -128,22 +126,22 @@ export class AppQueue {
 
   @BullQueueProcess()
   public async process(job: Job) {
-    console.log('called process', job.data, this.service.root());
+    console.log("called process", job.data, this.service.root());
   }
 
   @BullQueueEventProgress()
   public async progress(job: Job, progress: number) {
-    console.log('progress', job.id, progress);
+    console.log("progress", job.id, progress);
   }
 
   @BullQueueEventCompleted()
   public async completed(job: Job, result: any) {
-    console.log('completed', job.id, result);
+    console.log("completed", job.id, result);
   }
 
   @BullQueueEventFailed()
   public async failed(job: Job, error: Error) {
-    console.error('failed', job.id, error);
+    console.error("failed", job.id, error);
   }
 }
 ```
@@ -151,25 +149,24 @@ export class AppQueue {
 ### Getting Queue using BullService
 
 ```ts
-import { Controller, Get, Inject } from '@nestjs/common';
-import { JobId, Queue } from 'bull';
-import { APP_QUEUE } from './app.constants';
-import { BullService, BULL_MODULE_SERVICE } from '@anchan828/nest-bull';
+import { Controller, Get, Inject } from "@nestjs/common";
+import { JobId, Queue } from "bull";
+import { APP_QUEUE } from "./app.constants";
+import { BullService, BULL_MODULE_SERVICE } from "@anchan828/nest-bull";
 
 @Controller()
 export class AppController {
   constructor(
-    @Inject(BULL_MODULE_SERVICE) 
-    private readonly service: BullService
+    @Inject(BULL_MODULE_SERVICE)
+    private readonly service: BullService,
   ) {}
 
   @Get()
   async root(): Promise<JobId> {
-    const job = await this.service.getQueue(APP_QUEUE).add({ text: 'text' });
+    const job = await this.service.getQueue(APP_QUEUE).add({ text: "text" });
     return job.id;
   }
 }
-
 ```
 
 ### forRootAsync
@@ -181,7 +178,6 @@ This package supports forRootAsync. However, you can only BullService if you wan
 See example app: https://github.com/anchan828/nest-bull-example
 
 And more: https://github.com/anchan828/nest-bull/tree/master/src/examples
-
 
 ### Extra
 
@@ -213,16 +209,17 @@ export interface BullQueueExtraOptions {
   };
 }
 ```
+
 You can set options to module and per queue.
 
 ```ts
 @Module({
   imports: [
     BullModule.forRoot({
-      queues: [__dirname + '/**/*.queue{.ts,.js}'],
+      queues: [__dirname + "/**/*.queue{.ts,.js}"],
       options: {
         redis: {
-          host: '127.0.0.1',
+          host: "127.0.0.1",
         },
       },
       extra: {
@@ -251,13 +248,13 @@ export class AppModule {}
   },
 })
 export class AppQueue {
-
   @BullQueueProcess()
   public async process(job: Job) {
     return Promise.resolve();
   }
 }
 ```
+
 ## Testing
 
 Example for TestingModule
@@ -284,25 +281,21 @@ import { BullQueueInject } from "@anchan828/nest-bull";
 
 @Injectable()
 export class Service {
-
   constructor(
     @BullQueueInject("Queue name")
     private readonly queue: Queue,
   ) {}
 
   public async someMethod() {
-    await this.queue.add({key: "value"})
+    await this.queue.add({ key: "value" });
   }
 }
 ```
 
 ```ts
-import { createTestBullProvider } from '@anchan828/nest-bull/dist/testing';
+import { createTestBullProvider } from "@anchan828/nest-bull/dist/testing";
 const app: TestingModule = await Test.createTestingModule({
-  providers: [
-    Service,
-    createTestBullProvider("Queue name")
-  ]
+  providers: [Service, createTestBullProvider("Queue name")],
 }).compile();
 ```
 

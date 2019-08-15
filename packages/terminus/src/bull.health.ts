@@ -1,13 +1,9 @@
-import {
-  BullQueue,
-  BullQueueInject,
-  BullQueueProcess,
-} from '@anchan828/nest-bull';
-import { HealthCheckError } from '@godaddy/terminus';
-import { Injectable } from '@nestjs/common';
-import { HealthIndicator, HealthIndicatorResult } from '@nestjs/terminus';
-import { Job, Queue } from 'bull';
-import { QUEUE_NAME } from './constants';
+import { BullQueue, BullQueueInject, BullQueueProcess } from "@anchan828/nest-bull";
+import { HealthCheckError } from "@godaddy/terminus";
+import { Injectable } from "@nestjs/common";
+import { HealthIndicator, HealthIndicatorResult } from "@nestjs/terminus";
+import { Queue } from "bull";
+import { QUEUE_NAME } from "./constants";
 
 @BullQueue({
   name: QUEUE_NAME,
@@ -25,7 +21,7 @@ import { QUEUE_NAME } from './constants';
 })
 export class BullHealthCheckQueue {
   @BullQueueProcess()
-  async process(job: Job): Promise<void> {
+  async process(): Promise<void> {
     return Promise.resolve();
   }
 }
@@ -41,11 +37,8 @@ export class BullHealthIndicator extends HealthIndicator {
       const job = await this.queue.add({});
       await job.finished();
     } catch (e) {
-      throw new HealthCheckError(
-        'BullHealthCheck failed',
-        this.getStatus('bull', false, { message: e.message }),
-      );
+      throw new HealthCheckError("BullHealthCheck failed", this.getStatus("bull", false, { message: e.message }));
     }
-    return this.getStatus('bull', true);
+    return this.getStatus("bull", true);
   }
 }
