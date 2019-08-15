@@ -9,8 +9,6 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    container:
-      image: node:lts
     steps:
       - uses: actions/checkout@master
       - name: Checkout master
