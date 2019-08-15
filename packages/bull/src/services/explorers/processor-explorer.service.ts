@@ -1,49 +1,40 @@
+import { Inject, Injectable as InjectableDecorator } from "@nestjs/common";
+import { Injectable } from "@nestjs/common/interfaces";
+import { ModulesContainer } from "@nestjs/core";
+import { MetadataScanner } from "@nestjs/core/metadata-scanner";
+import * as deepmerge from "deepmerge";
 import {
-  Inject,
-  Injectable as InjectableDecorator,
-  Logger,
-} from '@nestjs/common';
-import { Injectable } from '@nestjs/common/interfaces';
-import { ModulesContainer } from '@nestjs/core';
-import { MetadataScanner } from '@nestjs/core/metadata-scanner';
-import * as deepmerge from 'deepmerge';
-import {
-  BULL_MODULE,
   BULL_MODULE_OPTIONS,
   BULL_MODULE_SERVICE,
   BULL_QUEUE_DEFAULT_PROCESSOR_NAME,
   BULL_QUEUE_PROCESSOR_DECORATOR,
   BULL_QUEUE_PROCESSOR_DEFAULT_CONCURRENCY,
-} from '../../bull.constants';
+} from "../../bull.constants";
 import {
   BullModuleOptions,
   BullQueue,
+  BullQueueDefaultProcessorOptions,
   BullQueueProcessorOptions,
-} from '../../bull.interfaces';
-import { BullService } from '../bull.service';
-import { BaseExplorerService } from './base-explorer.service';
+} from "../../bull.interfaces";
+import { BullService } from "../bull.service";
+import { BaseExplorerService } from "./base-explorer.service";
 
 @InjectableDecorator()
-export class BullQueueProcessorExplorerService extends BaseExplorerService<
-  BullQueueProcessorOptions
-> {
-  private readonly logger = new Logger(BULL_MODULE, true);
-  private getExtraProcessorOptions() {
+export class BullQueueProcessorExplorerService extends BaseExplorerService<BullQueueProcessorOptions> {
+  private getExtraProcessorOptions(): BullQueueDefaultProcessorOptions | undefined {
     if (this.options.extra && this.options.extra.defaultProcessorOptions) {
       return this.options.extra.defaultProcessorOptions;
     }
   }
-  protected getOptions(
-    prototype: any,
-    propertyName: string,
-  ): BullQueueProcessorOptions {
+
+  protected getOptions(prototype: any, propertyName: string): Required<BullQueueProcessorOptions> {
     const options = Reflect.getMetadata(
       BULL_QUEUE_PROCESSOR_DECORATOR,
       prototype,
       propertyName,
     ) as BullQueueProcessorOptions;
 
-    return deepmerge.all([
+    return deepmerge.all<Required<BullQueueProcessorOptions>>([
       {
         name: propertyName,
         concurrency: BULL_QUEUE_PROCESSOR_DEFAULT_CONCURRENCY,
@@ -51,13 +42,10 @@ export class BullQueueProcessorExplorerService extends BaseExplorerService<
         skip: options && options.skip,
       },
       this.getExtraProcessorOptions() || {},
-      Reflect.getMetadata(
-        BULL_QUEUE_PROCESSOR_DECORATOR,
-        prototype,
-        propertyName,
-      ) || {},
-    ]) as BullQueueProcessorOptions;
+      Reflect.getMetadata(BULL_QUEUE_PROCESSOR_DECORATOR, prototype, propertyName) || {},
+    ]);
   }
+
   protected onBullQueuePropertyProcess(
     bullQueue: BullQueue,
     instance: Injectable,
@@ -74,25 +62,17 @@ export class BullQueueProcessorExplorerService extends BaseExplorerService<
     const processorName =
       allPropertyNames.length === 1 && !processorOptions.isCustomProcessorName
         ? BULL_QUEUE_DEFAULT_PROCESSOR_NAME
-        : processorOptions.name!;
+        : processorOptions.name;
 
-    bullQueue.process(
-      processorName,
-      processorOptions.concurrency!,
-      prototype[propertyName].bind(instance),
-    );
+    bullQueue.process(processorName, processorOptions.concurrency, prototype[propertyName].bind(instance));
 
-    this.logger.log(
-      `${processorOptions.name} processor on ${bullQueue.name} initialized`,
-    );
+    this.logger.log(`${processorOptions.name} processor on ${bullQueue.name} initialized`);
   }
+
   protected verifyPropertyName(target: any, propertyName: string): boolean {
-    return Reflect.hasMetadata(
-      BULL_QUEUE_PROCESSOR_DECORATOR,
-      target,
-      propertyName,
-    );
+    return Reflect.hasMetadata(BULL_QUEUE_PROCESSOR_DECORATOR, target, propertyName);
   }
+
   constructor(
     @Inject(BULL_MODULE_OPTIONS)
     readonly options: BullModuleOptions,

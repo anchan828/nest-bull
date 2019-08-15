@@ -1,27 +1,21 @@
-import { Injectable, Module } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
-import { Job, Queue } from 'bull';
-import {
-  BullQueue,
-  BullQueueInject,
-  BullQueueProcess,
-} from '../bull.decorator';
-import { BullModule } from '../bull.module';
-import { REDIS_HOST } from '../bull.utils.spec';
+import { Injectable, Module } from "@nestjs/common";
+import { Test } from "@nestjs/testing";
+import { Queue } from "bull";
+import { BullQueue, BullQueueInject, BullQueueProcess } from "../bull.decorator";
+import { BullModule } from "../bull.module";
+import { REDIS_HOST, wait } from "../bull.utils.spec";
 
 @BullQueue()
 export class MockExampleBullQueue {
   @BullQueueProcess()
-  public async process(job: Job): Promise<{ status: string }> {
-    return { status: 'not call' };
+  public async process(): Promise<{ status: string }> {
+    return { status: "not call" };
   }
 }
 
 @Injectable()
 export class MockExampleService {
-  constructor(
-    @BullQueueInject('MockExampleBullQueue') public readonly queue: Queue,
-  ) {}
+  constructor(@BullQueueInject("MockExampleBullQueue") public readonly queue: Queue) {}
 }
 
 @Module({
@@ -49,8 +43,8 @@ export class MockExampleModule {}
 })
 export class ApplicationModule {}
 
-describe('9. Mock Example', () => {
-  it('test', async () => {
+describe("9. Mock Example", () => {
+  it("test", async () => {
     const app = await Test.createTestingModule({
       imports: [ApplicationModule],
     }).compile();
@@ -58,8 +52,9 @@ describe('9. Mock Example', () => {
     const service = app.get<MockExampleService>(MockExampleService);
     expect(service).toBeDefined();
     expect(service.queue).toBeDefined();
-    const job = await service.queue.add({ data: 'test' });
-    expect(job).toStrictEqual({ data: 'test' });
+    const job = await service.queue.add({ data: "test" });
+    expect(job).toStrictEqual({ data: "test" });
+    await wait(100);
     await app.close();
   });
 });

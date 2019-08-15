@@ -1,22 +1,19 @@
-import { Injectable, Module } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
-import { Job, Queue } from 'bull';
-import {
-  BullQueue,
-  BullQueueInject,
-  BullQueueProcess,
-} from '../bull.decorator';
-import { BullModule } from '../bull.module';
-import { REDIS_HOST } from '../bull.utils.spec';
+import { Injectable, Module } from "@nestjs/common";
+import { Test } from "@nestjs/testing";
+import { Job, Queue } from "bull";
+import { BullQueue, BullQueueInject, BullQueueProcess } from "../bull.decorator";
+import { BullModule } from "../bull.module";
+import { REDIS_HOST } from "../bull.utils.spec";
 
 @BullQueue()
 export class ParentQueue {
   constructor(
-    @BullQueueInject('Child1Queue')
+    @BullQueueInject("Child1Queue")
     private readonly child1Queue: Queue,
-    @BullQueueInject('Child2Queue')
+    @BullQueueInject("Child2Queue")
     private readonly child2Queue: Queue,
   ) {}
+
   @BullQueueProcess()
   public async process(job: Job): Promise<{ child1: string; child2: string }> {
     const child1Job = await this.child1Queue.add(job.data);
@@ -29,8 +26,8 @@ export class ParentQueue {
 export class Child1Queue {
   @BullQueueProcess()
   public async process(job: Job): Promise<{ child1: string }> {
-    expect(job.data).toStrictEqual({ test: 'test' });
-    return { child1: 'ok' };
+    expect(job.data).toStrictEqual({ test: "test" });
+    return { child1: "ok" };
   }
 }
 
@@ -38,30 +35,25 @@ export class Child1Queue {
 export class Child2Queue {
   @BullQueueProcess()
   public async process(job: Job): Promise<{ child2: string }> {
-    expect(job.data).toStrictEqual({ test: 'test' });
-    return { child2: 'ok' };
+    expect(job.data).toStrictEqual({ test: "test" });
+    return { child2: "ok" };
   }
 }
 
 @Injectable()
 export class ParentChildQueueExampleService {
   constructor(
-    @BullQueueInject('ParentQueue')
+    @BullQueueInject("ParentQueue")
     public readonly queue: Queue,
   ) {}
 
-  public async addJob() {
-    return this.queue.add({ test: 'test' });
+  public async addJob(): Promise<Job<any>> {
+    return this.queue.add({ test: "test" });
   }
 }
 
 @Module({
-  providers: [
-    ParentQueue,
-    Child1Queue,
-    Child2Queue,
-    ParentChildQueueExampleService,
-  ],
+  providers: [ParentQueue, Child1Queue, Child2Queue, ParentChildQueueExampleService],
 })
 export class ParentChildQueueExampleModule {}
 
@@ -80,21 +72,19 @@ export class ParentChildQueueExampleModule {}
 })
 export class ApplicationModule {}
 
-describe('5. Parent Child Example', () => {
-  it('test', async () => {
+describe("5. Parent Child Example", () => {
+  it("test", async () => {
     const app = await Test.createTestingModule({
       imports: [ApplicationModule],
     }).compile();
     await app.init();
-    const service = app.get<ParentChildQueueExampleService>(
-      ParentChildQueueExampleService,
-    );
+    const service = app.get<ParentChildQueueExampleService>(ParentChildQueueExampleService);
     expect(service).toBeDefined();
     expect(service.queue).toBeDefined();
     const job = await service.addJob();
     await expect(job.finished()).resolves.toStrictEqual({
-      child1: 'ok',
-      child2: 'ok',
+      child1: "ok",
+      child2: "ok",
     });
     await app.close();
   });

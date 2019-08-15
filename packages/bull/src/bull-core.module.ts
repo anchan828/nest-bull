@@ -1,47 +1,28 @@
-import {
-  DynamicModule,
-  Global,
-  Inject,
-  Module,
-  OnModuleDestroy,
-  OnModuleInit,
-  Provider,
-} from '@nestjs/common';
-import { ClassProvider, FactoryProvider } from '@nestjs/common/interfaces';
+import { DynamicModule, Global, Inject, Module, OnModuleDestroy, OnModuleInit, Provider } from "@nestjs/common";
+import { ClassProvider, FactoryProvider } from "@nestjs/common/interfaces";
 // import { ModulesContainer } from '@nestjs/core';
 // import {
 //   CustomValue,
 //   Module as CoreModule,
 // } from '@nestjs/core/injector/module';
-import { MetadataScanner } from '@nestjs/core/metadata-scanner';
-import { BULL_MODULE_OPTIONS, BULL_MODULE_SERVICE } from './bull.constants';
-import {
-  BullModuleAsyncOptions,
-  BullModuleOptions,
-  BullModuleOptionsFactory,
-} from './bull.interfaces';
-import { BullQueueProviderService } from './services/bull-queue-provider.service';
-import { BullService } from './services/bull.service';
-import { BullQueueEventExplorerService } from './services/explorers/event-explorer.service';
-import { BullQueueProcessorExplorerService } from './services/explorers/processor-explorer.service';
+import { MetadataScanner } from "@nestjs/core/metadata-scanner";
+import { BULL_MODULE_OPTIONS, BULL_MODULE_SERVICE } from "./bull.constants";
+import { BullModuleAsyncOptions, BullModuleOptions, BullModuleOptionsFactory } from "./bull.interfaces";
+import { BullQueueProviderService } from "./services/bull-queue-provider.service";
+import { BullService } from "./services/bull.service";
+import { BullQueueEventExplorerService } from "./services/explorers/event-explorer.service";
+import { BullQueueProcessorExplorerService } from "./services/explorers/processor-explorer.service";
 
 @Global()
 @Module({
-  providers: [
-    MetadataScanner,
-    BullQueueProcessorExplorerService,
-    BullQueueEventExplorerService,
-  ],
+  providers: [MetadataScanner, BullQueueProcessorExplorerService, BullQueueEventExplorerService],
 })
 export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
-  async onModuleInit() {
+  async onModuleInit(): Promise<void> {
     if (this.bullService.isAsync) {
-      const bullProviderService = new BullQueueProviderService(
-        this.options,
-        this.bullService,
-      );
+      const bullProviderService = new BullQueueProviderService(this.options, this.bullService);
       // TODO: get value providers, but get injector error before adding BullCoreModule to them.
-      const bullQueueProviders = bullProviderService.createBullQueueProviders();
+      bullProviderService.createBullQueueProviders();
       // const bullCoreModule = [...this.container.values()].find(
       //   module => module.metatype === BullCoreModule,
       // ) as CoreModule;
@@ -56,7 +37,8 @@ export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
     this.eventExplorer.explore();
     await this.bullService.isReady();
   }
-  async onModuleDestroy() {
+
+  async onModuleDestroy(): Promise<void> {
     await this.bullService.closeAll();
   }
 
@@ -68,12 +50,10 @@ export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
     @Inject(BULL_MODULE_SERVICE)
     private readonly bullService: BullService,
   ) {}
+
   public static forRoot(options: BullModuleOptions): DynamicModule {
     const bullService = new BullService();
-    const bullProviderService = new BullQueueProviderService(
-      options,
-      bullService,
-    );
+    const bullProviderService = new BullQueueProviderService(options, bullService);
     const bullQueueProviders = bullProviderService.createBullQueueProviders();
     const bullQueueServiceProvider = {
       provide: BULL_MODULE_SERVICE,
@@ -92,6 +72,7 @@ export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
       exports: [bullQueueServiceProvider, ...bullQueueProviders],
     };
   }
+
   // TODO: I don't know how to create bull queue providers by async...
   public static forRootAsync(options: BullModuleAsyncOptions): DynamicModule {
     const bullService = new BullService(true);
@@ -109,9 +90,7 @@ export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
     };
   }
 
-  private static createAsyncProviders(
-    options: BullModuleAsyncOptions,
-  ): Provider[] {
+  private static createAsyncProviders(options: BullModuleAsyncOptions): Provider[] {
     if (options.useFactory) {
       return [this.createAsyncOptionsProvider(options)];
     }
@@ -125,9 +104,7 @@ export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
     ];
   }
 
-  private static createAsyncOptionsProvider(
-    options: BullModuleAsyncOptions,
-  ): FactoryProvider {
+  private static createAsyncOptionsProvider(options: BullModuleAsyncOptions): FactoryProvider {
     if (options.useFactory) {
       return {
         provide: BULL_MODULE_OPTIONS,
@@ -137,7 +114,7 @@ export class BullCoreModule implements OnModuleInit, OnModuleDestroy {
     }
     return {
       provide: BULL_MODULE_OPTIONS,
-      useFactory: async (optionsFactory: BullModuleOptionsFactory) =>
+      useFactory: async (optionsFactory: BullModuleOptionsFactory): Promise<BullModuleOptions> =>
         await optionsFactory.createBullModuleOptions(),
       inject: options.useClass ? [options.useClass] : [],
     };

@@ -7,9 +7,12 @@
   "scripts": {
     "prepublishOnly": "rm -rf dist && npm run build && rm -f dist/*.tsbuildinfo && npm run copy:license",
     "copy:license": "cp ../../LICENSE ./",
-    "build": "tsc -p tsconfig.build.json",
-    "watch": "tsc --watch",
-    "test": "jest --runInBand --coverage --detectOpenHandles --forceExit",
+    "build": "node ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
+    "lint": "node ../../node_modules/eslint/bin/eslint --ignore-path ../../.eslintignore '**/*.ts'",
+    "lint:fix": "npm run lint -- --fix",
+    "watch": "node ../../node_modules/typescript/bin/tsc --watch",
+    "test": "node ../../node_modules/jest/bin/jest --coverage --runInBand --detectOpenHandles --forceExit --logHeapUsage",
+    "test:debug": "node --inspect-brk ../../node_modules/jest/bin/jest --runInBand ---detectOpenHandles --logHeapUsage",
     "test:watch": "npm run test -- --watch"
   },
   "repository": {
@@ -25,21 +28,5 @@
   "dependencies": {
     "deepmerge": "4.0.0",
     "fast-glob": "3.0.4"
-  },
-  "devDependencies": {
-    "@nestjs/common": "6.5.3",
-    "@nestjs/core": "6.5.3",
-    "@nestjs/testing": "6.5.3",
-    "@types/bull": "3.10.2",
-    "@types/ioredis": "4.0.14",
-    "@types/jest": "24.0.17",
-    "@types/node": "11.13.19",
-    "bull": "3.10.0",
-    "jest": "24.8.0",
-    "prettier": "1.18.2",
-    "reflect-metadata": "0.1.13",
-    "ts-jest": "24.0.2",
-    "typescript": "3.5.3",
-    "ulid": "2.3.0"
   }
 }

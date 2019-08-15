@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { BullName, BullQueue } from '../bull.interfaces';
-import { getBullQueueToken } from '../bull.utils';
+import { Injectable } from "@nestjs/common";
+import { BullName, BullQueue } from "../bull.interfaces";
+import { getBullQueueToken } from "../bull.utils";
 
 @Injectable()
 export class BullService {
   constructor(public isAsync: boolean = false) {}
+
   private queues: Map<BullName, BullQueue> = new Map<BullName, BullQueue>();
 
   public getQueue(token: BullName): BullQueue | undefined {

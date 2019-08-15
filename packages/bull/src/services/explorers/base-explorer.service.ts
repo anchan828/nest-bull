@@ -1,19 +1,17 @@
-import { flatten } from '@nestjs/common';
-import { Injectable, Type } from '@nestjs/common/interfaces';
-import { ModulesContainer } from '@nestjs/core';
-import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
-import { Module } from '@nestjs/core/injector/module';
-import { MetadataScanner } from '@nestjs/core/metadata-scanner';
-import { BullCoreModule } from '../../bull-core.module';
-import { BULL_QUEUE_DECORATOR } from '../../bull.constants';
-import {
-  BullModuleOptions,
-  BullQueue,
-  BullQueueOptions,
-} from '../../bull.interfaces';
-import { BullService } from '../bull.service';
+import { flatten, Logger } from "@nestjs/common";
+import { Injectable, Type } from "@nestjs/common/interfaces";
+import { ModulesContainer } from "@nestjs/core";
+import { InstanceWrapper } from "@nestjs/core/injector/instance-wrapper";
+import { Module } from "@nestjs/core/injector/module";
+import { MetadataScanner } from "@nestjs/core/metadata-scanner";
+import { BullCoreModule } from "../../bull-core.module";
+import { BULL_MODULE, BULL_QUEUE_DECORATOR } from "../../bull.constants";
+import { BullModuleOptions, BullQueue, BullQueueOptions } from "../../bull.interfaces";
+import { BullService } from "../bull.service";
 
 export abstract class BaseExplorerService<Options> {
+  protected readonly logger = new Logger(BULL_MODULE, true);
+
   constructor(
     protected readonly options: BullModuleOptions,
     protected readonly bullService: BullService,
@@ -30,44 +28,30 @@ export abstract class BaseExplorerService<Options> {
 
     this.getComponents(modules).forEach(component => {
       for (const wrapper of component.values()) {
-        if (
-          wrapper.isNotMetatype ||
-          !this.hasBullQueueDecorator(wrapper.metatype)
-        ) {
+        if (wrapper.isNotMetatype || !this.hasBullQueueDecorator(wrapper.metatype)) {
           continue;
         }
 
-        const metadata = Reflect.getMetadata(
-          BULL_QUEUE_DECORATOR,
-          wrapper.metatype,
-        ) as BullQueueOptions;
-        const bullQueue = this.bullService.getQueue(metadata.name!);
-        if (bullQueue) {
-          this.onBullQueueProcess(bullQueue, wrapper);
-        }
+        const metadata = Reflect.getMetadata(BULL_QUEUE_DECORATOR, wrapper.metatype) as Required<BullQueueOptions>;
+
+        const bullQueue = this.bullService.getQueue(metadata.name) as Required<BullQueue>;
+
+        this.onBullQueueProcess(bullQueue, wrapper);
       }
     });
   }
 
-  private getComponents(
-    modules: Module[],
-  ): Array<Map<string, InstanceWrapper<Injectable>>> {
+  private getComponents(modules: Module[]): Array<Map<string, InstanceWrapper<Injectable>>> {
     return flatten(
-      modules
-        .filter(module => module.metatype !== BullCoreModule)
-        .map(module => module.components),
+      modules.filter(module => module.metatype !== BullCoreModule).map(module => module.components),
     ) as Array<Map<string, InstanceWrapper<Injectable>>>;
   }
 
-  private hasBullQueueDecorator(
-    metatype: Function | Type<Injectable>,
-  ): boolean {
+  private hasBullQueueDecorator(metatype: Function | Type<Injectable>): boolean {
     return Reflect.hasMetadata(BULL_QUEUE_DECORATOR, metatype);
   }
-  protected onBullQueueProcess(
-    bullQueue: BullQueue,
-    wrapper: InstanceWrapper<Injectable>,
-  ) {
+
+  protected onBullQueueProcess(bullQueue: BullQueue, wrapper: InstanceWrapper<Injectable>): void {
     const { instance } = wrapper;
     const prototype = Object.getPrototypeOf(instance);
     const propertyNames = this.metadataScanner
@@ -79,13 +63,7 @@ export abstract class BaseExplorerService<Options> {
       .filter(x => x) as string[];
 
     propertyNames.forEach(propertyName =>
-      this.onBullQueuePropertyProcess(
-        bullQueue,
-        instance,
-        prototype,
-        propertyName,
-        propertyNames,
-      ),
+      this.onBullQueuePropertyProcess(bullQueue, instance, prototype, propertyName, propertyNames),
     );
   }
 
@@ -97,10 +75,7 @@ export abstract class BaseExplorerService<Options> {
     allPropertyNames?: string[],
   ): void;
 
-  protected abstract verifyPropertyName(
-    target: any,
-    propertyName: string,
-  ): boolean;
+  protected abstract verifyPropertyName(target: any, propertyName: string): boolean;
 
   protected abstract getOptions(prototype: any, propertyName: string): Options;
 }

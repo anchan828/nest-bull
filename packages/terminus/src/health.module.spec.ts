@@ -1,16 +1,16 @@
-import { BullModule, getBullQueueToken } from '@anchan828/nest-bull';
-import { Module } from '@nestjs/common';
-import { TerminusModule, TerminusModuleOptions } from '@nestjs/terminus';
-import { Test } from '@nestjs/testing';
-import { Queue } from 'bull';
-import * as request from 'supertest';
-import { BullHealthCheckQueue, BullHealthIndicator } from './bull.health';
-import { QUEUE_NAME } from './constants';
-import { BullHealthModule } from './health.module';
+import { BullModule, getBullQueueToken } from "@anchan828/nest-bull";
+import { Module } from "@nestjs/common";
+import { HealthIndicatorResult, TerminusModule, TerminusModuleOptions } from "@nestjs/terminus";
+import { Test } from "@nestjs/testing";
+import { Job, Queue } from "bull";
+import * as request from "supertest";
+import { BullHealthCheckQueue, BullHealthIndicator } from "./bull.health";
+import { QUEUE_NAME } from "./constants";
+import { BullHealthModule } from "./health.module";
 
 const REDIS_HOST = process.env.REDIS_HOST;
-describe('BullHealthModule', () => {
-  it('should compile module', async () => {
+describe("BullHealthModule", () => {
+  it("should compile module", async () => {
     await expect(
       Test.createTestingModule({
         imports: [
@@ -28,14 +28,12 @@ describe('BullHealthModule', () => {
     ).resolves.toBeDefined();
   });
 
-  it('should compile health module', async () => {
-    const getTerminusOptions = (
-      bull: BullHealthIndicator,
-    ): TerminusModuleOptions => ({
+  it("should compile health module", async () => {
+    const getTerminusOptions = (bull: BullHealthIndicator): TerminusModuleOptions => ({
       endpoints: [
         {
-          url: '/health',
-          healthIndicators: [async () => bull.isHealthy()],
+          url: "/health",
+          healthIndicators: [async (): Promise<HealthIndicatorResult> => bull.isHealthy()],
         },
       ],
     });
@@ -67,15 +65,13 @@ describe('BullHealthModule', () => {
     ).resolves.toBeDefined();
   });
 
-  describe('e2e tests', () => {
-    it('should create nest application', async () => {
-      const getTerminusOptions = (
-        bull: BullHealthIndicator,
-      ): TerminusModuleOptions => ({
+  describe("e2e tests", () => {
+    it("should create nest application", async () => {
+      const getTerminusOptions = (bull: BullHealthIndicator): TerminusModuleOptions => ({
         endpoints: [
           {
-            url: '/health',
-            healthIndicators: [async () => bull.isHealthy()],
+            url: "/health",
+            healthIndicators: [async (): Promise<HealthIndicatorResult> => bull.isHealthy()],
           },
         ],
       });
@@ -103,20 +99,17 @@ describe('BullHealthModule', () => {
           HealthModule,
         ],
       }).compile();
-
       const app = module.createNestApplication();
       await expect(app.init()).resolves.toBeDefined();
       await app.close();
     });
 
-    it('should return status is up', async () => {
-      const getTerminusOptions = (
-        bull: BullHealthIndicator,
-      ): TerminusModuleOptions => ({
+    it("should return status is up", async () => {
+      const getTerminusOptions = (bull: BullHealthIndicator): TerminusModuleOptions => ({
         endpoints: [
           {
-            url: '/health',
-            healthIndicators: [async () => bull.isHealthy()],
+            url: "/health",
+            healthIndicators: [async (): Promise<HealthIndicatorResult> => bull.isHealthy()],
           },
         ],
       });
@@ -148,23 +141,21 @@ describe('BullHealthModule', () => {
       const app = module.createNestApplication();
       await app.init();
       return request(app.getHttpServer())
-        .get('/health')
+        .get("/health")
         .expect(200)
         .expect({
-          status: 'ok',
-          info: { bull: { status: 'up' } },
-          details: { bull: { status: 'up' } },
+          status: "ok",
+          info: { bull: { status: "up" } },
+          details: { bull: { status: "up" } },
         });
     });
 
-    it('should return status is down', async () => {
-      const getTerminusOptions = (
-        bull: BullHealthIndicator,
-      ): TerminusModuleOptions => ({
+    it("should return status is down", async () => {
+      const getTerminusOptions = (bull: BullHealthIndicator): TerminusModuleOptions => ({
         endpoints: [
           {
-            url: '/health',
-            healthIndicators: [async () => bull.isHealthy()],
+            url: "/health",
+            healthIndicators: [async (): Promise<HealthIndicatorResult> => bull.isHealthy()],
           },
         ],
       });
@@ -197,22 +188,19 @@ describe('BullHealthModule', () => {
 
       await app.init();
       const queue = app.get<Queue>(getBullQueueToken(QUEUE_NAME));
-      jest.spyOn(queue, 'add').mockImplementationOnce(
-        (name: string, data: any): Promise<any> => {
-          return Promise.resolve({
-            finished: (): Promise<any> => {
-              throw new Error('faild');
-            },
-          });
+      jest.spyOn(queue, "add").mockResolvedValueOnce({
+        finished: (): Promise<any> => {
+          throw new Error("faild");
         },
-      );
+      } as Job);
+
       return request(app.getHttpServer())
-        .get('/health')
+        .get("/health")
         .expect(503)
         .expect({
-          status: 'error',
-          error: { bull: { status: 'down', message: 'faild' } },
-          details: { bull: { status: 'down', message: 'faild' } },
+          status: "error",
+          error: { bull: { status: "down", message: "faild" } },
+          details: { bull: { status: "down", message: "faild" } },
         });
     });
   });

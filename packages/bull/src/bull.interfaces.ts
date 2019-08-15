@@ -1,37 +1,41 @@
-import { Type } from '@nestjs/common';
-import { ModuleMetadata } from '@nestjs/common/interfaces';
-import * as Bull from 'bull';
-import { Redis } from 'ioredis';
+import { Type } from "@nestjs/common";
+import { ModuleMetadata } from "@nestjs/common/interfaces";
+import * as Bull from "bull";
+import { Redis } from "ioredis";
 
 export type BullName = string | symbol;
+
+export interface BullQueueDefaultProcessorOptions {
+  /**
+   * Bull will then call your handler in parallel respecting this maximum value.
+   */
+  concurrency?: number;
+
+  /**
+   * Skip call this processor if true.
+   */
+  skip?: boolean;
+}
+
+export interface BullQueueDefaultJobOptions {
+  /**
+   * Set TTL when job in the completed. (Default: -1)
+   */
+  setTTLOnComplete?: number;
+  /**
+   * Set TTL when job in the failed. (Default: -1)
+   */
+  setTTLOnFail?: number;
+}
+
 export interface BullQueueExtraOptions {
-  defaultProcessorOptions?: {
-    /**
-     * Bull will then call your handler in parallel respecting this maximum value.
-     */
-    concurrency?: number;
+  defaultProcessorOptions?: BullQueueDefaultProcessorOptions;
 
-    /**
-     * Skip call this processor if true.
-     */
-    skip?: boolean;
-  };
-
-  defaultJobOptions?: {
-    /**
-     * Set TTL when job in the completed. (Default: -1)
-     */
-    setTTLOnComplete?: number;
-    /**
-     * Set TTL when job in the failed. (Default: -1)
-     */
-    setTTLOnFail?: number;
-  };
+  defaultJobOptions?: BullQueueDefaultJobOptions;
 }
 export type BullQueueType = string | Type<unknown>;
 
-export interface BullQueueMock
-  extends Pick<BullQueue, 'name' | 'add' | 'isReady' | 'close' | 'process'> {
+export interface BullQueueMock extends Pick<BullQueue, "name" | "add" | "isReady" | "close" | "process"> {
   on: (listener: string, callback: () => void) => void;
 }
 export interface BullModuleOptions {
@@ -53,14 +57,12 @@ export type BullModuleAsyncOptions = {
   /**
    * The factory which should be used to provide the Bull options
    */
-  useFactory?: (
-    ...args: unknown[]
-  ) => Promise<BullModuleOptions> | BullModuleOptions;
+  useFactory?: (...args: unknown[]) => Promise<BullModuleOptions> | BullModuleOptions;
   /**
    * The providers which should get injected
    */
   inject?: Array<Type<any> | string | any>;
-} & Pick<ModuleMetadata, 'imports'>;
+} & Pick<ModuleMetadata, "imports">;
 
 export interface BullModuleOptionsFactory {
   createBullModuleOptions(): Promise<BullModuleOptions> | BullModuleOptions;
@@ -93,15 +95,15 @@ export interface BullQueueEventOptions extends BaseBullQueueOptions {
 export type BullQueue = Bull.Queue & { clients: Redis[] };
 export type BullJob = Bull.Job & { toKey: () => string; queue: BullQueue };
 export type BullQueueEvent =
-  | 'error'
-  | 'waiting'
-  | 'active'
-  | 'stalled'
-  | 'progress'
-  | 'completed'
-  | 'failed'
-  | 'paused'
-  | 'resumed'
-  | 'cleaned'
-  | 'drained'
-  | 'removed';
+  | "error"
+  | "waiting"
+  | "active"
+  | "stalled"
+  | "progress"
+  | "completed"
+  | "failed"
+  | "paused"
+  | "resumed"
+  | "cleaned"
+  | "drained"
+  | "removed";

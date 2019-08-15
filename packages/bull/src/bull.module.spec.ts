@@ -1,15 +1,17 @@
-import { Test } from '@nestjs/testing';
-import { BullModuleOptions } from './bull.interfaces';
-import { BullModule } from './bull.module';
-import { cleanTestFiles, createTestFile } from './bull.utils.spec';
-describe('BullModule', () => {
-  it('should be defined', () => {
+import { Test } from "@nestjs/testing";
+import { BullModuleOptions } from "./bull.interfaces";
+import { BullModule } from "./bull.module";
+import { cleanTestFiles, createTestFile } from "./bull.utils.spec";
+describe("BullModule", () => {
+  it("should be defined", () => {
     expect(BullModule).toBeDefined();
   });
 
-  describe('forRoot', () => {
-    cleanTestFiles();
-    it('should compile', async () => {
+  describe("forRoot", () => {
+    beforeEach(() => {
+      cleanTestFiles();
+    });
+    it("should compile", async () => {
       const app = await Test.createTestingModule({
         imports: [BullModule.forRoot({} as any)],
       }).compile();
@@ -23,10 +25,7 @@ describe('BullModule', () => {
       },
     ): Promise<void> => {
       const app = await Test.createTestingModule({
-        imports: [
-          BullModule.forRoot(bullModuleOptions),
-          require(filePath).TestModule,
-        ],
+        imports: [BullModule.forRoot(bullModuleOptions), require(filePath).TestModule],
       }).compile();
       expect(app).toBeDefined();
       await app.close();
@@ -45,7 +44,7 @@ describe('BullModule', () => {
       );
     });
 
-    it('BullQueue decorator only', async () => {
+    it("BullQueue decorator only", async () => {
       await compileModule(
         createTestFile(`
       @BullQueue()
@@ -58,7 +57,7 @@ describe('BullModule', () => {
       );
     });
 
-    it('BullQueueProcess', async () => {
+    it("BullQueueProcess", async () => {
       await compileModule(
         createTestFile(`
       @BullQueue()
@@ -75,7 +74,7 @@ describe('BullModule', () => {
       );
     });
 
-    it('BullQueueProcess has options', async () => {
+    it("BullQueueProcess has options", async () => {
       await compileModule(
         createTestFile(`
       @BullQueue()
@@ -94,7 +93,7 @@ describe('BullModule', () => {
       );
     });
 
-    it('BullQueue has extra options', async () => {
+    it("BullQueue has extra options", async () => {
       await compileModule(
         createTestFile(`
       @BullQueue({
@@ -118,7 +117,7 @@ describe('BullModule', () => {
       );
     });
 
-    it('BullModule has extra options', async () => {
+    it("BullModule has extra options", async () => {
       const filePath = createTestFile(`
       @BullQueue()
       export class TestClass {
@@ -142,7 +141,7 @@ describe('BullModule', () => {
       });
     });
 
-    it('BullQueue has completed event', async () => {
+    it("BullQueue has completed event", async () => {
       await compileModule(
         createTestFile(`
       @BullQueue()
@@ -159,7 +158,7 @@ describe('BullModule', () => {
       );
     });
 
-    it('BullQueue has 2 completed event', async () => {
+    it("BullQueue has 2 completed event", async () => {
       await compileModule(
         createTestFile(`
       @BullQueue()
@@ -181,7 +180,7 @@ describe('BullModule', () => {
       export class TestModule {}`),
       );
     });
-    it('BullQueue has all events', async () => {
+    it("BullQueue has all events", async () => {
       await compileModule(
         createTestFile(`
       @BullQueue()
