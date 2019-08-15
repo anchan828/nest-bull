@@ -23,11 +23,9 @@ jobs:
         with:
           fetch-depth: 1
       - name: Install npm packages
-        run: npm ci
-      - name: Bootstrap monorepo packages
-        run: |
-          npm run bootstrap
-          npm run build
+        run: npm i
+      - name: Lint
+        run: npm run lint
       - name: Setup cc-test-reporter
         run: |
           curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
