@@ -5,8 +5,6 @@
 
 The [Bull](https://github.com/OptimalBits/bull) module for [Nest](https://github.com/nestjs/nest).
 
-
 [@anchan828/nest-bull](https://github.com/anchan828/nest-bull/tree/master/packages/bull)
 
 [@anchan828/nest-bull-terminus](https://github.com/anchan828/nest-bull/tree/master/packages/terminus)
-

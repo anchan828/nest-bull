@@ -19,14 +19,12 @@ $ npm i --save-dev @types/bull
 1. Create Health Module
 
 ```ts
-import { BullHealthCheckQueue, BullHealthIndicator, BullHealthModule } from '@anchan828/nest-bull-terminus';
+import { BullHealthCheckQueue, BullHealthIndicator, BullHealthModule } from "@anchan828/nest-bull-terminus";
 
-const getTerminusOptions = (
-  bull: BullHealthIndicator,
-): TerminusModuleOptions => ({
+const getTerminusOptions = (bull: BullHealthIndicator): TerminusModuleOptions => ({
   endpoints: [
     {
-      url: '/health',
+      url: "/health",
       healthIndicators: [async () => bull.isHealthy()],
     },
   ],
@@ -47,7 +45,7 @@ export class HealthModule {}
 2. Create Health Bull Queue
 
 ```ts
-import { BullHealthCheckQueue } from '@anchan828/nest-bull-terminus';
+import { BullHealthCheckQueue } from "@anchan828/nest-bull-terminus";
 
 @Module({
   imports: [
