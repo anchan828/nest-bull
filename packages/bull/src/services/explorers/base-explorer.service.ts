@@ -35,8 +35,9 @@ export abstract class BaseExplorerService<Options> {
         const metadata = Reflect.getMetadata(BULL_QUEUE_DECORATOR, wrapper.metatype) as Required<BullQueueOptions>;
 
         const bullQueue = this.bullService.getQueue(metadata.name) as Required<BullQueue>;
-
-        this.onBullQueueProcess(bullQueue, wrapper);
+        if (bullQueue) {
+          this.onBullQueueProcess(bullQueue, wrapper);
+        }
       }
     });
   }
