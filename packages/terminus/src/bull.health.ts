@@ -32,13 +32,13 @@ export class BullHealthIndicator extends HealthIndicator {
     super();
   }
 
-  async isHealthy(): Promise<HealthIndicatorResult> {
+  async isHealthy(key = "bull"): Promise<HealthIndicatorResult> {
     try {
       const job = await this.queue.add({});
       await job.finished();
     } catch (e) {
-      throw new HealthCheckError("BullHealthCheck failed", this.getStatus("bull", false, { message: e.message }));
+      throw new HealthCheckError("BullHealthCheck failed", this.getStatus(key, false, { message: e.message }));
     }
-    return this.getStatus("bull", true);
+    return this.getStatus(key, true);
   }
 }
