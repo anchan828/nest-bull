@@ -37,7 +37,7 @@
     "@types/bull": "3.10.3",
     "@types/ioredis": "4.0.17",
     "@types/jest": "24.0.18",
-    "@types/node": "11.13.20",
+    "@types/node": "11.13.21",
     "@typescript-eslint/eslint-plugin": "2.3.1",
     "@typescript-eslint/parser": "2.3.1",
     "bull": "3.11.0",
