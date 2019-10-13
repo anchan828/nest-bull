@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.32](https://github.com/anchan828/nest-bull/compare/v0.3.31...v0.3.32) (2019-10-13)
+
+### Bug Fixes
+
+- **deps:** update dependency deepmerge to v4.1.0 ([635dd46](https://github.com/anchan828/nest-bull/commit/635dd46a03769d5f4578e2a98022cb116d395f0f))
+- **deps:** update dependency deepmerge to v4.1.1 ([79ea1f0](https://github.com/anchan828/nest-bull/commit/79ea1f064f5150686b9af1bf20e72524dade08d6))
+- **deps:** update dependency fast-glob to v3.1.0 ([905d1a4](https://github.com/anchan828/nest-bull/commit/905d1a4ad117e9edc0fe014f745434c53c930152))
+
 ## [0.3.31](https://github.com/anchan828/nest-bull/compare/v0.3.30...v0.3.31) (2019-10-06)
 
 **Note:** Version bump only for package @anchan828/nest-bull-packages
