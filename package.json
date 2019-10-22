@@ -34,7 +34,7 @@
     "@nestjs/core": "6.8.3",
     "@nestjs/platform-express": "6.8.3",
     "@nestjs/testing": "6.8.3",
-    "@types/bull": "3.10.3",
+    "@types/bull": "3.10.4",
     "@types/ioredis": "4.0.18",
     "@types/jest": "24.0.19",
     "@types/node": "11.13.22",
