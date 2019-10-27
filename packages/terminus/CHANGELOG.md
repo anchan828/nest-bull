@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.34](https://github.com/anchan828/nest-bull/compare/v0.3.33...v0.3.34) (2019-10-27)
+
+### Bug Fixes
+
+- **deps:** update dependency deepmerge to v4.2.0 ([f94c625](https://github.com/anchan828/nest-bull/commit/f94c6253756a281d40632ebe6c5c89bdc3c51f21))
+
 ## [0.3.33](https://github.com/anchan828/nest-bull/compare/v0.3.32...v0.3.33) (2019-10-20)
 
 **Note:** Version bump only for package @anchan828/nest-bull-terminus
