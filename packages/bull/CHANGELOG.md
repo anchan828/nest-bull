@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.35](https://github.com/anchan828/nest-bull/compare/v0.3.34...v0.3.35) (2019-11-03)
+
+### Bug Fixes
+
+- **deps:** update dependency deepmerge to v4.2.2 ([687e371](https://github.com/anchan828/nest-bull/commit/687e37176c8452621117dbc06d29d832f375ed28))
+
 ## [0.3.34](https://github.com/anchan828/nest-bull/compare/v0.3.33...v0.3.34) (2019-10-27)
 
 ### Bug Fixes
