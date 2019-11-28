@@ -51,7 +51,7 @@
     "prettier": "1.19.1",
     "reflect-metadata": "0.1.13",
     "ts-jest": "24.2.0",
-    "ts-node": "8.5.3",
+    "ts-node": "8.5.4",
     "typescript": "3.7.2",
     "ulid": "2.3.0"
   }
