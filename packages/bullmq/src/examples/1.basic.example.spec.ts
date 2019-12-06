@@ -1,9 +1,9 @@
 import { Injectable, Module } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
-import { Job, Queue, QueueEvents } from "bullmq";
+import { Job, Queue } from "bullmq";
 import { BullQueueInject, BullWorker, BullWorkerProcess } from "../bull.decorator";
 import { BullModule } from "../bull.module";
-import { REDIS_HOST } from "../bull.utils.spec";
+import { createQueueEvents, REDIS_HOST } from "../bull.utils.spec";
 
 const queueName = "queueName";
 
@@ -55,12 +55,7 @@ describe("1. Basic Example", () => {
     expect(service).toBeDefined();
     expect(service.queue).toBeDefined();
     const job = await service.addJob();
-    const queueEvents = new QueueEvents(queueName, {
-      connection: {
-        host: REDIS_HOST,
-      },
-    });
-    await expect(job.waitUntilFinished(queueEvents)).resolves.toStrictEqual({ status: "ok" });
+    await expect(job.waitUntilFinished(createQueueEvents(queueName))).resolves.toStrictEqual({ status: "ok" });
     await app.close();
   });
 });
