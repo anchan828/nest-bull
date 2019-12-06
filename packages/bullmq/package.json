@@ -1,0 +1,35 @@
+{
+  "name": "@anchan828/nest-bullmq",
+  "version": "0.3.35",
+  "description": "The [BullMQ](https://github.com/taskforcesh/bullmq) module for [Nest](https://github.com/nestjs/nest).",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "prepublishOnly": "rm -rf dist && npm run build && rm -f dist/*.tsbuildinfo && npm run copy:license",
+    "copy:license": "cp ../../LICENSE ./",
+    "build": "node ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
+    "lint": "node ../../node_modules/eslint/bin/eslint --ignore-path ../../.eslintignore '**/*.ts'",
+    "lint:fix": "npm run lint -- --fix",
+    "watch": "node ../../node_modules/typescript/bin/tsc --watch",
+    "test": "node ../../node_modules/jest/bin/jest --coverage --runInBand --detectOpenHandles --forceExit --logHeapUsage",
+    "test:debug": "node --inspect-brk ../../node_modules/jest/bin/jest --runInBand ---detectOpenHandles --logHeapUsage",
+    "test:watch": "npm run test -- --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anchan828/nest-bull.git"
+  },
+  "author": "anchan828 <anchan828@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/anchan828/nest-bull/issues"
+  },
+  "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/bullmq#readme",
+  "dependencies": {
+    "deepmerge": "4.2.2",
+    "fast-glob": "3.1.0"
+  },
+  "devDependencies": {
+    "bullmq": "1.4.1"
+  }
+}
