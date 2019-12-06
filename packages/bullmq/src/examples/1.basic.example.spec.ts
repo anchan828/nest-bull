@@ -55,7 +55,11 @@ describe("1. Basic Example", () => {
     expect(service).toBeDefined();
     expect(service.queue).toBeDefined();
     const job = await service.addJob();
-    const queueEvents = new QueueEvents(queueName);
+    const queueEvents = new QueueEvents(queueName, {
+      connection: {
+        host: REDIS_HOST,
+      },
+    });
     await expect(job.waitUntilFinished(queueEvents)).resolves.toStrictEqual({ status: "ok" });
     await app.close();
   });
