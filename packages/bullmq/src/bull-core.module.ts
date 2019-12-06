@@ -68,7 +68,7 @@ export class BullCoreModule implements OnModuleInit {
       return {
         provide: getBullQueueToken(queue.queueName),
         useFactory: (options: BullModuleOptions): Queue => {
-          return new Queue(queue.queueName, deepmerge(options, queue.options || {}));
+          return new Queue(queue.queueName, deepmerge(options.options || {}, queue.options || {}));
         },
         inject: [BULL_MODULE_OPTIONS],
       } as Provider;
