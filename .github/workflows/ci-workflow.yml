@@ -6,7 +6,7 @@ jobs:
   test:
     strategy:
       matrix:
-        node: [10, 12]
+        node: [12, 13]
     name: Test Node v${{ matrix.node }}
     runs-on: ubuntu-latest
     container:
@@ -19,7 +19,7 @@ jobs:
         ports:
           - "6379:6379"
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v1
         with:
           fetch-depth: 1
       - name: Install npm packages
