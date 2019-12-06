@@ -30,6 +30,6 @@
     "fast-glob": "3.1.0"
   },
   "devDependencies": {
-    "bullmq": "1.4.1"
+    "bullmq": "1.5.0"
   }
 }
