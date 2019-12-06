@@ -28,5 +28,9 @@
   "dependencies": {
     "deepmerge": "4.2.2",
     "fast-glob": "3.1.0"
+  },
+  "devDependencies": {
+    "@types/bull": "3.10.6",
+    "bull": "3.12.0"
   }
 }
