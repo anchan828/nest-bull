@@ -26,7 +26,7 @@ export class BasicExampleService {
 }
 
 @Module({
-  imports: [BullModule.forQueue([{ queueName }])],
+  imports: [BullModule.forQueue([queueName])],
   providers: [BasicExampleBullQueue, BasicExampleService],
 })
 export class BasicExampleModule {}
@@ -55,6 +55,7 @@ describe("1. Basic Example", () => {
     expect(service).toBeDefined();
     expect(service.queue).toBeDefined();
     const job = await service.addJob();
+
     await expect(job.waitUntilFinished(createQueueEvents(queueName))).resolves.toStrictEqual({ status: "ok" });
     await app.close();
   });

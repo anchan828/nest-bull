@@ -63,12 +63,14 @@ export class BullCoreModule implements OnModuleInit {
     };
   }
 
-  public static forQueue(queues: BullQueueOptions[]): DynamicModule {
+  public static forQueue(queues: (string | BullQueueOptions)[]): DynamicModule {
     const queueProviders: Provider[] = queues.map(queue => {
+      const queueName = typeof queue === "string" ? queue : queue.queueName;
+      const queueOptions = typeof queue === "string" ? {} : queue.options || {};
       return {
-        provide: getBullQueueToken(queue.queueName),
+        provide: getBullQueueToken(queueName),
         useFactory: (options: BullModuleOptions): Queue => {
-          return new Queue(queue.queueName, deepmerge(options.options || {}, queue.options || {}));
+          return new Queue(queueName, deepmerge(options.options || {}, queueOptions));
         },
         inject: [BULL_MODULE_OPTIONS],
       } as Provider;

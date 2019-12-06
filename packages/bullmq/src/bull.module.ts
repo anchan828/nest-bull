@@ -19,7 +19,7 @@ export class BullModule {
     };
   }
 
-  public static forQueue(queues: BullQueueOptions[]): DynamicModule {
+  public static forQueue(queues: (string | BullQueueOptions)[]): DynamicModule {
     return {
       module: BullModule,
       imports: [BullCoreModule.forQueue(queues)],
