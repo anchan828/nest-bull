@@ -44,9 +44,7 @@ export class BullExplorerService {
 
     for (const methodName of this.metadataScanner.getAllFilteredMethodNames(prototype)) {
       const options = Reflect.getMetadata(BULL_WORKER_PROCESSOR_DECORATOR, prototype[methodName]);
-      if (options) {
-        workerProcessors.push({ processor: prototype[methodName].bind(instance), options });
-      }
+      workerProcessors.push({ processor: prototype[methodName].bind(instance), options });
     }
 
     return workerProcessors;

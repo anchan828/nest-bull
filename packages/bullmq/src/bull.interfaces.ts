@@ -51,12 +51,8 @@ export interface BullWorkerMetadata {
 /**
  * Worker process interfaces
  */
-export interface BullWorkerProcessOptions {
-  name: string;
-  opts?: WorkerOptions;
-}
 
 export interface BullWorkerProcessMetadata {
   processor: Processor;
-  options: BullWorkerProcessOptions;
+  options: WorkerOptions;
 }

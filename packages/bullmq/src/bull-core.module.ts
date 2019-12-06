@@ -35,7 +35,7 @@ export class BullCoreModule implements OnModuleInit {
           deepmerge.all([
             { connection: this.options?.options?.connection },
             worker.options.options || {},
-            workerProcessor.options.opts || {},
+            workerProcessor.options || {},
           ]),
         );
       }

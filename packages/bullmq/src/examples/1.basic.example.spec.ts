@@ -9,8 +9,8 @@ const queueName = "queueName";
 
 @BullWorker({ queueName })
 export class BasicExampleBullQueue {
-  @BullWorkerProcess({ name: "basic" })
-  public async process(job: Job): Promise<{ status: string }> {
+  @BullWorkerProcess()
+  public async process1(job: Job): Promise<{ status: string }> {
     expect(job.data).toStrictEqual({ test: "test" });
     return { status: "ok" };
   }
