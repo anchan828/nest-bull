@@ -1,6 +1,6 @@
 import { DynamicModule, Global, Module } from "@nestjs/common";
 import { BullCoreModule } from "./bull-core.module";
-import { BullModuleAsyncOptions, BullModuleOptions, BullQueueOptions } from "./bull.interfaces";
+import { BullModuleAsyncOptions, BullModuleOptions, BullQueueOptions } from "./interfaces";
 
 @Global()
 @Module({})

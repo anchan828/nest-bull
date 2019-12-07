@@ -1,6 +1,8 @@
 import { Type } from "@nestjs/common";
-import { Injectable, ModuleMetadata } from "@nestjs/common/interfaces";
-import { Processor, QueueBaseOptions, QueueOptions, WorkerOptions } from "bullmq";
+import { ModuleMetadata } from "@nestjs/common/interfaces";
+import { QueueBaseOptions } from "bullmq";
+import { BullQueueEventsMetadata } from "./bull-queue-events.interface";
+import { BullWorkerMetadata } from "./bull-worker.interface";
 
 /**
  * Module interfaces
@@ -26,33 +28,7 @@ export interface BullModuleOptionsFactory {
   createBullModuleOptions(): Promise<BullModuleOptions> | BullModuleOptions;
 }
 
-/**
- * Queue interfaces
- */
-export interface BullQueueOptions {
-  queueName: string;
-  options?: QueueOptions;
-}
-
-/**
- * Worker interfaces
- */
-export interface BullWorkerOptions {
-  queueName: string;
-  options?: WorkerOptions;
-}
-export interface BullWorkerMetadata {
-  instance: Injectable;
-  options: BullWorkerOptions;
-
-  processors: BullWorkerProcessMetadata[];
-}
-
-/**
- * Worker process interfaces
- */
-
-export interface BullWorkerProcessMetadata {
-  processor: Processor;
-  options: WorkerOptions;
+export interface BullExploreResults {
+  workers: BullWorkerMetadata[];
+  queueEvents: BullQueueEventsMetadata[];
 }

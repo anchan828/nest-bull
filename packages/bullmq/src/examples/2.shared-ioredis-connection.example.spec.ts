@@ -4,7 +4,7 @@ import { Job, Queue } from "bullmq";
 import { BullQueueInject, BullWorker, BullWorkerProcess } from "../bull.decorator";
 import { BullModule } from "../bull.module";
 import { createQueueEvents, REDIS_HOST } from "../bull.utils.spec";
-
+import IORedis = require("ioredis");
 const queueName = "queueName";
 
 @BullWorker({ queueName })
@@ -35,9 +35,9 @@ export class TestModule {}
   imports: [
     BullModule.forRoot({
       options: {
-        connection: {
+        connection: new IORedis({
           host: REDIS_HOST,
-        },
+        }),
       },
     }),
     TestModule,
@@ -45,7 +45,8 @@ export class TestModule {}
 })
 export class ApplicationModule {}
 
-describe("Basic Example", () => {
+// https://docs.bullmq.io/guide/connections
+describe("Shared IORedis connection", () => {
   it("test", async () => {
     const app = await Test.createTestingModule({
       imports: [ApplicationModule],

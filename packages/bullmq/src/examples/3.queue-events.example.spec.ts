@@ -1,10 +1,15 @@
 import { Injectable, Module } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import { Job, Queue } from "bullmq";
-import { BullQueueInject, BullWorker, BullWorkerProcess } from "../bull.decorator";
+import {
+  BullQueueEventProcess,
+  BullQueueEvents,
+  BullQueueInject,
+  BullWorker,
+  BullWorkerProcess,
+} from "../bull.decorator";
 import { BullModule } from "../bull.module";
-import { createQueueEvents, REDIS_HOST } from "../bull.utils.spec";
-
+import { createQueueEvents, REDIS_HOST, wait } from "../bull.utils.spec";
 const queueName = "queueName";
 
 @BullWorker({ queueName })
@@ -13,6 +18,14 @@ export class TestBullWorker {
   public async process(job: Job): Promise<{ status: string }> {
     expect(job.data).toStrictEqual({ test: "test" });
     return { status: "ok" };
+  }
+}
+
+@BullQueueEvents({ queueName })
+export class TestBullQueueEvents {
+  @BullQueueEventProcess("waiting")
+  public async process(job: Job): Promise<void> {
+    console.log({ job });
   }
 }
 
@@ -27,7 +40,7 @@ export class TestService {
 
 @Module({
   imports: [BullModule.forQueue([queueName])],
-  providers: [TestBullWorker, TestService],
+  providers: [TestBullWorker, TestService, TestBullQueueEvents],
 })
 export class TestModule {}
 
@@ -45,7 +58,8 @@ export class TestModule {}
 })
 export class ApplicationModule {}
 
-describe("Basic Example", () => {
+// https://docs.bullmq.io/guide/connections
+describe("Shared IORedis connection", () => {
   it("test", async () => {
     const app = await Test.createTestingModule({
       imports: [ApplicationModule],
@@ -55,8 +69,8 @@ describe("Basic Example", () => {
     expect(service).toBeDefined();
     expect(service.queue).toBeDefined();
     const job = await service.addJob();
-
     await expect(job.waitUntilFinished(createQueueEvents(queueName))).resolves.toStrictEqual({ status: "ok" });
+    await wait(1000);
     await app.close();
   });
 });

@@ -1,17 +1,13 @@
 import { DynamicModule, Global, Inject, Module, Provider } from "@nestjs/common";
 import { ClassProvider, FactoryProvider, OnModuleInit } from "@nestjs/common/interfaces";
 import { MetadataScanner } from "@nestjs/core/metadata-scanner";
-import { Queue, Worker } from "bullmq";
+import { Queue, QueueEvents, Worker } from "bullmq";
 import * as deepmerge from "deepmerge";
 import { BULL_MODULE_OPTIONS } from "./bull.constants";
 import { BullExplorerService } from "./bull.explorer.service";
-import {
-  BullModuleAsyncOptions,
-  BullModuleOptions,
-  BullModuleOptionsFactory,
-  BullQueueOptions,
-} from "./bull.interfaces";
 import { getBullQueueToken } from "./bull.utils";
+import { BullModuleAsyncOptions, BullModuleOptions, BullModuleOptionsFactory } from "./interfaces";
+import { BullQueueOptions } from "./interfaces/bull-queue.interface";
 
 @Global()
 @Module({
@@ -25,7 +21,7 @@ export class BullCoreModule implements OnModuleInit {
   ) {}
 
   onModuleInit(): void {
-    const workers = this.explorer.explore();
+    const { workers, queueEvents } = this.explorer.explore();
 
     for (const worker of workers) {
       for (const workerProcessor of worker.processors) {
@@ -38,6 +34,13 @@ export class BullCoreModule implements OnModuleInit {
             workerProcessor.options || {},
           ]),
         );
+      }
+    }
+    for (const queueEvent of queueEvents) {
+      const queueEventInstance = new QueueEvents(queueEvent.options.queueName);
+
+      for (const event of queueEvent.events) {
+        queueEventInstance.on(event.type, event.processor);
       }
     }
   }
