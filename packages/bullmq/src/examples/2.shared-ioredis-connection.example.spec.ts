@@ -31,14 +31,15 @@ export class TestService {
 })
 export class TestModule {}
 
+const connection = new IORedis({
+  host: process.env.REDIS_HOST,
+  port: parseInt(process.env.REDIS_PORT!),
+});
+
 @Module({
   imports: [
     BullModule.forRoot({
-      options: {
-        connection: new IORedis({
-          host: process.env.REDIS_HOST,
-        }),
-      },
+      options: { connection },
     }),
     TestModule,
   ],
@@ -56,7 +57,6 @@ describe("Shared IORedis connection", () => {
     expect(service).toBeDefined();
     expect(service.queue).toBeDefined();
     const job = await service.addJob();
-
     await expect(job.waitUntilFinished(createQueueEvents(queueName))).resolves.toStrictEqual({ status: "ok" });
     await app.close();
   });

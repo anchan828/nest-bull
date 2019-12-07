@@ -1,4 +1,4 @@
-import { Processor } from "bullmq";
+import { Processor, WorkerOptions } from "bullmq";
 import { BullQueueBaseMetadata } from "./bull-base.interface";
 
 /**

@@ -1,7 +1,7 @@
 import { DynamicModule, Global, Inject, Module, Provider } from "@nestjs/common";
 import { ClassProvider, FactoryProvider, OnModuleInit } from "@nestjs/common/interfaces";
 import { MetadataScanner } from "@nestjs/core/metadata-scanner";
-import { Queue, QueueEvents, Worker } from "bullmq";
+import { Queue, QueueBaseOptions, QueueEvents, QueueEventsOptions, Worker } from "bullmq";
 import * as deepmerge from "deepmerge";
 import { BULL_MODULE_OPTIONS } from "./bull.constants";
 import { BullExplorerService } from "./bull.explorer.service";
@@ -9,7 +9,22 @@ import { BullService } from "./bull.service";
 import { getBullQueueToken } from "./bull.utils";
 import { BullModuleAsyncOptions, BullModuleOptions, BullModuleOptionsFactory } from "./interfaces";
 import { BullQueueOptions } from "./interfaces/bull-queue.interface";
+import IORedis = require("ioredis");
 
+function mergeQueueBaseOptions(...options: (QueueBaseOptions | undefined)[]): QueueBaseOptions {
+  const opts = options.filter((x): x is QueueBaseOptions => x !== undefined) as QueueEventsOptions[];
+  const obj = deepmerge.all<QueueBaseOptions>(opts);
+
+  if (obj?.connection?.options) {
+    // IORedis object, but 'instanceof IORedis' returns false.
+    // for now, it uses last connection object.
+    obj.connection = opts
+      .reverse()
+      .map(x => x?.connection)
+      .find(connection => connection instanceof IORedis);
+  }
+  return obj;
+}
 @Global()
 @Module({
   providers: [MetadataScanner, BullExplorerService],
@@ -28,7 +43,7 @@ export class BullCoreModule implements OnModuleInit {
     for (const queue of queues) {
       const queueInstance = new Queue(
         queue.options.queueName,
-        deepmerge(this.options || {}, queue.options.options || {}),
+        mergeQueueBaseOptions(this.options?.options, queue.options.options),
       );
 
       for (const event of queue.events) {
@@ -43,11 +58,7 @@ export class BullCoreModule implements OnModuleInit {
         const workerInstance = new Worker(
           worker.options.queueName,
           workerProcessor.processor,
-          deepmerge.all([
-            { connection: this.options?.options?.connection },
-            worker.options.options || {},
-            workerProcessor.options || {},
-          ]),
+          mergeQueueBaseOptions(this.options?.options, worker?.options?.options, workerProcessor.options),
         );
 
         for (const event of worker.events) {
@@ -60,7 +71,7 @@ export class BullCoreModule implements OnModuleInit {
     for (const queueEvent of queueEvents) {
       const queueEventInstance = new QueueEvents(
         queueEvent.options.queueName,
-        deepmerge(this.options || {}, queueEvent.options.options || {}),
+        mergeQueueBaseOptions(this.options?.options, queueEvent.options.options),
       );
 
       for (const event of queueEvent.events) {
@@ -99,7 +110,7 @@ export class BullCoreModule implements OnModuleInit {
       return {
         provide: getBullQueueToken(queueName),
         useFactory: (options: BullModuleOptions, service: BullService): Queue => {
-          const queueInstance = new Queue(queueName, deepmerge(options.options || {}, queueOptions));
+          const queueInstance = new Queue(queueName, mergeQueueBaseOptions(options?.options, queueOptions));
           service.queues[queueName] = queueInstance;
           return queueInstance;
         },

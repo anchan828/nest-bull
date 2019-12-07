@@ -8,6 +8,8 @@ export function createQueueEvents(queueName: string): QueueEvents {
   return new QueueEvents(queueName, {
     connection: {
       host: process.env.REDIS_HOST,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      port: parseInt(process.env.REDIS_PORT!),
     },
   });
 }
