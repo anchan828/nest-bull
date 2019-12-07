@@ -62,3 +62,5 @@ typings/
 .idea
 dist
 .idea
+
+.DS_Store
