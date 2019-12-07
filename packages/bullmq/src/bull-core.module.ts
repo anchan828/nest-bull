@@ -26,7 +26,10 @@ export class BullCoreModule implements OnModuleInit {
   onModuleInit(): void {
     const { workers, queueEvents, queues } = this.explorer.explore();
     for (const queue of queues) {
-      const queueInstance = new Queue(queue.options.queueName, queue.options.options);
+      const queueInstance = new Queue(
+        queue.options.queueName,
+        deepmerge(this.options || {}, queue.options.options || {}),
+      );
 
       for (const event of queue.events) {
         queueInstance.on(event.type, event.processor);
@@ -55,7 +58,10 @@ export class BullCoreModule implements OnModuleInit {
       }
     }
     for (const queueEvent of queueEvents) {
-      const queueEventInstance = new QueueEvents(queueEvent.options.queueName, queueEvent.options.options);
+      const queueEventInstance = new QueueEvents(
+        queueEvent.options.queueName,
+        deepmerge(this.options || {}, queueEvent.options.options || {}),
+      );
 
       for (const event of queueEvent.events) {
         queueEventInstance.on(event.type, event.processor);
