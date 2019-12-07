@@ -1,4 +1,4 @@
-import { Injectable, Module } from "@nestjs/common";
+import { Injectable, Logger, Module } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import { Job, Queue } from "bullmq";
 import {
@@ -9,7 +9,7 @@ import {
   BullWorkerProcess,
 } from "../bull.decorator";
 import { BullModule } from "../bull.module";
-import { createQueueEvents, REDIS_HOST, wait } from "../bull.utils.spec";
+import { createQueueEvents, wait } from "../bull.utils";
 const queueName = "queueName";
 
 @BullWorker({ queueName })
@@ -25,7 +25,7 @@ export class TestBullWorker {
 export class TestBullQueueEvents {
   @BullQueueEventProcess("waiting")
   public async process(job: Job): Promise<void> {
-    console.log({ job });
+    Logger.log(job);
   }
 }
 
@@ -49,7 +49,7 @@ export class TestModule {}
     BullModule.forRoot({
       options: {
         connection: {
-          host: REDIS_HOST,
+          host: process.env.REDIS_HOST,
         },
       },
     }),
@@ -59,7 +59,7 @@ export class TestModule {}
 export class ApplicationModule {}
 
 // https://docs.bullmq.io/guide/connections
-describe("Shared IORedis connection", () => {
+describe("QueueEvents decorator", () => {
   it("test", async () => {
     const app = await Test.createTestingModule({
       imports: [ApplicationModule],

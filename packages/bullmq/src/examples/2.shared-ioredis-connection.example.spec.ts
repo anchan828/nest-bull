@@ -3,7 +3,7 @@ import { Test } from "@nestjs/testing";
 import { Job, Queue } from "bullmq";
 import { BullQueueInject, BullWorker, BullWorkerProcess } from "../bull.decorator";
 import { BullModule } from "../bull.module";
-import { createQueueEvents, REDIS_HOST } from "../bull.utils.spec";
+import { createQueueEvents } from "../bull.utils";
 import IORedis = require("ioredis");
 const queueName = "queueName";
 
@@ -36,7 +36,7 @@ export class TestModule {}
     BullModule.forRoot({
       options: {
         connection: new IORedis({
-          host: REDIS_HOST,
+          host: process.env.REDIS_HOST,
         }),
       },
     }),

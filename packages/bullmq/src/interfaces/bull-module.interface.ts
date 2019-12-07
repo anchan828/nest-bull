@@ -2,6 +2,7 @@ import { Type } from "@nestjs/common";
 import { ModuleMetadata } from "@nestjs/common/interfaces";
 import { QueueBaseOptions } from "bullmq";
 import { BullQueueEventsMetadata } from "./bull-queue-events.interface";
+import { BullQueueMetadata } from "./bull-queue.interface";
 import { BullWorkerMetadata } from "./bull-worker.interface";
 
 /**
@@ -29,6 +30,7 @@ export interface BullModuleOptionsFactory {
 }
 
 export interface BullExploreResults {
+  queues: BullQueueMetadata[];
   workers: BullWorkerMetadata[];
   queueEvents: BullQueueEventsMetadata[];
 }

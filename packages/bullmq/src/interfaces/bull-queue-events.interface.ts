@@ -1,5 +1,5 @@
-import { Injectable } from "@nestjs/common/interfaces";
-import { Processor } from "bullmq";
+import { Processor, QueueEventsOptions } from "bullmq";
+import { BullQueueBaseMetadata } from "./bull-base.interface";
 
 /**
  * Event types
@@ -32,15 +32,11 @@ export type BullQueueEvent =
  */
 export interface BullQueueEventsOptions {
   queueName: string;
-  options?: BullQueueEventsOptions;
+  options?: QueueEventsOptions;
 }
 
-export interface BullQueueEventsMetadata {
-  instance: Injectable;
-  options: BullQueueEventsOptions;
-
-  events: BullQueueEventsProcessMetadata[];
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface BullQueueEventsMetadata extends BullQueueBaseMetadata<BullQueueEventsOptions> {}
 
 /**
  * Queue events process interfaces

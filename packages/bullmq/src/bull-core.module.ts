@@ -5,6 +5,7 @@ import { Queue, QueueEvents, Worker } from "bullmq";
 import * as deepmerge from "deepmerge";
 import { BULL_MODULE_OPTIONS } from "./bull.constants";
 import { BullExplorerService } from "./bull.explorer.service";
+import { BullService } from "./bull.service";
 import { getBullQueueToken } from "./bull.utils";
 import { BullModuleAsyncOptions, BullModuleOptions, BullModuleOptionsFactory } from "./interfaces";
 import { BullQueueOptions } from "./interfaces/bull-queue.interface";
@@ -18,14 +19,25 @@ export class BullCoreModule implements OnModuleInit {
     @Inject(BULL_MODULE_OPTIONS)
     private readonly options: BullModuleOptions,
     private readonly explorer: BullExplorerService,
+
+    private readonly service: BullService,
   ) {}
 
   onModuleInit(): void {
-    const { workers, queueEvents } = this.explorer.explore();
+    const { workers, queueEvents, queues } = this.explorer.explore();
+    for (const queue of queues) {
+      const queueInstance = new Queue(queue.options.queueName, queue.options.options);
+
+      for (const event of queue.events) {
+        queueInstance.on(event.type, event.processor);
+      }
+
+      this.service.queues[queue.options.queueName] = queueInstance;
+    }
 
     for (const worker of workers) {
       for (const workerProcessor of worker.processors) {
-        new Worker(
+        const workerInstance = new Worker(
           worker.options.queueName,
           workerProcessor.processor,
           deepmerge.all([
@@ -34,14 +46,22 @@ export class BullCoreModule implements OnModuleInit {
             workerProcessor.options || {},
           ]),
         );
+
+        for (const event of worker.events) {
+          workerInstance.on(event.type, event.processor);
+        }
+
+        this.service.workers[worker.options.queueName] = workerInstance;
       }
     }
     for (const queueEvent of queueEvents) {
-      const queueEventInstance = new QueueEvents(queueEvent.options.queueName);
+      const queueEventInstance = new QueueEvents(queueEvent.options.queueName, queueEvent.options.options);
 
       for (const event of queueEvent.events) {
         queueEventInstance.on(event.type, event.processor);
       }
+
+      this.service.queueEvents[queueEvent.options.queueName] = queueEventInstance;
     }
   }
 
@@ -52,8 +72,8 @@ export class BullCoreModule implements OnModuleInit {
     };
     return {
       module: BullCoreModule,
-      providers: [optionProvider],
-      exports: [optionProvider],
+      providers: [optionProvider, BullService],
+      exports: [optionProvider, BullService],
     };
   }
 
@@ -62,7 +82,7 @@ export class BullCoreModule implements OnModuleInit {
     return {
       module: BullCoreModule,
       imports: [...(options.imports || [])],
-      providers: [...asyncProviders],
+      providers: [...asyncProviders, BullService],
     };
   }
 
@@ -72,10 +92,12 @@ export class BullCoreModule implements OnModuleInit {
       const queueOptions = typeof queue === "string" ? {} : queue.options || {};
       return {
         provide: getBullQueueToken(queueName),
-        useFactory: (options: BullModuleOptions): Queue => {
-          return new Queue(queueName, deepmerge(options.options || {}, queueOptions));
+        useFactory: (options: BullModuleOptions, service: BullService): Queue => {
+          const queueInstance = new Queue(queueName, deepmerge(options.options || {}, queueOptions));
+          service.queues[queueName] = queueInstance;
+          return queueInstance;
         },
-        inject: [BULL_MODULE_OPTIONS],
+        inject: [BULL_MODULE_OPTIONS, BullService],
       } as Provider;
     });
     return {
