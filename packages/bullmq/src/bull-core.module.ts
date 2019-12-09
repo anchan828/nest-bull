@@ -1,7 +1,7 @@
 import { DynamicModule, Global, Inject, Module, Provider } from "@nestjs/common";
 import { ClassProvider, FactoryProvider, OnModuleInit } from "@nestjs/common/interfaces";
 import { MetadataScanner } from "@nestjs/core/metadata-scanner";
-import { Queue, QueueBaseOptions, QueueEvents, QueueEventsOptions, Worker } from "bullmq";
+import { Processor, Queue, QueueBaseOptions, QueueEvents, QueueEventsOptions, Worker } from "bullmq";
 import * as deepmerge from "deepmerge";
 import { BULL_MODULE_OPTIONS } from "./bull.constants";
 import { BullExplorerService } from "./bull.explorer.service";
@@ -25,6 +25,50 @@ function mergeQueueBaseOptions(...options: (QueueBaseOptions | undefined)[]): Qu
   }
   return obj;
 }
+
+function createJobMock(args: any): any {
+  return {
+    ...args,
+    waitUntilFinished: (): Promise<boolean> => Promise.resolve(true),
+    isCompleted: (): Promise<boolean> => Promise.resolve(true),
+    isFailed: (): Promise<boolean> => Promise.resolve(true),
+    isActive: (): Promise<boolean> => Promise.resolve(true),
+    isWaiting: (): Promise<boolean> => Promise.resolve(false),
+    getState: (): Promise<string> => Promise.resolve("completed"),
+    remove: (): Promise<boolean> => Promise.resolve(true),
+  };
+}
+
+function createQueue(queueName: string, options: QueueBaseOptions, mock?: boolean): Queue {
+  if (mock) {
+    return {
+      name: queueName,
+      opts: options,
+      add: (args: any) => Promise.resolve(createJobMock(args)),
+      addBulk: (args: any[]) => Promise.all(args.map(x => createJobMock(x))),
+      on: () => {},
+    } as any;
+  }
+
+  return new Queue(queueName, options);
+}
+function createWorker(queueName: string, processor: Processor, options: QueueBaseOptions, mock?: boolean): Worker {
+  if (mock) {
+    return {
+      on: () => {},
+    } as any;
+  }
+  return new Worker(queueName, processor, options);
+}
+function createQueueEvents(queueName: string, options: QueueBaseOptions, mock?: boolean): QueueEvents {
+  if (mock) {
+    return {
+      on: () => {},
+    } as any;
+  }
+  return new QueueEvents(queueName, options);
+}
+
 @Global()
 @Module({
   providers: [MetadataScanner, BullExplorerService],
@@ -41,9 +85,10 @@ export class BullCoreModule implements OnModuleInit {
   onModuleInit(): void {
     const { workers, queueEvents, queues } = this.explorer.explore();
     for (const queue of queues) {
-      const queueInstance = new Queue(
+      const queueInstance = createQueue(
         queue.options.queueName,
         mergeQueueBaseOptions(this.options?.options, queue.options.options),
+        this.options.mock,
       );
 
       for (const event of queue.events) {
@@ -55,10 +100,11 @@ export class BullCoreModule implements OnModuleInit {
 
     for (const worker of workers) {
       for (const workerProcessor of worker.processors) {
-        const workerInstance = new Worker(
+        const workerInstance = createWorker(
           worker.options.queueName,
           workerProcessor.processor,
           mergeQueueBaseOptions(this.options?.options, worker?.options?.options, workerProcessor.options),
+          this.options.mock,
         );
 
         for (const event of worker.events) {
@@ -69,9 +115,10 @@ export class BullCoreModule implements OnModuleInit {
       }
     }
     for (const queueEvent of queueEvents) {
-      const queueEventInstance = new QueueEvents(
+      const queueEventInstance = createQueueEvents(
         queueEvent.options.queueName,
         mergeQueueBaseOptions(this.options?.options, queueEvent.options.options),
+        this.options.mock,
       );
 
       for (const event of queueEvent.events) {
@@ -100,6 +147,7 @@ export class BullCoreModule implements OnModuleInit {
       module: BullCoreModule,
       imports: [...(options.imports || [])],
       providers: [...asyncProviders, BullService],
+      exports: [...asyncProviders, BullService],
     };
   }
 
@@ -110,7 +158,11 @@ export class BullCoreModule implements OnModuleInit {
       return {
         provide: getBullQueueToken(queueName),
         useFactory: (options: BullModuleOptions, service: BullService): Queue => {
-          const queueInstance = new Queue(queueName, mergeQueueBaseOptions(options?.options, queueOptions));
+          const queueInstance = createQueue(
+            queueName,
+            mergeQueueBaseOptions(options?.options, queueOptions),
+            options.mock,
+          );
           service.queues[queueName] = queueInstance;
           return queueInstance;
         },

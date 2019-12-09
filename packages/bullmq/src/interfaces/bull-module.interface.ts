@@ -11,6 +11,14 @@ import { BullWorkerMetadata } from "./bull-worker.interface";
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface BullModuleOptions {
   options?: QueueBaseOptions;
+
+  /**
+   * Set true if you don't want to create {@link Queue}/{@link Worker}/{@link QueueEvents} object.
+   * If you set to true, module create mock object for them
+   * @type {boolean}
+   * @memberof BullModuleOptions
+   */
+  mock?: boolean;
 }
 
 export type BullModuleAsyncOptions = {

@@ -58,30 +58,6 @@ export class BullExplorerService {
     return metadata;
   }
 
-  private getWorkers(modules: Module[]): BullWorkerMetadata[] {
-    const workers: BullWorkerMetadata[] = [];
-    for (const classInstanceWrapper of this.getClassInstanceWrappers(modules)) {
-      const options = Reflect.getMetadata(BULL_WORKER_DECORATOR, classInstanceWrapper.instance.constructor);
-
-      if (options) {
-        workers.push({ instance: classInstanceWrapper.instance, options, processors: [], events: [] });
-      }
-    }
-    return workers;
-  }
-
-  private getQueueEvents(modules: Module[]): BullQueueEventsMetadata[] {
-    const queueEvents: BullQueueEventsMetadata[] = [];
-    for (const classInstanceWrapper of this.getClassInstanceWrappers(modules)) {
-      const options = Reflect.getMetadata(BULL_QUEUE_EVENTS_DECORATOR, classInstanceWrapper.instance.constructor);
-
-      if (options) {
-        queueEvents.push({ instance: classInstanceWrapper.instance, options, events: [] });
-      }
-    }
-    return queueEvents;
-  }
-
   private getClassInstanceWrappers(modules: Module[]): InstanceWrapper<InjectableMeta>[] {
     const instanceWrappers = modules.map(module => [...module.providers.values()]).reduce((a, b) => a.concat(b), []);
     return instanceWrappers

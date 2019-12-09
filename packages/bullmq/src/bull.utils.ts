@@ -15,9 +15,8 @@ export function createQueueEvents(queueName: string): QueueEvents {
 }
 
 export const wait = async (timer: number): Promise<void> =>
-  await new Promise(
-    (resolve): NodeJS.Timeout =>
-      setTimeout((): void => {
-        resolve();
-      }, timer),
+  await new Promise((resolve): any =>
+    setTimeout((): void => {
+      resolve();
+    }, timer),
   );
