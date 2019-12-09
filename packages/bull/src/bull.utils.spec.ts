@@ -5,8 +5,6 @@ import { join, resolve } from "path";
 import { ulid } from "ulid";
 import { getBullQueueToken } from "./bull.utils";
 
-export const REDIS_HOST = process.env.REDIS_HOST || "localhost";
-
 export const tmpWorkspaceDir = resolve(tmpdir(), "nest-bull");
 export const cleanTestFiles = (): void => {
   const unlinkFiles = (): void =>

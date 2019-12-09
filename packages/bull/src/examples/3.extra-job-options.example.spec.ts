@@ -5,7 +5,6 @@ import { Job, Queue } from "bull";
 import { BullQueue, BullQueueInject, BullQueueProcess } from "../bull.decorator";
 import { BullJob } from "../bull.interfaces";
 import { BullModule } from "../bull.module";
-import { REDIS_HOST } from "../bull.utils.spec";
 
 @BullQueue({
   extra: {
@@ -50,7 +49,8 @@ export class ExtraJobOptionsModule {}
       queues: [__filename],
       options: {
         redis: {
-          host: REDIS_HOST,
+          host: process.env.REDIS_HOST,
+          port: parseInt(process.env.REDIS_PORT!),
         },
       },
       extra: {

@@ -3,7 +3,7 @@ import { Test } from "@nestjs/testing";
 import { Queue } from "bull";
 import { BullQueue, BullQueueInject, BullQueueProcess } from "../bull.decorator";
 import { BullModule } from "../bull.module";
-import { REDIS_HOST, wait } from "../bull.utils.spec";
+import { wait } from "../bull.utils.spec";
 
 @BullQueue()
 export class MockExampleBullQueue {
@@ -28,7 +28,8 @@ export class MockExampleModule {}
       queues: [__filename],
       options: {
         redis: {
-          host: REDIS_HOST,
+          host: process.env.REDIS_HOST,
+          port: parseInt(process.env.REDIS_PORT!),
         },
       },
       extra: {

@@ -8,7 +8,6 @@ import { BullHealthCheckQueue, BullHealthIndicator } from "./bull.health";
 import { QUEUE_NAME } from "./constants";
 import { BullHealthModule } from "./health.module";
 
-const REDIS_HOST = process.env.REDIS_HOST;
 describe("BullHealthModule", () => {
   it("should compile module", async () => {
     await expect(
@@ -18,7 +17,8 @@ describe("BullHealthModule", () => {
             queues: [BullHealthCheckQueue],
             options: {
               redis: {
-                host: REDIS_HOST,
+                host: process.env.REDIS_HOST,
+                port: parseInt(process.env.REDIS_PORT!),
               },
             },
           }),
@@ -55,7 +55,8 @@ describe("BullHealthModule", () => {
             queues: [BullHealthCheckQueue],
             options: {
               redis: {
-                host: REDIS_HOST,
+                host: process.env.REDIS_HOST,
+                port: parseInt(process.env.REDIS_PORT!),
               },
             },
           }),
@@ -92,7 +93,8 @@ describe("BullHealthModule", () => {
             queues: [BullHealthCheckQueue],
             options: {
               redis: {
-                host: REDIS_HOST,
+                host: process.env.REDIS_HOST,
+                port: parseInt(process.env.REDIS_PORT!),
               },
             },
           }),
@@ -130,7 +132,8 @@ describe("BullHealthModule", () => {
             queues: [BullHealthCheckQueue],
             options: {
               redis: {
-                host: REDIS_HOST,
+                host: process.env.REDIS_HOST,
+                port: parseInt(process.env.REDIS_PORT!),
               },
             },
           }),
@@ -176,7 +179,8 @@ describe("BullHealthModule", () => {
             queues: [BullHealthCheckQueue],
             options: {
               redis: {
-                host: REDIS_HOST,
+                host: process.env.REDIS_HOST,
+                port: parseInt(process.env.REDIS_PORT!),
               },
             },
           }),
