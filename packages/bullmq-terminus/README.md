@@ -10,8 +10,7 @@ The terminus of The [Bull](https://github.com/OptimalBits/bull) module for [Nest
 ## Installation
 
 ```bash
-$ npm i --save @anchan828/nest-bullmq-terminus @nestjs/terminus @godaddy/terminus @anchan828/nest-bull bull
-$ npm i --save-dev @types/bull
+$ npm i --save @anchan828/nest-bullmq-terminus @nestjs/terminus @godaddy/terminus @anchan828/nest-bullmq bullmq
 ```
 
 ## Quick Start
