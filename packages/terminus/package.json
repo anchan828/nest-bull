@@ -1,6 +1,6 @@
 {
   "name": "@anchan828/nest-bull-terminus",
-  "version": "0.3.35",
+  "version": "0.3.37",
   "description": "The terminus of [Bull](https://github.com/OptimalBits/bull) module for [Nest](https://github.com/nestjs/nest).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -26,11 +26,11 @@
   },
   "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/terminus#readme",
   "dependencies": {
-    "@anchan828/nest-bull": "^0.3.35"
+    "@anchan828/nest-bull": "^0.3.37"
   },
   "devDependencies": {
-    "@godaddy/terminus": "4.2.1",
-    "@nestjs/terminus": "6.5.2",
+    "@godaddy/terminus": "4.3.1",
+    "@nestjs/terminus": "6.5.3",
     "@types/bull": "3.10.6",
     "@types/supertest": "2.0.8",
     "bull": "3.12.0",
