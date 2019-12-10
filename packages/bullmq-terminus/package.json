@@ -24,7 +24,7 @@
   "bugs": {
     "url": "https://github.com/anchan828/nest-bull/issues"
   },
-  "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/terminus#readme",
+  "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/bullmq-terminus#readme",
   "dependencies": {
     "@anchan828/nest-bullmq": "^0.3.35"
   },
