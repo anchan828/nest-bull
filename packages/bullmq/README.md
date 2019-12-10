@@ -23,7 +23,74 @@ $ npm i --save @anchan828/nest-bullmq bullmq
 
 ## Quick Start
 
-TODO
+### Import BullModule
+
+```ts
+import { BullModule } from "@anchan828/nest-bullmq";
+import { Module } from "@nestjs/common";
+
+@Module({
+  imports: [
+    BullModule.forRoot({
+      options: {
+        connection: {
+          host: "127.0.0.1",
+        },
+      },
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+### Create queue provider
+
+```ts
+import { Module } from "@nestjs/common";
+import { ExampleService } from "./example.service";
+
+@Module({
+  imports: [BullModule.forQueue(["QueueName"])],
+  providers: [ExampleService],
+})
+export class ExampleModule {}
+```
+
+### Inject Queue provider
+
+```ts
+import { Inject, Injectable } from "@nestjs/common";
+import { Queue } from "bullmq";
+import { APP_QUEUE } from "./app.constants";
+import { BullQueueInject } from "@anchan828/nest-bullmq";
+
+@Injectable()
+export class ExampleService {
+  constructor(
+    @BullQueueInject(APP_QUEUE)
+    private readonly queue: Queue,
+  ) {}
+
+  async addJob(): Promise<Job> {
+    return this.queue.add("example", { text: "text" });
+  }
+}
+```
+
+### Create worker provider
+
+```ts
+import { BullWorker, BullWorkerProcess } from "@anchan828/nest-bullmq";
+import { APP_QUEUE } from "./app.constants";
+
+@BullWorker({ queueName: APP_QUEUE })
+export class ExampleBullWorker {
+  @BullWorkerProcess()
+  public async process(job: Job): Promise<{ status: string }> {
+    return { status: "ok" };
+  }
+}
+```
 
 ## License
 
