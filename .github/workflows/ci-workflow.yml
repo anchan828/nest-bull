@@ -13,15 +13,14 @@ jobs:
       image: node:${{ matrix.node }}
       env:
         REDIS_HOST: redis
+        REDIS_PORT: 6379
     services:
       redis:
         image: redis
         ports:
           - "6379:6379"
     steps:
-      - uses: actions/checkout@master
-        with:
-          fetch-depth: 1
+      - uses: actions/checkout@v1
       - name: Install npm packages
         run: npm ci
       - name: Bootstrap monorepo packages
@@ -30,14 +29,10 @@ jobs:
           npm run build
       - name: Lint
         run: npm run lint
-      - name: Setup cc-test-reporter
-        run: |
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          chmod +x ./cc-test-reporter
-          ./cc-test-reporter before-build
       - name: Test monorepo packages
-        run: |
-          npm test
-          npx ts-node scripts/merge-coverage.ts
-      - name: Report coverage
-        run: ./cc-test-reporter after-build -r ${{ secrets.CC_TEST_REPORTER_ID }} --coverage-input-type lcov
+        uses: paambaati/codeclimate-action@v2.3.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: npm test
+          debug: true

@@ -3,7 +3,6 @@ import { Test } from "@nestjs/testing";
 import { Job, Queue } from "bull";
 import { BullQueue, BullQueueInject, BullQueueProcess } from "../bull.decorator";
 import { BullModule } from "../bull.module";
-import { REDIS_HOST } from "../bull.utils.spec";
 
 @BullQueue()
 export class MultipleProcessorExampleBullQueue {
@@ -46,7 +45,8 @@ export class MultipleProcessorExampleModule {}
       queues: [__filename],
       options: {
         redis: {
-          host: REDIS_HOST,
+          host: process.env.REDIS_HOST,
+          port: parseInt(process.env.REDIS_PORT!),
         },
       },
     }),
