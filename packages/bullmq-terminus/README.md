@@ -18,7 +18,7 @@ $ npm i --save @anchan828/nest-bullmq-terminus @nestjs/terminus @godaddy/terminu
 1. Create Health Module
 
 ```ts
-import { BullHealthCheckQueue, BullHealthIndicator, BullHealthModule } from "@anchan828/nest-bullmq-terminus";
+import { BullHealthIndicator, BullHealthModule } from "@anchan828/nest-bullmq-terminus";
 
 const getTerminusOptions = (bull: BullHealthIndicator): TerminusModuleOptions => ({
   endpoints: [
