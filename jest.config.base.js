@@ -1,7 +1,7 @@
 module.exports = {
   preset: "ts-jest",
   rootDir: ".",
-  coverageDirectory: "../coverage",
+  coverageDirectory: "coverage",
   coverageReporters: ["text-summary", "json-summary", "lcov", "text", "clover"],
   testEnvironment: "node",
   setupFilesAfterEnv: ["../../jest.setup.js"],
