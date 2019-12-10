@@ -10,8 +10,7 @@ The terminus of The [Bull](https://github.com/OptimalBits/bull) module for [Nest
 ## Installation
 
 ```bash
-$ npm i --save @anchan828/nest-bullmq-terminus @nestjs/terminus @godaddy/terminus @anchan828/nest-bull bull
-$ npm i --save-dev @types/bull
+$ npm i --save @anchan828/nest-bullmq-terminus @nestjs/terminus @godaddy/terminus @anchan828/nest-bullmq bullmq
 ```
 
 ## Quick Start
@@ -19,7 +18,7 @@ $ npm i --save-dev @types/bull
 1. Create Health Module
 
 ```ts
-import { BullHealthCheckQueue, BullHealthIndicator, BullHealthModule } from "@anchan828/nest-bullmq-terminus";
+import { BullHealthIndicator, BullHealthModule } from "@anchan828/nest-bullmq-terminus";
 
 const getTerminusOptions = (bull: BullHealthIndicator): TerminusModuleOptions => ({
   endpoints: [
