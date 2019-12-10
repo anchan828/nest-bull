@@ -19,6 +19,7 @@ module.exports = {
     "no-useless-constructor": "off",
     "@typescript-eslint/no-useless-constructor": "error",
     "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
     "lines-between-class-members": ["error", "always"],
   },
 };
