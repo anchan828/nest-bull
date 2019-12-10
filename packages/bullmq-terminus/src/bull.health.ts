@@ -4,7 +4,7 @@ import { Injectable } from "@nestjs/common";
 import { HealthIndicator, HealthIndicatorResult } from "@nestjs/terminus";
 import { QUEUE_NAME } from "./constants";
 
-@BullQueue({ queueName: QUEUE_NAME })
+@BullQueue({ queueName: QUEUE_NAME, options: { defaultJobOptions: { removeOnComplete: true } } })
 export class BullHealthCheckQueue {}
 
 @BullWorker({ queueName: QUEUE_NAME })
