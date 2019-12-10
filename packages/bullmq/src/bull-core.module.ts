@@ -46,6 +46,7 @@ function createQueue(queueName: string, options: QueueBaseOptions, mock?: boolea
       opts: options,
       add: (args: any) => Promise.resolve(createJobMock(args)),
       addBulk: (args: any[]) => Promise.all(args.map(x => createJobMock(x))),
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       on: () => {},
     } as any;
   }
@@ -55,6 +56,7 @@ function createQueue(queueName: string, options: QueueBaseOptions, mock?: boolea
 function createWorker(queueName: string, processor: Processor, options: QueueBaseOptions, mock?: boolean): Worker {
   if (mock) {
     return {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       on: () => {},
     } as any;
   }
@@ -63,6 +65,7 @@ function createWorker(queueName: string, processor: Processor, options: QueueBas
 function createQueueEvents(queueName: string, options: QueueBaseOptions, mock?: boolean): QueueEvents {
   if (mock) {
     return {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       on: () => {},
     } as any;
   }

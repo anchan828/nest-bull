@@ -74,7 +74,7 @@ export class BullQueueProviderService {
         isReady: () => Promise.resolve(true),
         close: () => Promise.resolve(),
         process: () => Promise.resolve(),
-        /* tslint:disable:no-empty */
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         on: () => {},
       } as any) as BullQueue;
     }
