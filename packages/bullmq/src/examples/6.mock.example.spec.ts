@@ -50,7 +50,7 @@ describe("Mock Example", () => {
     expect(service).toBeDefined();
     expect(service.queue).toBeDefined();
     const job = await service.addJob();
-    await job.waitUntilFinished(createQueueEvents(queueName));
+    await job.waitUntilFinished(await createQueueEvents(queueName));
     await app.close();
   });
 });
