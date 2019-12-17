@@ -57,7 +57,7 @@ describe("Basic Example", () => {
     expect(service.queue).toBeDefined();
     const job = await service.addJob();
 
-    await expect(job.waitUntilFinished(createQueueEvents(queueName))).resolves.toStrictEqual({ status: "ok" });
+    await expect(job.waitUntilFinished(await createQueueEvents(queueName))).resolves.toStrictEqual({ status: "ok" });
     await app.close();
   });
 });

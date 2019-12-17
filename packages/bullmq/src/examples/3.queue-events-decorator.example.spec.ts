@@ -9,7 +9,8 @@ import {
   BullWorkerProcess,
 } from "../bull.decorator";
 import { BullModule } from "../bull.module";
-import { createQueueEvents, wait } from "../bull.utils";
+import { BullService } from "../bull.service";
+import { wait } from "../bull.utils";
 const queueName = "queueName";
 
 @BullWorker({ queueName })
@@ -70,7 +71,11 @@ describe("QueueEvents decorator", () => {
     expect(service).toBeDefined();
     expect(service.queue).toBeDefined();
     const job = await service.addJob();
-    await expect(job.waitUntilFinished(createQueueEvents(queueName))).resolves.toStrictEqual({ status: "ok" });
+
+    const bullService = app.get<BullService>(BullService);
+    expect(bullService).toBeDefined();
+    const qe = bullService.queueEvents[queueName];
+    await expect(job.waitUntilFinished(qe)).resolves.toStrictEqual({ status: "ok" });
     await wait(1000);
     await app.close();
   });
