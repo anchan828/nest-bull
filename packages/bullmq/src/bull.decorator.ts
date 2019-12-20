@@ -10,26 +10,26 @@ import {
 import { getBullQueueToken } from "./bull.utils";
 import { BullQueueEvent, BullQueueEventsOptions, BullQueueOptions, BullWorkerOptions } from "./interfaces";
 
-export function BullQueue(options: BullQueueOptions): Function {
+export function BullQueue(options: BullQueueOptions): ClassDecorator {
   return SetMetadata(BULL_QUEUE_DECORATOR, options);
 }
 
-export function BullWorker(options: BullWorkerOptions): Function {
+export function BullWorker(options: BullWorkerOptions): ClassDecorator {
   return SetMetadata(BULL_WORKER_DECORATOR, options);
 }
 
-export function BullWorkerProcess(options?: WorkerOptions): Function {
+export function BullWorkerProcess(options?: WorkerOptions): MethodDecorator {
   return SetMetadata(BULL_WORKER_PROCESSOR_DECORATOR, options);
 }
 
-export function BullQueueEvents(options?: BullQueueEventsOptions): Function {
+export function BullQueueEvents(options?: BullQueueEventsOptions): ClassDecorator {
   return SetMetadata(BULL_QUEUE_EVENTS_DECORATOR, options);
 }
 
-export function BullQueueEventProcess(type: BullQueueEvent): Function {
+export function BullQueueEventProcess(type: BullQueueEvent): MethodDecorator {
   return SetMetadata(BULL_QUEUE_EVENTS_PROCESSOR_DECORATOR, type);
 }
 
-export function BullQueueInject(queueName: string): Function {
+export function BullQueueInject(queueName: string): ParameterDecorator {
   return Inject(getBullQueueToken(queueName));
 }
