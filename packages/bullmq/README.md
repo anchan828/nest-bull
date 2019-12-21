@@ -49,7 +49,7 @@ import { ExampleService } from "./example.service";
 import { APP_QUEUE } from "./app.constants";
 
 @Module({
-  imports: [BullModule.forQueue([APP_QUEUE])],
+  imports: [BullModule.forQueue(APP_QUEUE)],
   providers: [ExampleService],
 })
 export class ExampleModule {}
