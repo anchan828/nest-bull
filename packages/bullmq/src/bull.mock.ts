@@ -1,6 +1,6 @@
 import { Queue, QueueBaseOptions, QueueEvents, Worker } from "bullmq";
 
-function createJobMock(args: any): any {
+function createJobMock(...args: any[]): any {
   return {
     ...args,
     waitUntilFinished: (): Promise<boolean> => Promise.resolve(true),
@@ -8,15 +8,16 @@ function createJobMock(args: any): any {
     isFailed: (): Promise<boolean> => Promise.resolve(true),
     isActive: (): Promise<boolean> => Promise.resolve(true),
     isWaiting: (): Promise<boolean> => Promise.resolve(false),
-    getState: (): Promise<string> => Promise.resolve("completed"),
-    remove: (): Promise<boolean> => Promise.resolve(true),
+    getState: (): Promise<"active" | "delayed" | "completed" | "failed" | "waiting" | "unknown"> =>
+      Promise.resolve("completed"),
+    remove: (): Promise<void> => Promise.resolve(),
   };
 }
 export function createQueueMock(queueName: string, options: QueueBaseOptions): Queue {
   return {
     name: queueName,
     opts: options,
-    add: (args: any) => Promise.resolve(createJobMock(args)),
+    add: (...args: any[]) => Promise.resolve(createJobMock(...args)),
     addBulk: (args: any[]) => Promise.all(args.map(x => createJobMock(x))),
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     on: () => {},
