@@ -1,7 +1,37 @@
 import { Provider, Type } from "@nestjs/common";
 import { ClassProvider, FactoryProvider } from "@nestjs/common/interfaces";
+import { Processor, Queue, QueueBaseOptions, QueueEvents, Worker } from "bullmq";
+import { BullService, getBullQueueToken } from ".";
 import { BULL_MODULE_OPTIONS } from "./bull.constants";
-import { BullModuleAsyncOptions, BullModuleOptions, BullModuleOptionsFactory } from "./interfaces";
+import { createQueueEventsMock, createQueueMock, createWorkerMock } from "./bull.mock";
+import { mergeQueueBaseOptions } from "./bull.utils";
+import { BullModuleAsyncOptions, BullModuleOptions, BullModuleOptionsFactory, BullQueueOptions } from "./interfaces";
+
+export function createQueue(queueName: string, options: QueueBaseOptions, mock?: boolean): Queue {
+  if (mock) {
+    return createQueueMock(queueName, options);
+  }
+
+  return new Queue(queueName, options);
+}
+
+export function createWorker(
+  queueName: string,
+  processor: Processor,
+  options: QueueBaseOptions,
+  mock?: boolean,
+): Worker {
+  if (mock) {
+    return createWorkerMock();
+  }
+  return new Worker(queueName, processor, options);
+}
+export function createQueueEvents(queueName: string, options: QueueBaseOptions, mock?: boolean): QueueEvents {
+  if (mock) {
+    return createQueueEventsMock();
+  }
+  return new QueueEvents(queueName, options);
+}
 
 export function createAsyncOptionsProvider(options: BullModuleAsyncOptions): FactoryProvider {
   if (options.useFactory) {
@@ -33,4 +63,24 @@ export function createAsyncProviders(options: BullModuleAsyncOptions): Provider[
       useClass: options.useClass,
     } as ClassProvider,
   ];
+}
+
+export function createQueueProviders(queues: (string | BullQueueOptions)[]): Provider[] {
+  return queues.map(queue => {
+    const queueName = typeof queue === "string" ? queue : queue.queueName;
+    const queueOptions = typeof queue === "string" ? {} : queue.options || {};
+    return {
+      provide: getBullQueueToken(queueName),
+      useFactory: (options: BullModuleOptions, service: BullService): Queue => {
+        const queueInstance = createQueue(
+          queueName,
+          mergeQueueBaseOptions(options?.options, queueOptions),
+          options.mock,
+        );
+        service.queues[queueName] = queueInstance;
+        return queueInstance;
+      },
+      inject: [BULL_MODULE_OPTIONS, BullService],
+    } as Provider;
+  });
 }
