@@ -24,15 +24,17 @@ export function createQueueMock(queueName: string, options: QueueBaseOptions): Q
   } as any;
 }
 
-export function createWorkerMock(): Worker {
+export function createWorkerMock(queueName: string): Worker {
   return {
+    name: queueName,
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     on: () => {},
   } as any;
 }
 
-export function createQueueEventsMock(): QueueEvents {
+export function createQueueEventsMock(queueName: string): QueueEvents {
   return {
+    name: queueName,
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     on: () => {},
   } as any;

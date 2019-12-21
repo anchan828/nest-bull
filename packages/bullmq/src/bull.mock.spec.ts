@@ -27,13 +27,14 @@ describe("createQueueMock", () => {
 
 describe("createWorkerMock", () => {
   it("should return mock object", () => {
-    expect(createWorkerMock()).toStrictEqual({
+    expect(createWorkerMock("test")).toStrictEqual({
+      name: "test",
       on: expect.any(Function),
     });
   });
 
   it("should call mock functions", () => {
-    const worker = createWorkerMock();
+    const worker = createWorkerMock("test");
     worker.on("test", () => {
       console.log(test);
     });
@@ -42,13 +43,14 @@ describe("createWorkerMock", () => {
 
 describe("createQueueEventsMock", () => {
   it("should return mock object", () => {
-    expect(createQueueEventsMock()).toStrictEqual({
+    expect(createQueueEventsMock("test")).toStrictEqual({
+      name: "test",
       on: expect.any(Function),
     });
   });
 
   it("should call mock functions", () => {
-    const queueEvent = createQueueEventsMock();
+    const queueEvent = createQueueEventsMock("test");
     queueEvent.on("test", () => {
       console.log(test);
     });
@@ -62,7 +64,7 @@ describe("createJobMock", () => {
 
   it("should call mock functions", async () => {
     const job = await createQueueMock("test", {}).add("test", {});
-    await job.waitUntilFinished(createQueueEventsMock());
+    await job.waitUntilFinished(createQueueEventsMock("test"));
     await expect(job.isCompleted()).resolves.toBeTruthy();
     await expect(job.isFailed()).resolves.toBeTruthy();
     await expect(job.isActive()).resolves.toBeTruthy();

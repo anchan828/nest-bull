@@ -1,6 +1,7 @@
 import { QueueBaseOptions, QueueEvents, QueueEventsOptions } from "bullmq";
 import * as deepmerge from "deepmerge";
 import IORedis = require("ioredis");
+
 export function getBullQueueToken(name: string): string {
   return `_BullQueue_${name}`;
 }

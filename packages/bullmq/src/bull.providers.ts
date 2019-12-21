@@ -8,11 +8,7 @@ import { mergeQueueBaseOptions } from "./bull.utils";
 import { BullModuleAsyncOptions, BullModuleOptions, BullModuleOptionsFactory, BullQueueOptions } from "./interfaces";
 
 export function createQueue(queueName: string, options: QueueBaseOptions, mock?: boolean): Queue {
-  if (mock) {
-    return createQueueMock(queueName, options);
-  }
-
-  return new Queue(queueName, options);
+  return mock ? createQueueMock(queueName, options) : new Queue(queueName, options);
 }
 
 export function createWorker(
@@ -21,16 +17,10 @@ export function createWorker(
   options: QueueBaseOptions,
   mock?: boolean,
 ): Worker {
-  if (mock) {
-    return createWorkerMock();
-  }
-  return new Worker(queueName, processor, options);
+  return mock ? createWorkerMock(queueName) : new Worker(queueName, processor, options);
 }
 export function createQueueEvents(queueName: string, options: QueueBaseOptions, mock?: boolean): QueueEvents {
-  if (mock) {
-    return createQueueEventsMock();
-  }
-  return new QueueEvents(queueName, options);
+  return mock ? createQueueEventsMock(queueName) : new QueueEvents(queueName, options);
 }
 
 export function createAsyncOptionsProvider(options: BullModuleAsyncOptions): FactoryProvider {

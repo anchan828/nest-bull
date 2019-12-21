@@ -4,7 +4,10 @@ import { BullModuleOptions, BullModuleOptionsFactory } from "./interfaces";
 
 describe("createQueueEvents", () => {
   it("should create mock object", () => {
-    expect(createQueueEvents("test", {}, true)).toStrictEqual({ on: expect.any(Function) });
+    expect(createQueueEvents("test", {}, true)).toStrictEqual({
+      name: "test",
+      on: expect.any(Function),
+    });
   });
 });
 
