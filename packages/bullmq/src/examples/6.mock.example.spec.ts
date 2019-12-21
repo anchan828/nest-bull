@@ -25,7 +25,7 @@ export class TestService {
 }
 
 @Module({
-  imports: [BullModule.forQueue(queueName)],
+  imports: [BullModule.registerQueue(queueName)],
   providers: [TestBullWorker, TestService],
 })
 export class TestModule {}
