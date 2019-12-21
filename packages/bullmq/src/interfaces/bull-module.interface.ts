@@ -21,17 +21,12 @@ export interface BullModuleOptions {
   mock?: boolean;
 }
 
-export type BullModuleAsyncOptions = {
+export interface BullModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
   useClass?: Type<BullModuleOptionsFactory>;
-  /**
-   * The factory which should be used to provide the Bull options
-   */
+  useExisting?: Type<BullModuleOptionsFactory>;
   useFactory?: (...args: unknown[]) => Promise<BullModuleOptions> | BullModuleOptions;
-  /**
-   * The providers which should get injected
-   */
-  inject?: Array<Type<any> | string | any>;
-} & Pick<ModuleMetadata, "imports">;
+  inject?: Array<Type<BullModuleOptionsFactory> | string | any>;
+}
 
 export interface BullModuleOptionsFactory {
   createBullModuleOptions(): Promise<BullModuleOptions> | BullModuleOptions;

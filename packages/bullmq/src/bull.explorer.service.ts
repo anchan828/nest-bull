@@ -1,8 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Injectable as InjectableMeta } from "@nestjs/common/interfaces";
+import { DiscoveryService } from "@nestjs/core";
 import { InstanceWrapper } from "@nestjs/core/injector/instance-wrapper";
-import { Module } from "@nestjs/core/injector/module";
-import { ModulesContainer } from "@nestjs/core/injector/modules-container";
 import { MetadataScanner } from "@nestjs/core/metadata-scanner";
 import {
   BULL_QUEUE_DECORATOR,
@@ -22,13 +21,12 @@ import {
 import { BullQueueBaseMetadata } from "./interfaces/bull-base.interface";
 @Injectable()
 export class BullExplorerService {
-  constructor(private readonly modulesContainer: ModulesContainer, private readonly metadataScanner: MetadataScanner) {}
+  constructor(private readonly discoveryService: DiscoveryService, private readonly metadataScanner: MetadataScanner) {}
 
   public explore(): BullExploreResults {
-    const modules = [...this.modulesContainer.values()];
-    const queues = this.getMetadata<BullQueueMetadata>(modules, BULL_QUEUE_DECORATOR);
-    const workers = this.getMetadata<BullWorkerMetadata>(modules, BULL_WORKER_DECORATOR);
-    const queueEvents = this.getMetadata<BullQueueEventsMetadata>(modules, BULL_QUEUE_EVENTS_DECORATOR);
+    const queues = this.getMetadata<BullQueueMetadata>(BULL_QUEUE_DECORATOR);
+    const workers = this.getMetadata<BullWorkerMetadata>(BULL_WORKER_DECORATOR);
+    const queueEvents = this.getMetadata<BullQueueEventsMetadata>(BULL_QUEUE_EVENTS_DECORATOR);
 
     for (const queue of queues) {
       queue.events = this.getQueueEventProcessors(queue);
@@ -46,9 +44,9 @@ export class BullExplorerService {
     return { workers, queueEvents, queues };
   }
 
-  private getMetadata<T extends BullQueueBaseMetadata<any>>(modules: Module[], metadataKey: string): T[] {
+  private getMetadata<T extends BullQueueBaseMetadata<any>>(metadataKey: string): T[] {
     const metadata: T[] = [];
-    for (const classInstanceWrapper of this.getClassInstanceWrappers(modules)) {
+    for (const classInstanceWrapper of this.getClassInstanceWrappers()) {
       const options = Reflect.getMetadata(metadataKey, classInstanceWrapper.instance.constructor);
 
       if (options) {
@@ -58,11 +56,8 @@ export class BullExplorerService {
     return metadata;
   }
 
-  private getClassInstanceWrappers(modules: Module[]): InstanceWrapper<InjectableMeta>[] {
-    const instanceWrappers = modules.map(module => [...module.providers.values()]).reduce((a, b) => a.concat(b), []);
-    return instanceWrappers
-      .filter(instanceWrapper => instanceWrapper.instance)
-      .filter(({ instance }) => instance.constructor);
+  private getClassInstanceWrappers(): InstanceWrapper<InjectableMeta>[] {
+    return this.discoveryService.getProviders().filter(instanceWrapper => instanceWrapper.instance?.constructor);
   }
 
   private getWorkerProcessors(worker: BullWorkerMetadata): BullWorkerProcessMetadata[] {

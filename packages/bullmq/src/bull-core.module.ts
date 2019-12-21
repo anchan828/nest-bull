@@ -1,13 +1,15 @@
 import { DynamicModule, Global, Inject, Module, Provider } from "@nestjs/common";
-import { ClassProvider, FactoryProvider, OnModuleInit } from "@nestjs/common/interfaces";
+import { OnModuleInit } from "@nestjs/common/interfaces";
+import { DiscoveryModule } from "@nestjs/core";
 import { MetadataScanner } from "@nestjs/core/metadata-scanner";
 import { Processor, Queue, QueueBaseOptions, QueueEvents, QueueEventsOptions, Worker } from "bullmq";
 import * as deepmerge from "deepmerge";
 import { BULL_MODULE_OPTIONS } from "./bull.constants";
 import { BullExplorerService } from "./bull.explorer.service";
+import { createAsyncProviders } from "./bull.providers";
 import { BullService } from "./bull.service";
 import { getBullQueueToken } from "./bull.utils";
-import { BullModuleAsyncOptions, BullModuleOptions, BullModuleOptionsFactory } from "./interfaces";
+import { BullModuleAsyncOptions, BullModuleOptions } from "./interfaces";
 import { BullQueueOptions } from "./interfaces/bull-queue.interface";
 import IORedis = require("ioredis");
 
@@ -74,6 +76,7 @@ function createQueueEvents(queueName: string, options: QueueBaseOptions, mock?: 
 
 @Global()
 @Module({
+  imports: [DiscoveryModule],
   providers: [MetadataScanner, BullExplorerService],
 })
 export class BullCoreModule implements OnModuleInit {
@@ -145,7 +148,7 @@ export class BullCoreModule implements OnModuleInit {
   }
 
   public static forRootAsync(options: BullModuleAsyncOptions): DynamicModule {
-    const asyncProviders = this.createAsyncProviders(options);
+    const asyncProviders = createAsyncProviders(options);
     return {
       module: BullCoreModule,
       imports: [...(options.imports || [])],
@@ -176,36 +179,6 @@ export class BullCoreModule implements OnModuleInit {
       module: BullCoreModule,
       providers: queueProviders,
       exports: queueProviders,
-    };
-  }
-
-  private static createAsyncProviders(options: BullModuleAsyncOptions): Provider[] {
-    if (options.useFactory) {
-      return [this.createAsyncOptionsProvider(options)];
-    }
-    return [
-      this.createAsyncOptionsProvider(options),
-      {
-        provide: options.useClass,
-        useClass: options.useClass,
-        inject: [options.inject || []],
-      } as ClassProvider,
-    ];
-  }
-
-  private static createAsyncOptionsProvider(options: BullModuleAsyncOptions): FactoryProvider {
-    if (options.useFactory) {
-      return {
-        provide: BULL_MODULE_OPTIONS,
-        useFactory: options.useFactory,
-        inject: options.inject || [],
-      };
-    }
-    return {
-      provide: BULL_MODULE_OPTIONS,
-      useFactory: async (optionsFactory: BullModuleOptionsFactory): Promise<BullModuleOptions> =>
-        await optionsFactory.createBullModuleOptions(),
-      inject: options.useClass ? [options.useClass] : [],
     };
   }
 }
