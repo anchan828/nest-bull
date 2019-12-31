@@ -3,9 +3,7 @@
 ![npm](https://img.shields.io/npm/v/@anchan828/nest-bullmq.svg)
 ![NPM](https://img.shields.io/npm/l/@anchan828/nest-bullmq.svg)
 
-**THIS PACKAGE IS STILL IN DEVELOPMENT!!**
-
-## Road map
+## Roadmap
 
 This package will merge into @anchan828/nest-bull when bullmq has been released as v4.
 
