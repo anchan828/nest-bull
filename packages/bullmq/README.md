@@ -55,6 +55,27 @@ import { APP_QUEUE } from "./app.constants";
 export class ExampleModule {}
 ```
 
+#### With queue options
+
+```ts
+import { Module } from "@nestjs/common";
+import { ExampleService } from "./example.service";
+import { APP_QUEUE } from "./app.constants";
+
+@Module({
+  imports: [
+    BullModule.registerQueue({
+      queueName,
+      options: {
+        defaultJobOptions: { priority: 1 },
+      },
+    }),
+  ],
+  providers: [ExampleService],
+})
+export class ExampleModule {}
+```
+
 ### Inject Queue provider
 
 ```ts
@@ -91,6 +112,10 @@ export class ExampleBullWorker {
 }
 ```
 
+## Examples
+
+There are [examples](./examples).
+
 ## License
 
-[MIT](LICENSE).
+[MIT](LICENSE)
