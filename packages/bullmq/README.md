@@ -112,7 +112,7 @@ export class ExampleBullWorker {
 
 ## Examples
 
-There are [examples](./examples).
+There are [examples](./src/examples).
 
 ## License
 
