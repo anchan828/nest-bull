@@ -2,12 +2,13 @@
   "[typescript]": {
     "editor.codeActionsOnSave": {
       "source.organizeImports": true
-    }
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
   "editor.formatOnSave": true,
   "eslint.options": {
     "extensinons": [".js", ".ts"]

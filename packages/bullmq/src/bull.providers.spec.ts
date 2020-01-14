@@ -3,10 +3,11 @@ import { createAsyncOptionsProvider, createAsyncProviders, createQueueEvents } f
 import { BullModuleOptions, BullModuleOptionsFactory } from "./interfaces";
 
 describe("createQueueEvents", () => {
-  it("should create mock object", () => {
-    expect(createQueueEvents("test", {}, true)).toStrictEqual({
+  it("should create mock object", async () => {
+    await expect(createQueueEvents("test", {}, true)).resolves.toStrictEqual({
       name: "test",
       on: expect.any(Function),
+      waitUntilReady: expect.any(Function),
     });
   });
 });

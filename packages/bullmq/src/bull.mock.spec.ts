@@ -7,6 +7,7 @@ describe("createQueueMock", () => {
       addBulk: expect.any(Function),
       name: "test",
       on: expect.any(Function),
+      waitUntilReady: expect.any(Function),
       opts: {},
     });
   });
@@ -30,6 +31,7 @@ describe("createWorkerMock", () => {
     expect(createWorkerMock("test")).toStrictEqual({
       name: "test",
       on: expect.any(Function),
+      waitUntilReady: expect.any(Function),
     });
   });
 
@@ -46,6 +48,7 @@ describe("createQueueEventsMock", () => {
     expect(createQueueEventsMock("test")).toStrictEqual({
       name: "test",
       on: expect.any(Function),
+      waitUntilReady: expect.any(Function),
     });
   });
 

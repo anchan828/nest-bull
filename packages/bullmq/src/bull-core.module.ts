@@ -9,6 +9,7 @@ import {
   createQueue,
   createQueueEvents,
   createQueueProviders,
+  createQueueScheduler,
   createWorker,
 } from "./bull.providers";
 import { BullService } from "./bull.service";
@@ -30,25 +31,28 @@ export class BullCoreModule implements OnModuleInit {
     private readonly service: BullService,
   ) {}
 
-  onModuleInit(): void {
+  async onModuleInit(): Promise<void> {
     const { workers, queueEvents, queues } = this.explorer.explore();
     for (const queue of queues) {
-      const queueInstance = createQueue(
+      const queueOptions = mergeQueueBaseOptions(this.options?.options, queue.options.options);
+      const queueSchedulerInstance = await createQueueScheduler(
         queue.options.queueName,
-        mergeQueueBaseOptions(this.options?.options, queue.options.options),
+        queueOptions,
         this.options.mock,
       );
+      const queueInstance = await createQueue(queue.options.queueName, queueOptions, this.options.mock);
 
       for (const event of queue.events) {
         queueInstance.on(event.type, event.processor);
       }
 
+      this.service.queueSchedulers[queue.options.queueName] = queueSchedulerInstance;
       this.service.queues[queue.options.queueName] = queueInstance;
     }
 
     for (const worker of workers) {
       for (const workerProcessor of worker.processors) {
-        const workerInstance = createWorker(
+        const workerInstance = await createWorker(
           worker.options.queueName,
           workerProcessor.processor,
           mergeQueueBaseOptions(this.options?.options, worker?.options?.options, workerProcessor.options),
@@ -63,7 +67,7 @@ export class BullCoreModule implements OnModuleInit {
       }
     }
     for (const queueEvent of queueEvents) {
-      const queueEventInstance = createQueueEvents(
+      const queueEventInstance = await createQueueEvents(
         queueEvent.options.queueName,
         mergeQueueBaseOptions(this.options?.options, queueEvent.options.options),
         this.options.mock,

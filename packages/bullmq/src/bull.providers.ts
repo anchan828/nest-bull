@@ -1,26 +1,67 @@
 import { Provider, Type } from "@nestjs/common";
 import { ClassProvider, FactoryProvider } from "@nestjs/common/interfaces";
-import { Processor, Queue, QueueBaseOptions, QueueEvents, Worker } from "bullmq";
+import { Processor, Queue, QueueBase, QueueBaseOptions, QueueEvents, QueueScheduler, Worker } from "bullmq";
 import { BullService, getBullQueueToken } from ".";
 import { BULL_MODULE_OPTIONS } from "./bull.constants";
-import { createQueueEventsMock, createQueueMock, createWorkerMock } from "./bull.mock";
+import { createQueueEventsMock, createQueueMock, createQueueSchedulerMock, createWorkerMock } from "./bull.mock";
 import { mergeQueueBaseOptions } from "./bull.utils";
 import { BullModuleAsyncOptions, BullModuleOptions, BullModuleOptionsFactory, BullQueueOptions } from "./interfaces";
 
-export function createQueue(queueName: string, options: QueueBaseOptions, mock?: boolean): Queue {
-  return mock ? createQueueMock(queueName, options) : new Queue(queueName, options);
+async function createQueueBase<T extends QueueBase>(
+  createMockFunction: () => T,
+  createFunction: () => T,
+  mock: boolean,
+): Promise<T> {
+  if (mock) {
+    return createMockFunction();
+  }
+  const queueBase = createFunction();
+  await queueBase.waitUntilReady();
+  return queueBase;
 }
 
-export function createWorker(
+export async function createQueue(queueName: string, options: QueueBaseOptions, mock = false): Promise<Queue> {
+  return createQueueBase(
+    () => createQueueMock(queueName, options),
+    () => new Queue(queueName, options),
+    mock,
+  );
+}
+
+export async function createQueueScheduler(
+  queueName: string,
+  options: QueueBaseOptions,
+  mock = false,
+): Promise<QueueScheduler> {
+  return createQueueBase(
+    () => createQueueSchedulerMock(queueName, options),
+    () => new QueueScheduler(queueName, options),
+    mock,
+  );
+}
+
+export async function createWorker(
   queueName: string,
   processor: Processor,
   options: QueueBaseOptions,
-  mock?: boolean,
-): Worker {
-  return mock ? createWorkerMock(queueName) : new Worker(queueName, processor, options);
+  mock = false,
+): Promise<Worker> {
+  return createQueueBase(
+    () => createWorkerMock(queueName),
+    () => new Worker(queueName, processor, options),
+    mock,
+  );
 }
-export function createQueueEvents(queueName: string, options: QueueBaseOptions, mock?: boolean): QueueEvents {
-  return mock ? createQueueEventsMock(queueName) : new QueueEvents(queueName, options);
+export async function createQueueEvents(
+  queueName: string,
+  options: QueueBaseOptions,
+  mock = false,
+): Promise<QueueEvents> {
+  return createQueueBase(
+    () => createQueueEventsMock(queueName),
+    () => new QueueEvents(queueName, options),
+    mock,
+  );
 }
 
 export function createAsyncOptionsProvider(options: BullModuleAsyncOptions): FactoryProvider {
@@ -61,12 +102,11 @@ export function createQueueProviders(queues: (string | BullQueueOptions)[]): Pro
     const queueOptions = typeof queue === "string" ? {} : queue.options || {};
     return {
       provide: getBullQueueToken(queueName),
-      useFactory: (options: BullModuleOptions, service: BullService): Queue => {
-        const queueInstance = createQueue(
-          queueName,
-          mergeQueueBaseOptions(options?.options, queueOptions),
-          options.mock,
-        );
+      useFactory: async (options: BullModuleOptions, service: BullService): Promise<Queue> => {
+        const mergedOptions = mergeQueueBaseOptions(options?.options, queueOptions);
+        const queueSchedulerInstance = await createQueueScheduler(queueName, mergedOptions, options.mock);
+        const queueInstance = await createQueue(queueName, mergedOptions, options.mock);
+        service.queueSchedulers[queueName] = queueSchedulerInstance;
         service.queues[queueName] = queueInstance;
         return queueInstance;
       },

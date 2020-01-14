@@ -1,4 +1,5 @@
-import { Queue, QueueBaseOptions, QueueEvents, Worker } from "bullmq";
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { Queue, QueueBaseOptions, QueueEvents, QueueScheduler, Worker } from "bullmq";
 
 function createJobMock(...args: any[]): any {
   return {
@@ -19,23 +20,32 @@ export function createQueueMock(queueName: string, options: QueueBaseOptions): Q
     opts: options,
     add: (...args: any[]) => Promise.resolve(createJobMock(...args)),
     addBulk: (args: any[]) => Promise.all(args.map(x => createJobMock(x))),
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     on: () => {},
+    waitUntilReady: async () => {},
+  } as any;
+}
+
+export function createQueueSchedulerMock(queueName: string, options: QueueBaseOptions): QueueScheduler {
+  return {
+    name: queueName,
+    opts: options,
+    on: () => {},
+    waitUntilReady: async () => {},
   } as any;
 }
 
 export function createWorkerMock(queueName: string): Worker {
   return {
     name: queueName,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     on: () => {},
+    waitUntilReady: async () => {},
   } as any;
 }
 
 export function createQueueEventsMock(queueName: string): QueueEvents {
   return {
     name: queueName,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     on: () => {},
+    waitUntilReady: async () => {},
   } as any;
 }
