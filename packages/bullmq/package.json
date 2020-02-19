@@ -28,6 +28,6 @@
   "devDependencies": {
     "@types/ioredis": "4.14.7",
     "bullmq": "1.6.7",
-    "ioredis": "4.14.1"
+    "ioredis": "4.16.0"
   }
 }
