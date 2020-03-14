@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { Injectable as InjectableMeta } from "@nestjs/common/interfaces";
 import { DiscoveryService } from "@nestjs/core";
 import { InstanceWrapper } from "@nestjs/core/injector/instance-wrapper";
 import { MetadataScanner } from "@nestjs/core/metadata-scanner";
@@ -46,18 +45,21 @@ export class BullExplorerService {
 
   private getMetadata<T extends BullQueueBaseMetadata<any>>(metadataKey: string): T[] {
     const metadata: T[] = [];
-    for (const classInstanceWrapper of this.getClassInstanceWrappers()) {
-      const options = Reflect.getMetadata(metadataKey, classInstanceWrapper.instance.constructor);
+    for (const classInstance of this.getClassInstances()) {
+      const options = Reflect.getMetadata(metadataKey, classInstance.constructor);
 
       if (options) {
-        metadata.push({ instance: classInstanceWrapper.instance, options } as T);
+        metadata.push({ instance: classInstance, options } as T);
       }
     }
     return metadata;
   }
 
-  private getClassInstanceWrappers(): InstanceWrapper<InjectableMeta>[] {
-    return this.discoveryService.getProviders().filter(instanceWrapper => instanceWrapper.instance?.constructor);
+  private getClassInstances(): InstanceWrapper<any>[] {
+    return this.discoveryService
+      .getProviders()
+      .filter(instanceWrapper => instanceWrapper.instance?.constructor)
+      .map(x => x.instance);
   }
 
   private getWorkerProcessors(worker: BullWorkerMetadata): BullWorkerProcessMetadata[] {
