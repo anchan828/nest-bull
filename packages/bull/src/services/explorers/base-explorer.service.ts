@@ -26,7 +26,7 @@ export abstract class BaseExplorerService<Options> {
   public explore(): void {
     const modules = this.getAllModules();
 
-    this.getComponents(modules).forEach(component => {
+    this.getComponents(modules).forEach((component) => {
       for (const wrapper of component.values()) {
         if (wrapper.isNotMetatype || !this.hasBullQueueDecorator(wrapper.metatype)) {
           continue;
@@ -44,7 +44,7 @@ export abstract class BaseExplorerService<Options> {
 
   private getComponents(modules: Module[]): Array<Map<string, InstanceWrapper<Injectable>>> {
     return (flatten(
-      modules.filter(module => module.metatype !== BullCoreModule).map(module => module.components),
+      modules.filter((module) => module.metatype !== BullCoreModule).map((module) => module.components),
     ) as unknown) as Array<Map<string, InstanceWrapper<Injectable>>>;
   }
 
@@ -56,14 +56,14 @@ export abstract class BaseExplorerService<Options> {
     const { instance } = wrapper;
     const prototype = Object.getPrototypeOf(instance);
     const propertyNames = this.metadataScanner
-      .scanFromPrototype(instance, prototype, propertyName => {
+      .scanFromPrototype(instance, prototype, (propertyName) => {
         if (this.verifyPropertyName(prototype, propertyName)) {
           return propertyName;
         }
       })
-      .filter(x => x) as string[];
+      .filter((x) => x) as string[];
 
-    propertyNames.forEach(propertyName =>
+    propertyNames.forEach((propertyName) =>
       this.onBullQueuePropertyProcess(bullQueue, instance, prototype, propertyName, propertyNames),
     );
   }

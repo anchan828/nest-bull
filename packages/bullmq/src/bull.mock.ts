@@ -19,7 +19,7 @@ export function createQueueMock(queueName: string, options: QueueBaseOptions): Q
     name: queueName,
     opts: options,
     add: (...args: any[]) => Promise.resolve(createJobMock(...args)),
-    addBulk: (args: any[]) => Promise.all(args.map(x => createJobMock(x))),
+    addBulk: (args: any[]) => Promise.all(args.map((x) => createJobMock(x))),
     on: () => {},
     waitUntilReady: async () => {},
   } as any;

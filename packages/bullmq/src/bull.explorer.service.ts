@@ -58,8 +58,8 @@ export class BullExplorerService {
   private getClassInstances(): InstanceWrapper<any>[] {
     return this.discoveryService
       .getProviders()
-      .filter(instanceWrapper => instanceWrapper.instance?.constructor)
-      .map(x => x.instance);
+      .filter((instanceWrapper) => instanceWrapper.instance?.constructor)
+      .map((x) => x.instance);
   }
 
   private getWorkerProcessors(worker: BullWorkerMetadata): BullWorkerProcessMetadata[] {

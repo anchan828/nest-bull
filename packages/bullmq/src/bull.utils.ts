@@ -14,8 +14,8 @@ export function mergeQueueBaseOptions(...options: (QueueBaseOptions | undefined)
     // for now, it uses last connection object.
     obj.connection = opts
       .reverse()
-      .map(x => x?.connection)
-      .find(connection => connection instanceof IORedis);
+      .map((x) => x?.connection)
+      .find((connection) => connection instanceof IORedis);
   }
 
   return obj;
