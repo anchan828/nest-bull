@@ -17,7 +17,7 @@ export class BullQueueEventExplorerService extends BaseExplorerService<BullQueue
     propertyName: string,
   ): void {
     const options = this.getOptions(prototype, propertyName);
-    options.eventNames.forEach(eventName => {
+    options.eventNames.forEach((eventName) => {
       bullQueue.on(eventName, prototype[propertyName].bind(instance));
       this.logger.log(`${eventName} listener on ${bullQueue.name} initialized`);
     });

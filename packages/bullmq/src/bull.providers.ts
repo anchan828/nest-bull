@@ -97,7 +97,7 @@ export function createAsyncProviders(options: BullModuleAsyncOptions): Provider[
 }
 
 export function createQueueProviders(queues: (string | BullQueueOptions)[]): Provider[] {
-  return queues.map(queue => {
+  return queues.map((queue) => {
     const queueName = typeof queue === "string" ? queue : queue.queueName;
     const queueOptions = typeof queue === "string" ? {} : queue.options || {};
     return {

@@ -8,7 +8,7 @@ import { getBullQueueToken } from "./bull.utils";
 export const tmpWorkspaceDir = resolve(tmpdir(), "nest-bull");
 export const cleanTestFiles = (): void => {
   const unlinkFiles = (): void =>
-    glob.sync(`${tmpWorkspaceDir}/*.ts`).forEach(entry => {
+    glob.sync(`${tmpWorkspaceDir}/*.ts`).forEach((entry) => {
       unlinkSync(entry.toString());
     });
 

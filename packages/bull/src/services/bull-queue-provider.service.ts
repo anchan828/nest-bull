@@ -104,7 +104,7 @@ export class BullQueueProviderService {
     } else if (typeof queue === "string") {
       const queues = this.loadQueues(queue);
 
-      targets.push(...queues.filter(q => this.hasBullQueueDecorator(q)));
+      targets.push(...queues.filter((q) => this.hasBullQueueDecorator(q)));
     }
     return targets;
   }
@@ -117,8 +117,8 @@ export class BullQueueProviderService {
     return flatten(
       glob
         .sync(filePath)
-        .map(entry => require(entry.toString()) as { [name: string]: any })
-        .map(x => Object.values(x)),
+        .map((entry) => require(entry.toString()) as { [name: string]: any })
+        .map((x) => Object.values(x)),
     );
   }
 }
