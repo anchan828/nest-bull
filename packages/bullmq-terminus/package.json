@@ -34,7 +34,7 @@
     "@types/ioredis": "4.14.9",
     "@types/supertest": "2.0.8",
     "bullmq": "1.8.5",
-    "ioredis": "4.16.1",
+    "ioredis": "4.16.2",
     "supertest": "4.0.2"
   }
 }
