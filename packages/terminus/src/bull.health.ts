@@ -1,7 +1,6 @@
 import { BullQueue, BullQueueInject, BullQueueProcess } from "@anchan828/nest-bull";
-import { HealthCheckError } from "@godaddy/terminus";
 import { Injectable } from "@nestjs/common";
-import { HealthIndicator, HealthIndicatorResult } from "@nestjs/terminus";
+import { HealthCheckError, HealthIndicator, HealthIndicatorResult } from "@nestjs/terminus";
 import { Queue } from "bull";
 import { QUEUE_NAME } from "./constants";
 

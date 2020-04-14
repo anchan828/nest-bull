@@ -1,7 +1,6 @@
 import { BullQueue, BullQueueEvents, BullService, BullWorker, BullWorkerProcess } from "@anchan828/nest-bullmq";
-import { HealthCheckError } from "@godaddy/terminus";
 import { Injectable } from "@nestjs/common";
-import { HealthIndicator, HealthIndicatorResult } from "@nestjs/terminus";
+import { HealthCheckError, HealthIndicator, HealthIndicatorResult } from "@nestjs/terminus";
 import { QUEUE_NAME } from "./constants";
 
 @BullQueue({ queueName: QUEUE_NAME, options: { defaultJobOptions: { removeOnComplete: true } } })
