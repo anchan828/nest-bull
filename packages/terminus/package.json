@@ -29,7 +29,6 @@
     "@anchan828/nest-bull": "^0.3.40"
   },
   "devDependencies": {
-    "@godaddy/terminus": "4.3.1",
     "@nestjs/terminus": "7.0.1",
     "@types/bull": "3.12.2",
     "@types/supertest": "2.0.8",
