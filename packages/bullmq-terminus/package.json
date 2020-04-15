@@ -1,6 +1,6 @@
 {
   "name": "@anchan828/nest-bullmq-terminus",
-  "version": "0.3.40",
+  "version": "0.4.0",
   "description": "The terminus of [BullMQ](https://github.com/taskforcesh/bullmq) module for [Nest](https://github.com/nestjs/nest).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/bullmq-terminus#readme",
   "dependencies": {
-    "@anchan828/nest-bullmq": "^0.3.40"
+    "@anchan828/nest-bullmq": "^0.4.0"
   },
   "devDependencies": {
     "@godaddy/terminus": "4.3.1",

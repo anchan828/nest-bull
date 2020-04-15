@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/anchan828/nest-bull/compare/v0.3.40...v0.4.0) (2020-04-15)
+
+### Bug Fixes
+
+- lint ([5169d77](https://github.com/anchan828/nest-bull/commit/5169d7789950537ed971a40c26076ce2f6f3aeec))
+- return type ([b0924f7](https://github.com/anchan828/nest-bull/commit/b0924f74fab61d3b4ef327958f625472eba4356a))
+
 ## [0.3.40](https://github.com/anchan828/nest-bull/compare/v0.3.38...v0.3.40) (2020-01-14)
 
 ### Features

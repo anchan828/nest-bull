@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/anchan828/nest-bull/compare/v0.3.40...v0.4.0) (2020-04-15)
+
+### Bug Fixes
+
+- lint ([5169d77](https://github.com/anchan828/nest-bull/commit/5169d7789950537ed971a40c26076ce2f6f3aeec))
+- **deps:** update dependency fast-glob to v3.2.0 ([7d5709a](https://github.com/anchan828/nest-bull/commit/7d5709afff3bf81ba5837fa8808a460cfe951563))
+- **deps:** update dependency fast-glob to v3.2.1 ([a4a46cc](https://github.com/anchan828/nest-bull/commit/a4a46cc85ff8919d7c71482486155e8bd3f32a62))
+- **deps:** update dependency fast-glob to v3.2.2 ([baa9487](https://github.com/anchan828/nest-bull/commit/baa94875dea118c56fbf3a45caf998321522a082))
+
 ## [0.3.40](https://github.com/anchan828/nest-bull/compare/v0.3.38...v0.3.40) (2020-01-14)
 
 **Note:** Version bump only for package @anchan828/nest-bull
