@@ -1,14 +1,6 @@
 {
-  "[typescript]": {
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": true
-    },
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
-
+  "editor.codeActionsOnSave": ["source.organizeImports", "source.fixAll"],
+  "editor.codeActionsOnSaveTimeout": 2000,
   "editor.formatOnSave": true,
   "eslint.options": {
     "extensinons": [".js", ".ts"]
@@ -19,6 +11,19 @@
       "mode": "auto"
     }
   ],
+  "eslint.codeAction.showDocumentation": {
+    "enable": false
+  },
+  "eslint.codeAction.disableRuleComment": {
+    "enable": false
+  },
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/.git": true,
+    "**/.hg": true,
+    "**/.svn": true,
+    "**/CVS": true
+  },
   "typescript.preferences.importModuleSpecifier": "relative",
   "typescript.tsdk": "node_modules/typescript/lib"
 }
