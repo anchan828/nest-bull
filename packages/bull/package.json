@@ -31,6 +31,6 @@
   },
   "devDependencies": {
     "@types/bull": "3.12.2",
-    "bull": "3.13.0"
+    "bull": "3.14.0"
   }
 }
