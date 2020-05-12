@@ -31,7 +31,7 @@
   "devDependencies": {
     "@godaddy/terminus": "4.4.1",
     "@nestjs/terminus": "7.0.1",
-    "@types/bull": "3.12.3",
+    "@types/bull": "3.13.0",
     "@types/supertest": "2.0.9",
     "bull": "3.14.0",
     "supertest": "4.0.2"
