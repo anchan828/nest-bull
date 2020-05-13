@@ -110,7 +110,11 @@ export class BullQueueProviderService {
   }
 
   private hasBullQueueDecorator(target: any): boolean {
-    return Reflect.hasMetadata(BULL_QUEUE_DECORATOR, target);
+    try {
+      return Reflect.hasMetadata(BULL_QUEUE_DECORATOR, target);
+    } catch {
+      return false;
+    }
   }
 
   private loadQueues(filePath: string): any[] {
