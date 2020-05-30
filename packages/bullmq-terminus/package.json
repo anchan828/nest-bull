@@ -31,10 +31,10 @@
   "devDependencies": {
     "@godaddy/terminus": "4.4.1",
     "@nestjs/terminus": "7.0.1",
-    "@types/ioredis": "4.16.2",
+    "@types/ioredis": "4.16.3",
     "@types/supertest": "2.0.9",
     "bullmq": "1.8.11",
-    "ioredis": "4.17.1",
+    "ioredis": "4.17.3",
     "supertest": "4.0.2"
   }
 }
