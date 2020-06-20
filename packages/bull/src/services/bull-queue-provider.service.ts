@@ -121,6 +121,7 @@ export class BullQueueProviderService {
     return flatten(
       glob
         .sync(filePath)
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         .map((entry) => require(entry.toString()) as { [name: string]: any })
         .map((x) => Object.values(x)),
     );

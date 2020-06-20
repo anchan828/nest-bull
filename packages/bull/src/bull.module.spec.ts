@@ -25,6 +25,7 @@ describe("BullModule", () => {
       },
     ): Promise<void> => {
       const app = await Test.createTestingModule({
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         imports: [BullModule.forRoot(bullModuleOptions), require(filePath).TestModule],
       }).compile();
       expect(app).toBeDefined();
