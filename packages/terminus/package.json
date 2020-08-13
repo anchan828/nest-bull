@@ -33,7 +33,7 @@
     "@nestjs/terminus": "7.0.1",
     "@types/bull": "3.14.0",
     "@types/supertest": "2.0.10",
-    "bull": "3.17.0",
+    "bull": "3.18.0",
     "supertest": "4.0.2"
   }
 }
