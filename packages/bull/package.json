@@ -30,7 +30,7 @@
     "fast-glob": "3.2.4"
   },
   "devDependencies": {
-    "@types/bull": "3.14.0",
+    "@types/bull": "3.14.1",
     "bull": "3.18.0"
   }
 }
