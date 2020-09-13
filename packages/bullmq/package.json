@@ -1,6 +1,6 @@
 {
   "name": "@anchan828/nest-bullmq",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "The [BullMQ](https://github.com/taskforcesh/bullmq) module for [Nest](https://github.com/nestjs/nest).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
