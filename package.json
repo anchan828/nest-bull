@@ -35,7 +35,7 @@
     "@nestjs/platform-express": "7.4.4",
     "@nestjs/testing": "7.4.4",
     "@types/ioredis": "4.17.6",
-    "@types/jest": "26.0.14",
+    "@types/jest": "26.0.15",
     "@types/node": "11.15.32",
     "@typescript-eslint/eslint-plugin": "4.5.0",
     "@typescript-eslint/parser": "4.5.0",
