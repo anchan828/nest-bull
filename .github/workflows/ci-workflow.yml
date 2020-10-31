@@ -20,7 +20,7 @@ jobs:
         ports:
           - "6379:6379"
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Install npm packages
         run: npm ci
       - name: Bootstrap monorepo packages
