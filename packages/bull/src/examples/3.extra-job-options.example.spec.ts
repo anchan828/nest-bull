@@ -87,7 +87,7 @@ describe("3. Extra Job Options", () => {
       status: "ok",
     });
     await expect(failedJob.finished()).rejects.toThrowError("error");
-    await new Promise((resolve): void => {
+    await new Promise<void>((resolve): void => {
       const interval = setInterval(async (): Promise<void> => {
         if ((await getTTL(completedJob)) !== -1 && (await getTTL(failedJob)) !== -1) {
           clearInterval(interval);
