@@ -4,5 +4,8 @@
   "major": {
     "automerge": false
   },
+  "constraints": {
+    "npm": "7"
+  },
   "semanticCommits": true
 }
