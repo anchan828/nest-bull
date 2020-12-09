@@ -19,7 +19,7 @@ export function BullWorker(options: BullWorkerOptions): ClassDecorator {
 }
 
 export function BullWorkerProcess(options?: WorkerOptions): MethodDecorator {
-  return SetMetadata(BULL_WORKER_PROCESSOR_DECORATOR, options);
+  return SetMetadata(BULL_WORKER_PROCESSOR_DECORATOR, options || {});
 }
 
 export function BullQueueEvents(options?: BullQueueEventsOptions): ClassDecorator {

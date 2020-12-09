@@ -69,7 +69,9 @@ export class BullExplorerService {
 
     for (const methodName of this.metadataScanner.getAllFilteredMethodNames(prototype)) {
       const options = Reflect.getMetadata(BULL_WORKER_PROCESSOR_DECORATOR, prototype[methodName]);
-      workerProcessors.push({ processor: prototype[methodName].bind(instance), options });
+      if (options) {
+        workerProcessors.push({ processor: prototype[methodName].bind(instance), options });
+      }
     }
 
     return workerProcessors;
@@ -82,7 +84,9 @@ export class BullExplorerService {
 
     for (const methodName of this.metadataScanner.getAllFilteredMethodNames(prototype)) {
       const type = Reflect.getMetadata(BULL_QUEUE_EVENTS_PROCESSOR_DECORATOR, prototype[methodName]);
-      queueEventsProcessors.push({ processor: prototype[methodName].bind(instance), type });
+      if (type) {
+        queueEventsProcessors.push({ processor: prototype[methodName].bind(instance), type });
+      }
     }
 
     return queueEventsProcessors;
