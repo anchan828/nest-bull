@@ -29,7 +29,6 @@
     "@anchan828/nest-bullmq": "^0.4.18"
   },
   "devDependencies": {
-    "@godaddy/terminus": "4.4.1",
     "@nestjs/terminus": "7.0.1",
     "@types/ioredis": "4.17.8",
     "@types/supertest": "2.0.10",
