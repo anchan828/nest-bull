@@ -43,7 +43,6 @@ describe("BullHealthModule", () => {
   it("should compile health module", async () => {
     @Module({
       controllers: [BullHealthController],
-      providers: [BullHealthIndicator],
       imports: [BullHealthModule, TerminusModule],
     })
     class HealthModule {}
@@ -69,7 +68,6 @@ describe("BullHealthModule", () => {
     it("should create nest application", async () => {
       @Module({
         controllers: [BullHealthController],
-        providers: [BullHealthIndicator],
         imports: [BullHealthModule, TerminusModule],
       })
       class HealthModule {}
@@ -95,7 +93,6 @@ describe("BullHealthModule", () => {
     it("should return status is up", async () => {
       @Module({
         controllers: [BullHealthController],
-        providers: [BullHealthIndicator],
         imports: [BullHealthModule, TerminusModule],
       })
       class HealthModule {}
@@ -130,7 +127,6 @@ describe("BullHealthModule", () => {
     it("should return status is down", async () => {
       @Module({
         controllers: [BullHealthController],
-        providers: [BullHealthIndicator],
         imports: [BullHealthModule, TerminusModule],
       })
       class HealthModule {}

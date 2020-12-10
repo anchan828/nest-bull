@@ -10,7 +10,7 @@ The terminus of The [Bull](https://github.com/OptimalBits/bull) module for [Nest
 ## Installation
 
 ```bash
-$ npm i --save @anchan828/nest-bull-terminus @nestjs/terminus @godaddy/terminus @anchan828/nest-bull bull
+$ npm i --save @anchan828/nest-bull-terminus @nestjs/terminus @anchan828/nest-bull bull
 $ npm i --save-dev @types/bull
 ```
 
@@ -21,23 +21,20 @@ $ npm i --save-dev @types/bull
 ```ts
 import { BullHealthCheckQueue, BullHealthIndicator, BullHealthModule } from "@anchan828/nest-bull-terminus";
 
-const getTerminusOptions = (bull: BullHealthIndicator): TerminusModuleOptions => ({
-  endpoints: [
-    {
-      url: "/health",
-      healthIndicators: [async () => bull.isHealthy()],
-    },
-  ],
-});
+@Controller("/health")
+class BullHealthController {
+  constructor(private health: HealthCheckService, private bull: BullHealthIndicator) {}
+
+  @Get()
+  @HealthCheck()
+  check() {
+    return this.health.check([() => this.bull.isHealthy()]);
+  }
+}
 
 @Module({
-  imports: [
-    TerminusModule.forRootAsync({
-      imports: [BullHealthModule],
-      inject: [BullHealthIndicator],
-      useFactory: (bull: any) => getTerminusOptions(bull),
-    }),
-  ],
+  controllers: [BullHealthController],
+  imports: [BullHealthModule, TerminusModule],
 })
 export class HealthModule {}
 ```

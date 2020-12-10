@@ -20,23 +20,20 @@ $ npm i --save @anchan828/nest-bullmq-terminus @nestjs/terminus @godaddy/terminu
 ```ts
 import { BullHealthIndicator, BullHealthModule } from "@anchan828/nest-bullmq-terminus";
 
-const getTerminusOptions = (bull: BullHealthIndicator): TerminusModuleOptions => ({
-  endpoints: [
-    {
-      url: "/health",
-      healthIndicators: [async () => bull.isHealthy()],
-    },
-  ],
-});
+@Controller("/health")
+class BullHealthController {
+  constructor(private health: HealthCheckService, private bull: BullHealthIndicator) {}
+
+  @Get()
+  @HealthCheck()
+  check() {
+    return this.health.check([() => this.bull.isHealthy()]);
+  }
+}
 
 @Module({
-  imports: [
-    TerminusModule.forRootAsync({
-      imports: [BullHealthModule],
-      inject: [BullHealthIndicator],
-      useFactory: (bull: BullHealthIndicator) => getTerminusOptions(bull),
-    }),
-  ],
+  controllers: [BullHealthController],
+  imports: [BullHealthModule, TerminusModule],
 })
 export class HealthModule {}
 ```
