@@ -77,8 +77,12 @@ export function createAsyncOptionsProvider(options: BullModuleAsyncOptions): Fac
       (x): x is Type<BullModuleOptionsFactory> => x !== undefined,
     ),
     provide: BULL_MODULE_OPTIONS,
-    useFactory: async (optionsFactory: BullModuleOptionsFactory): Promise<BullModuleOptions> =>
-      await optionsFactory.createBullModuleOptions(),
+    useFactory: async (optionsFactory?: BullModuleOptionsFactory): Promise<BullModuleOptions> => {
+      if (!optionsFactory) {
+        return {};
+      }
+      return optionsFactory.createBullModuleOptions();
+    },
   };
 }
 
