@@ -91,13 +91,17 @@ export function createAsyncProviders(options: BullModuleAsyncOptions): Provider[
   if (options.useExisting || options.useFactory) {
     return [asyncOptionsProvider];
   }
-  return [
-    asyncOptionsProvider,
-    {
+
+  const providers: Provider[] = [asyncOptionsProvider];
+
+  if (options.useClass) {
+    providers.push({
       provide: options.useClass,
       useClass: options.useClass,
-    } as ClassProvider,
-  ];
+    } as ClassProvider);
+  }
+
+  return providers;
 }
 
 export function createQueueProviders(queues: (string | BullQueueOptions)[]): Provider[] {

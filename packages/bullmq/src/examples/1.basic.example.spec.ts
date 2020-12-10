@@ -32,7 +32,7 @@ export class TestService {
 export class TestModule {}
 
 @Module({
-  imports: [BullModule.forRoot({}), TestModule],
+  imports: [BullModule.forRootAsync({}), TestModule],
 })
 export class ApplicationModule {}
 
