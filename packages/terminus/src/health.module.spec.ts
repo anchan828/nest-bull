@@ -1,6 +1,6 @@
 import { BullModule, getBullQueueToken } from "@anchan828/nest-bull";
-import { Module } from "@nestjs/common";
-import { HealthIndicatorResult, TerminusModule, TerminusModuleOptions } from "@nestjs/terminus";
+import { Controller, Get, Module } from "@nestjs/common";
+import { HealthCheck, HealthCheckService, TerminusModule } from "@nestjs/terminus";
 import { Test } from "@nestjs/testing";
 import { Job, Queue } from "bull";
 import * as request from "supertest";
@@ -9,6 +9,17 @@ import { QUEUE_NAME } from "./constants";
 import { BullHealthModule } from "./health.module";
 
 describe("BullHealthModule", () => {
+  @Controller("/health")
+  class BullHealthController {
+    constructor(private health: HealthCheckService, private bull: BullHealthIndicator) {}
+
+    @Get()
+    @HealthCheck()
+    check() {
+      return this.health.check([() => this.bull.isHealthy()]);
+    }
+  }
+
   it("should compile module", async () => {
     await expect(
       Test.createTestingModule({
@@ -29,22 +40,10 @@ describe("BullHealthModule", () => {
   });
 
   it("should compile health module", async () => {
-    const getTerminusOptions = (bull: BullHealthIndicator): TerminusModuleOptions => ({
-      endpoints: [
-        {
-          url: "/health",
-          healthIndicators: [async (): Promise<HealthIndicatorResult> => bull.isHealthy()],
-        },
-      ],
-    });
     @Module({
-      imports: [
-        TerminusModule.forRootAsync({
-          imports: [BullHealthModule],
-          inject: [BullHealthIndicator],
-          useFactory: (bull: any) => getTerminusOptions(bull),
-        }),
-      ],
+      controllers: [BullHealthController],
+      providers: [BullHealthIndicator],
+      imports: [BullHealthModule, TerminusModule],
     })
     class HealthModule {}
 
@@ -68,22 +67,10 @@ describe("BullHealthModule", () => {
 
   describe("e2e tests", () => {
     it("should create nest application", async () => {
-      const getTerminusOptions = (bull: BullHealthIndicator): TerminusModuleOptions => ({
-        endpoints: [
-          {
-            url: "/health",
-            healthIndicators: [async (): Promise<HealthIndicatorResult> => bull.isHealthy()],
-          },
-        ],
-      });
       @Module({
-        imports: [
-          TerminusModule.forRootAsync({
-            imports: [BullHealthModule],
-            inject: [BullHealthIndicator],
-            useFactory: (bull: any) => getTerminusOptions(bull),
-          }),
-        ],
+        controllers: [BullHealthController],
+        providers: [BullHealthIndicator],
+        imports: [BullHealthModule, TerminusModule],
       })
       class HealthModule {}
 
@@ -107,22 +94,10 @@ describe("BullHealthModule", () => {
     });
 
     it("should return status is up", async () => {
-      const getTerminusOptions = (bull: BullHealthIndicator): TerminusModuleOptions => ({
-        endpoints: [
-          {
-            url: "/health",
-            healthIndicators: [async (): Promise<HealthIndicatorResult> => bull.isHealthy()],
-          },
-        ],
-      });
       @Module({
-        imports: [
-          TerminusModule.forRootAsync({
-            imports: [BullHealthModule],
-            inject: [BullHealthIndicator],
-            useFactory: (bull: any) => getTerminusOptions(bull),
-          }),
-        ],
+        controllers: [BullHealthController],
+        providers: [BullHealthIndicator],
+        imports: [BullHealthModule, TerminusModule],
       })
       class HealthModule {}
 
@@ -148,28 +123,17 @@ describe("BullHealthModule", () => {
         .expect(200)
         .expect({
           status: "ok",
+          error: {},
           info: { bull: { status: "up" } },
           details: { bull: { status: "up" } },
         });
     });
 
     it("should return status is down", async () => {
-      const getTerminusOptions = (bull: BullHealthIndicator): TerminusModuleOptions => ({
-        endpoints: [
-          {
-            url: "/health",
-            healthIndicators: [async (): Promise<HealthIndicatorResult> => bull.isHealthy()],
-          },
-        ],
-      });
       @Module({
-        imports: [
-          TerminusModule.forRootAsync({
-            imports: [BullHealthModule],
-            inject: [BullHealthIndicator],
-            useFactory: (bull: any) => getTerminusOptions(bull),
-          }),
-        ],
+        controllers: [BullHealthController],
+        providers: [BullHealthIndicator],
+        imports: [BullHealthModule, TerminusModule],
       })
       class HealthModule {}
 
@@ -203,6 +167,7 @@ describe("BullHealthModule", () => {
         .expect(503)
         .expect({
           status: "error",
+          info: {},
           error: { bull: { status: "down", message: "faild" } },
           details: { bull: { status: "down", message: "faild" } },
         });
