@@ -1,6 +1,6 @@
 import { BullModule, BullService } from "@anchan828/nest-bullmq";
 import { Controller, Get, Module } from "@nestjs/common";
-import { HealthCheck, HealthCheckService, TerminusModule } from "@nestjs/terminus";
+import { DNSHealthIndicator, HealthCheck, HealthCheckService, TerminusModule } from "@nestjs/terminus";
 import { Test } from "@nestjs/testing";
 import * as request from "supertest";
 import { BullHealthIndicator } from "./bull.health";
@@ -10,12 +10,16 @@ import { BullHealthModule } from "./health.module";
 describe("BullHealthModule", () => {
   @Controller("/health")
   class BullHealthController {
-    constructor(private health: HealthCheckService, private bull: BullHealthIndicator) {}
+    constructor(
+      private health: HealthCheckService,
+      private bull: BullHealthIndicator,
+      private dns: DNSHealthIndicator,
+    ) {}
 
     @Get()
     @HealthCheck()
     check() {
-      return this.health.check([() => this.bull.isHealthy()]);
+      return this.health.check([async () => this.bull.isHealthy()]);
     }
   }
   it("should compile module", async () => {
@@ -158,13 +162,8 @@ describe("BullHealthModule", () => {
 
       return request(app.getHttpServer())
         .get("/health")
-        .expect(503)
-        .expect({
-          status: "error",
-          info: {},
-          error: { bull: { status: "down", message: "faild" } },
-          details: { bull: { status: "down", message: "faild" } },
-        });
+        .expect(500)
+        .expect({ statusCode: 500, message: "Internal server error" });
     });
   });
 });
