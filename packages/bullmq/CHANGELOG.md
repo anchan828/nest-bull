@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.2](https://github.com/anchan828/nest-bull/compare/v0.5.1...v0.5.2) (2020-12-10)
+
+
+### Bug Fixes
+
+* should be checked undefeind ([c504b42](https://github.com/anchan828/nest-bull/commit/c504b4259bd2aa4adc80774cd3c0e164748f05d2))
+
+
+
+
+
 # [0.5.0](https://github.com/anchan828/nest-bull/compare/v0.4.18...v0.5.0) (2020-12-10)
 
 **Note:** Version bump only for package @anchan828/nest-bullmq
