@@ -25,17 +25,7 @@ describe("BullHealthModule", () => {
   it("should compile module", async () => {
     await expect(
       Test.createTestingModule({
-        imports: [
-          BullModule.forRoot({
-            options: {
-              connection: {
-                host: process.env.REDIS_HOST,
-                port: parseInt(process.env.REDIS_PORT!),
-              },
-            },
-          }),
-          BullHealthModule,
-        ],
+        imports: [BullModule.forRoot({}), BullHealthModule],
       }).compile(),
     ).resolves.toBeDefined();
   });
@@ -49,17 +39,7 @@ describe("BullHealthModule", () => {
 
     await expect(
       Test.createTestingModule({
-        imports: [
-          BullModule.forRoot({
-            options: {
-              connection: {
-                host: process.env.REDIS_HOST,
-                port: parseInt(process.env.REDIS_PORT!),
-              },
-            },
-          }),
-          HealthModule,
-        ],
+        imports: [BullModule.forRoot({}), HealthModule],
       }).compile(),
     ).resolves.toBeDefined();
   });
@@ -73,17 +53,7 @@ describe("BullHealthModule", () => {
       class HealthModule {}
 
       const module = await Test.createTestingModule({
-        imports: [
-          BullModule.forRoot({
-            options: {
-              connection: {
-                host: process.env.REDIS_HOST,
-                port: parseInt(process.env.REDIS_PORT!),
-              },
-            },
-          }),
-          HealthModule,
-        ],
+        imports: [BullModule.forRoot({}), HealthModule],
       }).compile();
       const app = module.createNestApplication();
       await expect(app.init()).resolves.toBeDefined();
@@ -98,17 +68,7 @@ describe("BullHealthModule", () => {
       class HealthModule {}
 
       const module = await Test.createTestingModule({
-        imports: [
-          BullModule.forRoot({
-            options: {
-              connection: {
-                host: process.env.REDIS_HOST,
-                port: parseInt(process.env.REDIS_PORT!),
-              },
-            },
-          }),
-          HealthModule,
-        ],
+        imports: [BullModule.forRoot({}), HealthModule],
       }).compile();
 
       const app = module.createNestApplication();
@@ -132,17 +92,7 @@ describe("BullHealthModule", () => {
       class HealthModule {}
 
       const module = await Test.createTestingModule({
-        imports: [
-          BullModule.forRoot({
-            options: {
-              connection: {
-                host: process.env.REDIS_HOST,
-                port: parseInt(process.env.REDIS_PORT!),
-              },
-            },
-          }),
-          HealthModule,
-        ],
+        imports: [BullModule.forRoot({}), HealthModule],
       }).compile();
 
       const app = module.createNestApplication();

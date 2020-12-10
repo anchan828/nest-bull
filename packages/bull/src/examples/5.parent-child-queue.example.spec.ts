@@ -60,12 +60,6 @@ export class ParentChildQueueExampleModule {}
   imports: [
     BullModule.forRoot({
       queues: [__filename],
-      options: {
-        redis: {
-          host: process.env.REDIS_HOST,
-          port: parseInt(process.env.REDIS_PORT!),
-        },
-      },
     }),
     ParentChildQueueExampleModule,
   ],

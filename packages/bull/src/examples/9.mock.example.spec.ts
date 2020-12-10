@@ -26,12 +26,6 @@ export class MockExampleModule {}
   imports: [
     BullModule.forRoot({
       queues: [__filename],
-      options: {
-        redis: {
-          host: process.env.REDIS_HOST,
-          port: parseInt(process.env.REDIS_PORT!),
-        },
-      },
       extra: {
         defaultJobOptions: {
           setTTLOnComplete: 10,

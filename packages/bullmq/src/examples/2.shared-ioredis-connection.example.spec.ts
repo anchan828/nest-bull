@@ -31,10 +31,7 @@ export class TestService {
 })
 export class TestModule {}
 
-const connection = new IORedis({
-  host: process.env.REDIS_HOST,
-  port: parseInt(process.env.REDIS_PORT!),
-});
+const connection = new IORedis();
 @Module({
   imports: [
     BullModule.forRoot({

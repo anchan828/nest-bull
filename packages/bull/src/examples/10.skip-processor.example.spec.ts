@@ -31,12 +31,6 @@ export class SkipProcessorExampleModule {}
   imports: [
     BullModule.forRoot({
       queues: [__filename],
-      options: {
-        redis: {
-          host: process.env.REDIS_HOST,
-          port: parseInt(process.env.REDIS_PORT!),
-        },
-      },
       extra: {
         defaultProcessorOptions: {
           skip: true,

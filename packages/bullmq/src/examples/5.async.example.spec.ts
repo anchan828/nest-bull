@@ -35,14 +35,7 @@ export class TestModule {}
   imports: [
     BullModule.forRootAsync({
       useFactory: () => {
-        return {
-          options: {
-            connection: {
-              host: process.env.REDIS_HOST,
-              port: parseInt(process.env.REDIS_PORT!),
-            },
-          },
-        };
+        return {};
       },
     }),
     TestModule,

@@ -26,12 +26,6 @@ describe("BullHealthModule", () => {
         imports: [
           BullModule.forRoot({
             queues: [BullHealthCheckQueue],
-            options: {
-              redis: {
-                host: process.env.REDIS_HOST,
-                port: parseInt(process.env.REDIS_PORT!),
-              },
-            },
           }),
           BullHealthModule,
         ],
@@ -51,12 +45,6 @@ describe("BullHealthModule", () => {
         imports: [
           BullModule.forRoot({
             queues: [BullHealthCheckQueue],
-            options: {
-              redis: {
-                host: process.env.REDIS_HOST,
-                port: parseInt(process.env.REDIS_PORT!),
-              },
-            },
           }),
           HealthModule,
         ],
@@ -76,12 +64,6 @@ describe("BullHealthModule", () => {
         imports: [
           BullModule.forRoot({
             queues: [BullHealthCheckQueue],
-            options: {
-              redis: {
-                host: process.env.REDIS_HOST,
-                port: parseInt(process.env.REDIS_PORT!),
-              },
-            },
           }),
           HealthModule,
         ],
@@ -102,12 +84,6 @@ describe("BullHealthModule", () => {
         imports: [
           BullModule.forRoot({
             queues: [BullHealthCheckQueue],
-            options: {
-              redis: {
-                host: process.env.REDIS_HOST,
-                port: parseInt(process.env.REDIS_PORT!),
-              },
-            },
           }),
           HealthModule,
         ],
@@ -137,12 +113,6 @@ describe("BullHealthModule", () => {
         imports: [
           BullModule.forRoot({
             queues: [BullHealthCheckQueue],
-            options: {
-              redis: {
-                host: process.env.REDIS_HOST,
-                port: parseInt(process.env.REDIS_PORT!),
-              },
-            },
           }),
           HealthModule,
         ],

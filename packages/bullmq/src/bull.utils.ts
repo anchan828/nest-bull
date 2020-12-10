@@ -22,12 +22,7 @@ export function mergeQueueBaseOptions(...options: (QueueBaseOptions | undefined)
 }
 
 export async function createQueueEvents(queueName: string): Promise<QueueEvents> {
-  const qe = new QueueEvents(queueName, {
-    connection: {
-      host: process.env.REDIS_HOST,
-      port: parseInt(process.env.REDIS_PORT!),
-    },
-  });
+  const qe = new QueueEvents(queueName);
   await qe.waitUntilReady();
   return qe;
 }
