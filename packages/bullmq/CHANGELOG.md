@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.3](https://github.com/anchan828/nest-bull/compare/v0.5.2...v0.5.3) (2020-12-10)
+
+
+### Bug Fixes
+
+* should remove undefined provider ([b3bd3f6](https://github.com/anchan828/nest-bull/commit/b3bd3f6c5eab937306a43cf0632d6f06251a3eeb))
+
+
+
+
+
 ## [0.5.2](https://github.com/anchan828/nest-bull/compare/v0.5.1...v0.5.2) (2020-12-10)
 
 
