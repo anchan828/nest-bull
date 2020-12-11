@@ -108,8 +108,8 @@ describe("BullHealthModule", () => {
 
       return request(app.getHttpServer())
         .get("/health")
-        .expect(500)
-        .expect({ statusCode: 500, message: "Internal server error" });
+        .expect(503)
+        .expect({ statusCode: 503, message: "Service Unavailable" });
     });
   });
 });
