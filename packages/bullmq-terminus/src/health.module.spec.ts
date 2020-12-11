@@ -109,7 +109,12 @@ describe("BullHealthModule", () => {
       return request(app.getHttpServer())
         .get("/health")
         .expect(503)
-        .expect({ statusCode: 503, message: "Service Unavailable" });
+        .expect({
+          status: "error",
+          info: {},
+          error: { bull: { status: "down", message: "faild" } },
+          details: { bull: { status: "down", message: "faild" } },
+        });
     });
   });
 });
