@@ -33,6 +33,6 @@
     "@types/bull": "3.14.4",
     "@types/supertest": "2.0.10",
     "bull": "3.20.0",
-    "supertest": "6.0.1"
+    "supertest": "6.1.0"
   }
 }
