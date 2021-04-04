@@ -29,7 +29,7 @@
     "@anchan828/nest-bullmq": "^0.5.20"
   },
   "devDependencies": {
-    "@nestjs/terminus": "7.1.1",
+    "@nestjs/terminus": "7.1.2",
     "@types/ioredis": "4.22.2",
     "@types/supertest": "2.0.11",
     "bullmq": "1.15.1",
