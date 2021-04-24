@@ -1,7 +1,7 @@
-import { Injectable, Module } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
-import { FlowProducer, Job, JobNode, Queue } from "bullmq";
-import { BullQueueInject, BullWorker, BullWorkerProcess } from "../bull.decorator";
+import { FlowProducer, Job } from "bullmq";
+import { BullWorker, BullWorkerProcess } from "../bull.decorator";
 import { BullModule } from "../bull.module";
 import { createQueueEvents } from "../bull.utils";
 
@@ -18,31 +18,9 @@ export class TestBullWorker {
   }
 }
 
-@Injectable()
-export class TestService {
-  constructor(@BullQueueInject(queueName) public readonly queue: Queue) {}
-
-  public async addFlow(): Promise<JobNode> {
-    const flow = new FlowProducer({});
-    return flow.add({
-      name: "flow-test",
-      data: "parent-data",
-      queueName,
-      children: [
-        {
-          name: "child-job",
-          data: "child-data",
-          queueName,
-          children: [{ name: "child-job", data: "child-child-data", queueName }],
-        },
-      ],
-    });
-  }
-}
-
 @Module({
   imports: [BullModule.registerQueue(queueName)],
-  providers: [TestBullWorker, TestService],
+  providers: [TestBullWorker],
 })
 export class TestModule {}
 
@@ -57,11 +35,20 @@ describe("Flow Example", () => {
       imports: [ApplicationModule],
     }).compile();
     await app.init();
-    const service = app.get<TestService>(TestService);
-    expect(service).toBeDefined();
-    expect(service.queue).toBeDefined();
-
-    const jobNode = await service.addFlow();
+    const flow = new FlowProducer({});
+    const jobNode = await flow.add({
+      name: "flow-test",
+      data: "parent-data",
+      queueName,
+      children: [
+        {
+          name: "child-job",
+          data: "child-data",
+          queueName,
+          children: [{ name: "child-job", data: "child-child-data", queueName }],
+        },
+      ],
+    });
 
     await expect(jobNode.job.waitUntilFinished(await createQueueEvents(queueName))).resolves.toStrictEqual({
       status: "ok",
@@ -69,6 +56,7 @@ describe("Flow Example", () => {
 
     expect(results).toEqual(["child-child-data", "child-data", "parent-data"]);
 
+    await flow.closing;
     await app.close();
   });
 });
