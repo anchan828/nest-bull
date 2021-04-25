@@ -5,7 +5,7 @@ import { BullWorker, BullWorkerProcess } from "../bull.decorator";
 import { BullModule } from "../bull.module";
 import { createQueueEvents } from "../bull.utils";
 
-const queueName = "queueName";
+const queueName = "flowExample";
 
 const results: string[] = [];
 
@@ -50,15 +50,11 @@ describe("Flow Example", () => {
       ],
     });
 
-    console.log("start - waitUntilFinished");
     await expect(jobNode.job.waitUntilFinished(await createQueueEvents(queueName))).resolves.toStrictEqual({
       status: "ok",
     });
-    console.log("end - waitUntilFinished");
     expect(results).toEqual(["child-child-data", "child-data", "parent-data"]);
-    console.log("start - close");
     await flow.close();
-    console.log("end - close");
     await app.close();
   });
 });

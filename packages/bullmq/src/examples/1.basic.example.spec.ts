@@ -5,7 +5,7 @@ import { BullQueueInject, BullWorker, BullWorkerProcess } from "../bull.decorato
 import { BullModule } from "../bull.module";
 import { createQueueEvents } from "../bull.utils";
 
-const queueName = "queueName";
+const queueName = "basicExample";
 
 @BullWorker({ queueName })
 export class TestBullWorker {
