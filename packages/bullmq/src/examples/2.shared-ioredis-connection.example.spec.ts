@@ -5,7 +5,7 @@ import IORedis from "ioredis";
 import { BullQueueInject, BullWorker, BullWorkerProcess } from "../bull.decorator";
 import { BullModule } from "../bull.module";
 import { createQueueEvents, wait } from "../bull.utils";
-const queueName = "queueName";
+const queueName = "sharedConnectionExample";
 
 @BullWorker({ queueName })
 export class TestBullWorker {
