@@ -49,6 +49,5 @@ describe("1. Basic Example", () => {
     const job = await service.addJob();
     await expect(job.finished()).resolves.toStrictEqual({ status: "ok" });
     await app.close();
-    console.log("call");
   });
 });
