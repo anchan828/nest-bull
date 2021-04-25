@@ -56,7 +56,8 @@ describe("Flow Example", () => {
 
     expect(results).toEqual(["child-child-data", "child-data", "parent-data"]);
 
-    await flow.closing;
+    await flow.disconnect();
+
     await app.close();
   });
 });
