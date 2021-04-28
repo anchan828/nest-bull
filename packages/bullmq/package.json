@@ -27,7 +27,7 @@
   "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/bullmq#readme",
   "devDependencies": {
     "@types/ioredis": "4.26.0",
-    "bullmq": "1.21.0",
+    "bullmq": "1.22.1",
     "ioredis": "4.27.1"
   }
 }
