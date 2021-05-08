@@ -55,6 +55,17 @@ import { BullHealthCheckQueue } from "@anchan828/nest-bull-terminus";
 class AppModule {}
 ```
 
+`BullHealthCheckQueue` is a simple queue that just returns `Promise.resolve()`.
+
+```ts
+export class BullHealthCheckQueue {
+  @BullQueueProcess()
+  async process(): Promise<void> {
+    return Promise.resolve();
+  }
+}
+```
+
 ## License
 
 [MIT](LICENSE)
