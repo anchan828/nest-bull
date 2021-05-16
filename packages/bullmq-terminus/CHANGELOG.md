@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.5.26 (2021-05-16)
+
+**Note:** Version bump only for package @anchan828/nest-bullmq-terminus
+
+
+
+
+
 ## 0.5.25 (2021-05-09)
 
 **Note:** Version bump only for package @anchan828/nest-bullmq-terminus
