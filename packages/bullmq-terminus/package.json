@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@nestjs/terminus": "7.2.0",
-    "@types/ioredis": "4.26.3",
+    "@types/ioredis": "4.26.4",
     "@types/supertest": "2.0.11",
     "bullmq": "1.26.1",
     "ioredis": "4.27.2",
