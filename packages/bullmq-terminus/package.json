@@ -33,7 +33,7 @@
     "@types/ioredis": "4.26.4",
     "@types/supertest": "2.0.11",
     "bullmq": "1.30.2",
-    "ioredis": "4.27.3",
+    "ioredis": "4.27.4",
     "supertest": "6.1.3"
   }
 }
