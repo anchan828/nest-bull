@@ -27,9 +27,7 @@ describe("BullQueueProviderService", () => {
   });
 
   describe("createBullQueueProviders", () => {
-    beforeEach(() => {
-      cleanTestFiles();
-    });
+    cleanTestFiles();
 
     it("should get Test class", async () => {
       @BullQueue()

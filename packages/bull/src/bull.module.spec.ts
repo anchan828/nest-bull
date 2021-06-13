@@ -8,9 +8,8 @@ describe("BullModule", () => {
   });
 
   describe("forRoot", () => {
-    beforeEach(() => {
-      cleanTestFiles();
-    });
+    cleanTestFiles();
+
     it("should compile", async () => {
       const app = await Test.createTestingModule({
         imports: [BullModule.forRoot({} as any)],
