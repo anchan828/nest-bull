@@ -68,7 +68,7 @@ export class BullQueueProviderService {
 
   private createQueue(target: any, options: BullQueueOptions): BullQueue {
     if (this.bullModuleOptions.mock) {
-      return ({
+      return {
         name: String(options.name),
         add: (args: any) => Promise.resolve(args),
         isReady: () => Promise.resolve(true),
@@ -76,7 +76,7 @@ export class BullQueueProviderService {
         process: () => Promise.resolve(),
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         on: () => {},
-      } as any) as BullQueue;
+      } as any as BullQueue;
     }
 
     return new Bull(String(options.name), options.options) as BullQueue;

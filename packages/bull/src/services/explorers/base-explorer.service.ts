@@ -43,9 +43,9 @@ export abstract class BaseExplorerService<Options> {
   }
 
   private getComponents(modules: Module[]): Array<Map<string, InstanceWrapper<Injectable>>> {
-    return (flatten(
+    return flatten(
       modules.filter((module) => module.metatype !== BullCoreModule).map((module) => module.components),
-    ) as unknown) as Array<Map<string, InstanceWrapper<Injectable>>>;
+    ) as unknown as Array<Map<string, InstanceWrapper<Injectable>>>;
   }
 
   private hasBullQueueDecorator(metatype: Function | Type<Injectable>): boolean {
