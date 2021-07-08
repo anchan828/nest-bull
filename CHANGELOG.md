@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/anchan828/nest-bull/compare/v0.5.33...v1.0.0) (2021-07-08)
+
+
+### Bug Fixes
+
+* logger options ([b6a9602](https://github.com/anchan828/nest-bull/commit/b6a9602434b0fdb5f67d6979480b6d0c4d5ed9a5))
+
+
+
+
+
 ## 0.5.33 (2021-07-04)
 
 **Note:** Version bump only for package @anchan828/nest-bull-packages
