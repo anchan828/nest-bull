@@ -11,7 +11,7 @@ import { BullService } from "./bull.service";
 
 @Injectable()
 export class BullQueueProviderService {
-  private readonly logger = new Logger(BULL_MODULE, true);
+  private readonly logger = new Logger(BULL_MODULE, { timestamp: true });
 
   constructor(private readonly bullModuleOptions: BullModuleOptions, private readonly bullService: BullService) {}
 
