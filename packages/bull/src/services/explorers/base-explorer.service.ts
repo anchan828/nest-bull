@@ -10,7 +10,7 @@ import { BullModuleOptions, BullQueue, BullQueueOptions } from "../../bull.inter
 import { BullService } from "../bull.service";
 
 export abstract class BaseExplorerService<Options> {
-  protected readonly logger = new Logger(BULL_MODULE, true);
+  protected readonly logger = new Logger(BULL_MODULE, { timestamp: true });
 
   constructor(
     protected readonly options: BullModuleOptions,
