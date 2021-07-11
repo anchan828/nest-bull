@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.1 (2021-07-11)
+
+**Note:** Version bump only for package @anchan828/nest-bullmq
+
+
+
+
+
 # [1.0.0](https://github.com/anchan828/nest-bull/compare/v0.5.33...v1.0.0) (2021-07-08)
 
 **Note:** Version bump only for package @anchan828/nest-bullmq
