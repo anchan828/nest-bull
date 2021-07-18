@@ -28,6 +28,11 @@
   "devDependencies": {
     "@types/ioredis": "4.26.6",
     "bullmq": "1.39.3",
-    "ioredis": "4.27.6"
+    "ioredis": "4.27.6",
+    "@nestjs/common": "8.0.4",
+    "rxjs": "7.2.0"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^8.0.0"
   }
 }
