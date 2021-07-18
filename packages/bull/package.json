@@ -1,6 +1,6 @@
 {
   "name": "@anchan828/nest-bull",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The [Bull](https://github.com/OptimalBits/bull) module for [Nest](https://github.com/nestjs/nest).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -30,9 +30,9 @@
     "fast-glob": "3.2.7"
   },
   "devDependencies": {
+    "@nestjs/common": "8.0.4",
     "@types/bull": "3.15.2",
     "bull": "3.26.0",
-    "@nestjs/common": "8.0.4",
     "rxjs": "7.2.0"
   },
   "peerDependencies": {
