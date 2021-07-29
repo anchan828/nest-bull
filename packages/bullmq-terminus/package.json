@@ -29,8 +29,8 @@
     "@anchan828/nest-bullmq": "^1.0.3"
   },
   "devDependencies": {
-    "@nestjs/common": "8.0.4",
-    "@nestjs/terminus": "8.0.0-next.0",
+    "@nestjs/common": "8.0.5",
+    "@nestjs/terminus": "8.0.0-next.7",
     "@types/ioredis": "4.26.6",
     "@types/supertest": "2.0.11",
     "bullmq": "1.39.3",
