@@ -1,6 +1,6 @@
 import { BullModule, BullService } from "@anchan828/nest-bullmq";
 import { Controller, Get, Module } from "@nestjs/common";
-import { DNSHealthIndicator, HealthCheck, HealthCheckService, TerminusModule } from "@nestjs/terminus";
+import { HealthCheck, HealthCheckService, TerminusModule } from "@nestjs/terminus";
 import { Test } from "@nestjs/testing";
 import * as request from "supertest";
 import { BullHealthIndicator } from "./bull.health";
@@ -10,11 +10,7 @@ import { BullHealthModule } from "./health.module";
 describe("BullHealthModule", () => {
   @Controller("/health")
   class BullHealthController {
-    constructor(
-      private health: HealthCheckService,
-      private bull: BullHealthIndicator,
-      private dns: DNSHealthIndicator,
-    ) {}
+    constructor(private health: HealthCheckService, private bull: BullHealthIndicator) {}
 
     @Get()
     @HealthCheck()
