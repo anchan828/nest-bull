@@ -28,8 +28,8 @@
   },
   "homepage": "https://github.com/anchan828/nest-bull#readme",
   "devDependencies": {
-    "@commitlint/cli": "12.1.4",
-    "@commitlint/config-conventional": "12.1.4",
+    "@commitlint/cli": "13.1.0",
+    "@commitlint/config-conventional": "13.1.0",
     "@nestjs/common": "8.0.5",
     "@nestjs/core": "8.0.5",
     "@nestjs/platform-express": "8.0.5",
