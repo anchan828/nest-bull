@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "postinstall": "npm run bootstrap && npm run build",
+    "postinstall": "husky install && npm run bootstrap && npm run build",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build",
     "format": "prettier --write '**/*.{js,json,yml,yaml,md}'",
@@ -15,7 +15,7 @@
     "publish": "lerna publish --yes patch",
     "publish:minor": "lerna publish --yes minor",
     "publish:major": "lerna publish --yes major",
-    "test": "lerna run test && npx @anchan828/merge-coverage"
+    "test": "lerna run test --scope @anchan828/nest-bull --scope @anchan828/nest-bullmq && npx @anchan828/merge-coverage"
   },
   "repository": {
     "type": "git",
@@ -30,10 +30,10 @@
   "devDependencies": {
     "@commitlint/cli": "12.1.4",
     "@commitlint/config-conventional": "12.1.4",
-    "@nestjs/common": "8.0.4",
-    "@nestjs/core": "8.0.4",
-    "@nestjs/platform-express": "8.0.4",
-    "@nestjs/testing": "8.0.4",
+    "@nestjs/common": "8.0.5",
+    "@nestjs/core": "8.0.5",
+    "@nestjs/platform-express": "8.0.5",
+    "@nestjs/testing": "8.0.5",
     "@types/ioredis": "4.26.6",
     "@types/jest": "26.0.24",
     "@types/node": "16.3.2",
