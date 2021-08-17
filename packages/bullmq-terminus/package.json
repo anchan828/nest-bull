@@ -37,7 +37,7 @@
     "bullmq": "1.40.4",
     "ioredis": "4.27.7",
     "rxjs": "7.3.0",
-    "supertest": "6.1.5"
+    "supertest": "6.1.6"
   },
   "peerDependencies": {
     "@nestjs/axios": "^0.0.1",
