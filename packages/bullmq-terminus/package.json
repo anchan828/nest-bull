@@ -31,7 +31,7 @@
   "devDependencies": {
     "@nestjs/axios": "0.0.1",
     "@nestjs/common": "8.0.6",
-    "@nestjs/terminus": "8.0.0-next.7",
+    "@nestjs/terminus": "8.0.0",
     "@types/ioredis": "4.27.1",
     "@types/supertest": "2.0.11",
     "bullmq": "1.44.0",
