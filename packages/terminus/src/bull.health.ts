@@ -35,7 +35,7 @@ export class BullHealthIndicator extends HealthIndicator {
     try {
       const job = await this.queue.add({});
       await job.finished();
-    } catch (e) {
+    } catch (e: any) {
       throw new HealthCheckError("BullHealthCheck failed", this.getStatus(key, false, { message: e.message }));
     }
     return this.getStatus(key, true);
