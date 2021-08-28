@@ -44,7 +44,7 @@ export class BullQueueProviderService {
       const jobKey = `${job.toKey()}${job.id}`;
       const client = job.queue.clients[0];
       await client.expire(jobKey, expire);
-    } catch (e) {
+    } catch (e: any) {
       this.logger.error(e.message, e.stack);
     }
   }
