@@ -29,9 +29,9 @@
     "@anchan828/nest-bullmq": "^1.0.11"
   },
   "devDependencies": {
-    "@nestjs/axios": "0.0.1",
+    "@nestjs/axios": "0.0.2",
     "@nestjs/common": "8.0.6",
-    "@nestjs/terminus": "8.0.0",
+    "@nestjs/terminus": "8.0.1",
     "@types/ioredis": "4.27.4",
     "@types/supertest": "2.0.11",
     "bullmq": "1.48.1",
@@ -40,7 +40,7 @@
     "supertest": "6.1.6"
   },
   "peerDependencies": {
-    "@nestjs/axios": "^0.0.1",
+    "@nestjs/axios": "^0.0.1 || ^0.0.2",
     "@nestjs/common": "^8.0.0"
   }
 }
