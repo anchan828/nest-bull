@@ -30,7 +30,7 @@
     "fast-glob": "3.2.7"
   },
   "devDependencies": {
-    "@nestjs/common": "8.0.6",
+    "@nestjs/common": "8.0.7",
     "@types/bull": "3.15.4",
     "bull": "3.29.1",
     "rxjs": "7.3.0"
