@@ -21,16 +21,16 @@ describe("BullHealthModule", () => {
   }
 
   it("should compile module", async () => {
-    await expect(
-      Test.createTestingModule({
-        imports: [
-          BullModule.forRoot({
-            queues: [BullHealthCheckQueue],
-          }),
-          BullHealthModule,
-        ],
-      }).compile(),
-    ).resolves.toBeDefined();
+    const app = await Test.createTestingModule({
+      imports: [
+        BullModule.forRoot({
+          queues: [BullHealthCheckQueue],
+        }),
+        BullHealthModule,
+      ],
+    }).compile();
+    await app.init();
+    await app.close();
   });
 
   it("should compile health module", async () => {
@@ -40,16 +40,17 @@ describe("BullHealthModule", () => {
     })
     class HealthModule {}
 
-    await expect(
-      Test.createTestingModule({
-        imports: [
-          BullModule.forRoot({
-            queues: [BullHealthCheckQueue],
-          }),
-          HealthModule,
-        ],
-      }).compile(),
-    ).resolves.toBeDefined();
+    const app = await Test.createTestingModule({
+      imports: [
+        BullModule.forRoot({
+          queues: [BullHealthCheckQueue],
+        }),
+        HealthModule,
+      ],
+    }).compile();
+
+    await app.init();
+    await app.close();
   });
 
   describe("e2e tests", () => {
@@ -91,7 +92,7 @@ describe("BullHealthModule", () => {
 
       const app = module.createNestApplication();
       await app.init();
-      return request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get("/health")
         .expect(200)
         .expect({
@@ -100,6 +101,7 @@ describe("BullHealthModule", () => {
           info: { bull: { status: "up" } },
           details: { bull: { status: "up" } },
         });
+      await app.close();
     });
 
     it("should return status is down", async () => {
@@ -128,7 +130,7 @@ describe("BullHealthModule", () => {
         },
       } as Job);
 
-      return request(app.getHttpServer())
+      await request(app.getHttpServer())
         .get("/health")
         .expect(503)
         .expect({
@@ -137,6 +139,8 @@ describe("BullHealthModule", () => {
           error: { bull: { status: "down", message: "faild" } },
           details: { bull: { status: "down", message: "faild" } },
         });
+
+      await app.close();
     });
   });
 });
