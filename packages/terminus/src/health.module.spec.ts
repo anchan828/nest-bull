@@ -20,27 +20,14 @@ describe("BullHealthModule", () => {
     }
   }
 
-  it("should compile module", async () => {
-    const app = await Test.createTestingModule({
-      imports: [
-        BullModule.forRoot({
-          queues: [BullHealthCheckQueue],
-        }),
-        BullHealthModule,
-      ],
-    }).compile();
-    await app.init();
-    await app.close();
-  });
-
-  it("should compile health module", async () => {
+  it("should return status is up", async () => {
     @Module({
       controllers: [BullHealthController],
       imports: [BullHealthModule, TerminusModule],
     })
     class HealthModule {}
 
-    const app = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       imports: [
         BullModule.forRoot({
           queues: [BullHealthCheckQueue],
@@ -49,98 +36,56 @@ describe("BullHealthModule", () => {
       ],
     }).compile();
 
+    const app = module.createNestApplication();
     await app.init();
+    await request(app.getHttpServer())
+      .get("/health")
+      .expect(200)
+      .expect({
+        status: "ok",
+        error: {},
+        info: { bull: { status: "up" } },
+        details: { bull: { status: "up" } },
+      });
     await app.close();
   });
 
-  describe("e2e tests", () => {
-    it("should create nest application", async () => {
-      @Module({
-        controllers: [BullHealthController],
-        imports: [BullHealthModule, TerminusModule],
-      })
-      class HealthModule {}
+  it("should return status is down", async () => {
+    @Module({
+      controllers: [BullHealthController],
+      imports: [BullHealthModule, TerminusModule],
+    })
+    class HealthModule {}
 
-      const module = await Test.createTestingModule({
-        imports: [
-          BullModule.forRoot({
-            queues: [BullHealthCheckQueue],
-          }),
-          HealthModule,
-        ],
-      }).compile();
-      const app = module.createNestApplication();
-      await expect(app.init()).resolves.toBeDefined();
-      await app.close();
-    });
+    const module = await Test.createTestingModule({
+      imports: [
+        BullModule.forRoot({
+          queues: [BullHealthCheckQueue],
+        }),
+        HealthModule,
+      ],
+    }).compile();
 
-    it("should return status is up", async () => {
-      @Module({
-        controllers: [BullHealthController],
-        imports: [BullHealthModule, TerminusModule],
-      })
-      class HealthModule {}
+    const app = module.createNestApplication();
 
-      const module = await Test.createTestingModule({
-        imports: [
-          BullModule.forRoot({
-            queues: [BullHealthCheckQueue],
-          }),
-          HealthModule,
-        ],
-      }).compile();
+    await app.init();
+    const queue = app.get<Queue>(getBullQueueToken(QUEUE_NAME));
+    jest.spyOn(queue, "add").mockResolvedValueOnce({
+      finished: (): Promise<any> => {
+        throw new Error("faild");
+      },
+    } as Job);
 
-      const app = module.createNestApplication();
-      await app.init();
-      await request(app.getHttpServer())
-        .get("/health")
-        .expect(200)
-        .expect({
-          status: "ok",
-          error: {},
-          info: { bull: { status: "up" } },
-          details: { bull: { status: "up" } },
-        });
-      await app.close();
-    });
+    await request(app.getHttpServer())
+      .get("/health")
+      .expect(503)
+      .expect({
+        status: "error",
+        info: {},
+        error: { bull: { status: "down", message: "faild" } },
+        details: { bull: { status: "down", message: "faild" } },
+      });
 
-    it("should return status is down", async () => {
-      @Module({
-        controllers: [BullHealthController],
-        imports: [BullHealthModule, TerminusModule],
-      })
-      class HealthModule {}
-
-      const module = await Test.createTestingModule({
-        imports: [
-          BullModule.forRoot({
-            queues: [BullHealthCheckQueue],
-          }),
-          HealthModule,
-        ],
-      }).compile();
-
-      const app = module.createNestApplication();
-
-      await app.init();
-      const queue = app.get<Queue>(getBullQueueToken(QUEUE_NAME));
-      jest.spyOn(queue, "add").mockResolvedValueOnce({
-        finished: (): Promise<any> => {
-          throw new Error("faild");
-        },
-      } as Job);
-
-      await request(app.getHttpServer())
-        .get("/health")
-        .expect(503)
-        .expect({
-          status: "error",
-          info: {},
-          error: { bull: { status: "down", message: "faild" } },
-          details: { bull: { status: "down", message: "faild" } },
-        });
-
-      await app.close();
-    });
+    await app.close();
   });
 });
