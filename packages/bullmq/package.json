@@ -28,7 +28,7 @@
   "devDependencies": {
     "@nestjs/common": "8.0.11",
     "@types/ioredis": "4.27.6",
-    "bullmq": "1.48.3",
+    "bullmq": "1.49.0",
     "ioredis": "4.27.10",
     "rxjs": "7.4.0"
   },
