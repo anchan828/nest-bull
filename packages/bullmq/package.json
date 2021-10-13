@@ -29,7 +29,7 @@
     "@nestjs/common": "8.0.11",
     "@types/ioredis": "4.27.7",
     "bullmq": "1.49.0",
-    "ioredis": "4.27.11",
+    "ioredis": "4.28.0",
     "rxjs": "7.4.0"
   },
   "peerDependencies": {
