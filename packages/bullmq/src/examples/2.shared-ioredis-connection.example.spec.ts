@@ -1,6 +1,6 @@
 import { Injectable, Module } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
-import { Job, load, Queue } from "bullmq";
+import { Job, Queue } from "bullmq";
 import IORedis from "ioredis";
 import { BullQueueInject, BullWorker, BullWorkerProcess } from "../bull.decorator";
 import { BullModule } from "../bull.module";
@@ -48,8 +48,6 @@ describe("Shared IORedis connection", () => {
     const app = await Test.createTestingModule({
       imports: [ApplicationModule],
     }).compile();
-    // https://github.com/taskforcesh/bullmq/issues/79#issuecomment-597713817
-    await load(connection);
     await app.init();
     const service = app.get<TestService>(TestService);
     expect(service).toBeDefined();
@@ -59,5 +57,6 @@ describe("Shared IORedis connection", () => {
     const job = await service.addJob();
     await expect(job.waitUntilFinished(await createQueueEvents(queueName))).resolves.toStrictEqual({ status: "ok" });
     await app.close();
+    await connection.quit();
   });
 });
