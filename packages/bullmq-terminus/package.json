@@ -34,7 +34,7 @@
     "@nestjs/terminus": "8.0.1",
     "@types/ioredis": "4.28.1",
     "@types/supertest": "2.0.11",
-    "bullmq": "1.54.3",
+    "bullmq": "1.54.4",
     "ioredis": "4.28.1",
     "rxjs": "7.4.0",
     "supertest": "6.1.6"
