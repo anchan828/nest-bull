@@ -89,7 +89,7 @@ export class BullExplorerService {
         eventProcessors.push({
           processor: prototype[methodName].bind(instance),
           type,
-        } as any);
+        } as U);
       }
     }
 
