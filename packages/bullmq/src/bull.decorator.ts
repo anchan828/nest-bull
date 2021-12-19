@@ -8,7 +8,8 @@ import {
   BULL_WORKER_PROCESSOR_DECORATOR,
 } from "./bull.constants";
 import { getBullQueueToken } from "./bull.utils";
-import { BullQueueEvent, BullQueueEventsOptions, BullQueueOptions, BullWorkerOptions } from "./interfaces";
+import { BullQueueEventsOptions, BullQueueOptions, BullWorkerOptions } from "./interfaces";
+import { QueueListenerType } from "./interfaces/bull-base.interface";
 
 export function BullQueue(options: BullQueueOptions): ClassDecorator {
   return SetMetadata(BULL_QUEUE_DECORATOR, options);
@@ -26,7 +27,7 @@ export function BullQueueEvents(options?: BullQueueEventsOptions): ClassDecorato
   return SetMetadata(BULL_QUEUE_EVENTS_DECORATOR, options);
 }
 
-export function BullQueueEventProcess(type: BullQueueEvent): MethodDecorator {
+export function BullQueueEventProcess(type: QueueListenerType): MethodDecorator {
   return SetMetadata(BULL_QUEUE_EVENTS_PROCESSOR_DECORATOR, type);
 }
 

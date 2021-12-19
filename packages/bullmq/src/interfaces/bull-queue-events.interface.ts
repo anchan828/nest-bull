@@ -1,31 +1,5 @@
-import { Processor, QueueEventsOptions } from "bullmq";
-import { BullQueueBaseMetadata } from "./bull-base.interface";
-
-/**
- * Event types
- * @see https://github.com/taskforcesh/bullmq/blob/6de8b48c9612ea39bb28db5f4130cb2a2bb5ee90/src/classes/queue-base.ts#L22-L49
- */
-export type BullQueueEvent =
-  | "active"
-  | "wait"
-  | "waiting"
-  | "paused"
-  | "resumed"
-  | "active"
-  | "id"
-  | "delayed"
-  | "priority"
-  | "stalled-check"
-  | "completed"
-  | "failed"
-  | "stalled"
-  | "repeat"
-  | "limiter"
-  | "drained"
-  | "progress"
-  | "meta"
-  | "events"
-  | "delay";
+import { QueueEventsListener, QueueEventsOptions } from "bullmq";
+import { BullProcessMetadata, BullQueueBaseMetadata } from "./bull-base.interface";
 
 /**
  * Queue events options
@@ -36,13 +10,11 @@ export interface BullQueueEventsOptions {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface BullQueueEventsMetadata extends BullQueueBaseMetadata<BullQueueEventsOptions> {}
+export interface BullQueueEventsMetadata
+  extends BullQueueBaseMetadata<BullQueueEventsOptions, BullQueueEventsEventProcessMetadata> {}
 
 /**
  * Queue events process interfaces
  */
 
-export interface BullQueueEventsProcessMetadata {
-  type: BullQueueEvent;
-  processor: Processor | any;
-}
+export type BullQueueEventsEventProcessMetadata = BullProcessMetadata<keyof QueueEventsListener>;
