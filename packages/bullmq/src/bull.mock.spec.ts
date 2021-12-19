@@ -37,7 +37,7 @@ describe("createWorkerMock", () => {
 
   it("should call mock functions", () => {
     const worker = createWorkerMock("test");
-    worker.on("test", () => {
+    worker.on("active", () => {
       console.log(test);
     });
   });
@@ -54,7 +54,7 @@ describe("createQueueEventsMock", () => {
 
   it("should call mock functions", () => {
     const queueEvent = createQueueEventsMock("test");
-    queueEvent.on("test", () => {
+    queueEvent.on("active", () => {
       console.log(test);
     });
   });

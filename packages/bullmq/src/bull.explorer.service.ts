@@ -12,12 +12,11 @@ import {
 import {
   BullExploreResults,
   BullQueueEventsMetadata,
-  BullQueueEventsProcessMetadata,
   BullQueueMetadata,
   BullWorkerMetadata,
   BullWorkerProcessMetadata,
 } from "./interfaces";
-import { BullQueueBaseMetadata } from "./interfaces/bull-base.interface";
+import { BullProcessMetadata, BullQueueBaseMetadata } from "./interfaces/bull-base.interface";
 @Injectable()
 export class BullExplorerService {
   constructor(private readonly discoveryService: DiscoveryService, private readonly metadataScanner: MetadataScanner) {}
@@ -43,7 +42,7 @@ export class BullExplorerService {
     return { workers, queueEvents, queues };
   }
 
-  private getMetadata<T extends BullQueueBaseMetadata<any>>(metadataKey: string): T[] {
+  private getMetadata<T extends BullQueueBaseMetadata<any, any>>(metadataKey: string): T[] {
     const metadata: T[] = [];
     for (const classInstance of this.getClassInstances()) {
       const options = Reflect.getMetadata(metadataKey, classInstance.constructor);
@@ -77,18 +76,23 @@ export class BullExplorerService {
     return workerProcessors;
   }
 
-  private getQueueEventProcessors<T extends BullQueueBaseMetadata<any>>(metadata: T): BullQueueEventsProcessMetadata[] {
+  private getQueueEventProcessors<T extends BullQueueBaseMetadata<any, any>, U extends BullProcessMetadata<any>>(
+    metadata: T,
+  ): U[] {
     const instance = metadata.instance;
     const prototype = Object.getPrototypeOf(instance);
-    const queueEventsProcessors: BullQueueEventsProcessMetadata[] = [];
+    const eventProcessors: U[] = [];
 
     for (const methodName of this.metadataScanner.getAllFilteredMethodNames(prototype)) {
       const type = Reflect.getMetadata(BULL_QUEUE_EVENTS_PROCESSOR_DECORATOR, prototype[methodName]);
       if (type) {
-        queueEventsProcessors.push({ processor: prototype[methodName].bind(instance), type });
+        eventProcessors.push({
+          processor: prototype[methodName].bind(instance),
+          type,
+        } as U);
       }
     }
 
-    return queueEventsProcessors;
+    return eventProcessors;
   }
 }
