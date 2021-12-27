@@ -30,7 +30,7 @@
     "@types/ioredis": "4.28.5",
     "bullmq": "1.59.4",
     "ioredis": "4.28.2",
-    "rxjs": "7.4.0"
+    "rxjs": "7.5.0"
   },
   "peerDependencies": {
     "@nestjs/common": "^8.0.0"
