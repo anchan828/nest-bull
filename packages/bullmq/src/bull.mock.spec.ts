@@ -20,7 +20,7 @@ describe("createQueueMock", () => {
       { name: "test1", data: {}, opts: {} },
       { name: "test2", data: {}, opts: {} },
     ]);
-    queue.on("test", () => {
+    queue.on("waiting", () => {
       console.log(test);
     });
   });
