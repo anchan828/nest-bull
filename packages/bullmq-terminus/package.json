@@ -36,7 +36,7 @@
     "@types/supertest": "2.0.11",
     "bullmq": "1.64.0",
     "ioredis": "4.28.3",
-    "rxjs": "7.5.1",
+    "rxjs": "7.5.2",
     "supertest": "6.2.0"
   },
   "peerDependencies": {
