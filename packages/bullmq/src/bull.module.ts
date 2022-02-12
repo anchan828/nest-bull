@@ -1,5 +1,6 @@
-import { DynamicModule, Global, Module } from "@nestjs/common";
+import { DynamicModule, Global, Module, Provider } from "@nestjs/common";
 import { BullCoreModule } from "./bull-core.module";
+import { createQueueProviders } from "./bull.providers";
 import { BullModuleAsyncOptions, BullModuleOptions, BullQueueOptions } from "./interfaces";
 
 @Global()
@@ -20,9 +21,11 @@ export class BullModule {
   }
 
   public static registerQueue(...queues: (string | BullQueueOptions)[]): DynamicModule {
+    const queueProviders: Provider[] = createQueueProviders(queues);
     return {
       module: BullModule,
-      imports: [BullCoreModule.registerQueue(queues)],
+      providers: queueProviders,
+      exports: queueProviders,
     };
   }
 }

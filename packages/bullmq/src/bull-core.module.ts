@@ -1,4 +1,4 @@
-import { DynamicModule, Global, Inject, Module, Provider } from "@nestjs/common";
+import { DynamicModule, Global, Inject, Module } from "@nestjs/common";
 import { OnModuleInit } from "@nestjs/common/interfaces";
 import { DiscoveryModule } from "@nestjs/core";
 import { MetadataScanner } from "@nestjs/core/metadata-scanner";
@@ -8,14 +8,12 @@ import {
   createAsyncProviders,
   createQueue,
   createQueueEvents,
-  createQueueProviders,
   createQueueScheduler,
   createWorker,
 } from "./bull.providers";
 import { BullService } from "./bull.service";
 import { mergeQueueBaseOptions } from "./bull.utils";
 import { BullModuleAsyncOptions, BullModuleOptions } from "./interfaces";
-import { BullQueueOptions } from "./interfaces/bull-queue.interface";
 
 @Global()
 @Module({
@@ -97,15 +95,6 @@ export class BullCoreModule implements OnModuleInit {
       imports: [...(options.imports || [])],
       providers,
       exports: providers,
-    };
-  }
-
-  public static registerQueue(queues: (string | BullQueueOptions)[]): DynamicModule {
-    const queueProviders: Provider[] = createQueueProviders(queues);
-    return {
-      module: BullCoreModule,
-      providers: queueProviders,
-      exports: queueProviders,
     };
   }
 }
