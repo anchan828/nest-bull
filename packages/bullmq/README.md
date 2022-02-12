@@ -3,10 +3,6 @@
 ![npm](https://img.shields.io/npm/v/@anchan828/nest-bullmq.svg)
 ![NPM](https://img.shields.io/npm/l/@anchan828/nest-bullmq.svg)
 
-## Roadmap
-
-This package will merge into @anchan828/nest-bull when bullmq has been released as v4.
-
 ## Description
 
 The [BullMQ](https://github.com/taskforcesh/bullmq) module for [Nest](https://github.com/nestjs/nest).
