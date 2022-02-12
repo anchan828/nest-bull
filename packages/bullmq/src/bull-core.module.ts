@@ -99,13 +99,4 @@ export class BullCoreModule implements OnModuleInit {
       exports: providers,
     };
   }
-
-  public static registerQueue(queues: (string | BullQueueOptions)[]): DynamicModule {
-    const queueProviders: Provider[] = createQueueProviders(queues);
-    return {
-      module: BullCoreModule,
-      providers: queueProviders,
-      exports: queueProviders,
-    };
-  }
 }
