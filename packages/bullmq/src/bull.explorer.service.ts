@@ -3,9 +3,9 @@ import { DiscoveryService } from "@nestjs/core";
 import { InstanceWrapper } from "@nestjs/core/injector/instance-wrapper";
 import { MetadataScanner } from "@nestjs/core/metadata-scanner";
 import {
+  BULL_LISTENER_DECORATOR,
   BULL_QUEUE_DECORATOR,
   BULL_QUEUE_EVENTS_DECORATOR,
-  BULL_QUEUE_EVENTS_PROCESSOR_DECORATOR,
   BULL_WORKER_DECORATOR,
   BULL_WORKER_PROCESSOR_DECORATOR,
 } from "./bull.constants";
@@ -16,7 +16,7 @@ import {
   BullWorkerMetadata,
   BullWorkerProcessMetadata,
 } from "./interfaces";
-import { BullProcessMetadata, BullQueueBaseMetadata } from "./interfaces/bull-base.interface";
+import { BullBaseMetadata, BullProcessMetadata } from "./interfaces/bull-base.interface";
 @Injectable()
 export class BullExplorerService {
   constructor(private readonly discoveryService: DiscoveryService, private readonly metadataScanner: MetadataScanner) {}
@@ -27,22 +27,22 @@ export class BullExplorerService {
     const queueEvents = this.getMetadata<BullQueueEventsMetadata>(BULL_QUEUE_EVENTS_DECORATOR);
 
     for (const queue of queues) {
-      queue.events = this.getQueueEventProcessors(queue);
+      queue.events = this.getListeners(queue);
     }
 
     for (const worker of workers) {
       worker.processors = this.getWorkerProcessors(worker);
-      worker.events = this.getQueueEventProcessors(worker);
+      worker.events = this.getListeners(worker);
     }
 
     for (const queueEvent of queueEvents) {
-      queueEvent.events = this.getQueueEventProcessors(queueEvent);
+      queueEvent.events = this.getListeners(queueEvent);
     }
 
     return { workers, queueEvents, queues };
   }
 
-  private getMetadata<T extends BullQueueBaseMetadata<any, any>>(metadataKey: string): T[] {
+  private getMetadata<T extends BullBaseMetadata<any, any>>(metadataKey: string): T[] {
     const metadata: T[] = [];
     for (const classInstance of this.getClassInstances()) {
       const options = Reflect.getMetadata(metadataKey, classInstance.constructor);
@@ -76,23 +76,22 @@ export class BullExplorerService {
     return workerProcessors;
   }
 
-  private getQueueEventProcessors<T extends BullQueueBaseMetadata<any, any>, U extends BullProcessMetadata<any>>(
-    metadata: T,
-  ): U[] {
+  private getListeners<T extends BullBaseMetadata<any, any>, U extends BullProcessMetadata<any>>(metadata: T): U[] {
     const instance = metadata.instance;
     const prototype = Object.getPrototypeOf(instance);
-    const eventProcessors: U[] = [];
+    const eventListeners: U[] = [];
 
     for (const methodName of this.metadataScanner.getAllFilteredMethodNames(prototype)) {
-      const type = Reflect.getMetadata(BULL_QUEUE_EVENTS_PROCESSOR_DECORATOR, prototype[methodName]);
+      const type = Reflect.getMetadata(BULL_LISTENER_DECORATOR, prototype[methodName]);
+
       if (type) {
-        eventProcessors.push({
+        eventListeners.push({
           processor: prototype[methodName].bind(instance),
           type,
         } as U);
       }
     }
 
-    return eventProcessors;
+    return eventListeners;
   }
 }

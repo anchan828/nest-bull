@@ -1,5 +1,5 @@
 import { QueueEventsListener, QueueEventsOptions } from "bullmq";
-import { BullProcessMetadata, BullQueueBaseMetadata } from "./bull-base.interface";
+import { BullBaseMetadata, BullProcessMetadata } from "./bull-base.interface";
 
 /**
  * Queue events options
@@ -11,10 +11,8 @@ export interface BullQueueEventsOptions {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface BullQueueEventsMetadata
-  extends BullQueueBaseMetadata<BullQueueEventsOptions, BullQueueEventsEventProcessMetadata> {}
+  extends BullBaseMetadata<BullQueueEventsOptions, BullProcessMetadata<keyof QueueEventsListener>> {}
 
-/**
- * Queue events process interfaces
- */
-
-export type BullQueueEventsEventProcessMetadata = BullProcessMetadata<keyof QueueEventsListener>;
+export type BullQueueEventsListenerArgs = {
+  [key in keyof QueueEventsListener]: Parameters<QueueEventsListener[key]>[0];
+};

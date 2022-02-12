@@ -1,32 +1,25 @@
 import { Injectable, Module } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import { Job } from "bullmq";
-import { BullQueueListenerArgs } from "..";
-import { BullQueue, BullQueueListener, BullWorker, BullWorkerProcess } from "../bull.decorator";
+import { BullWorkerListener, BullWorkerListenerArgs } from "..";
+import { BullWorker, BullWorkerProcess } from "../bull.decorator";
 import { BullModule } from "../bull.module";
 import { BullService } from "../bull.service";
 import { createQueueEvents, wait } from "../bull.utils";
-const queueName = "queueDecoratorExample";
+const queueName = "workerDecoratorExample";
 const calledEvents = jest.fn();
-
-@BullQueue({ queueName })
-export class TestBullQueue {
-  @BullQueueListener("waiting")
-  public async waiting(job: BullQueueListenerArgs["waiting"]): Promise<void> {
-    calledEvents("waiting");
-    console.debug(`[${job.id}] waiting`);
-  }
-}
-
 @BullWorker({ queueName })
 export class TestBullWorker {
   @BullWorkerProcess()
   public async process(job: Job): Promise<{ status: string }> {
     expect(job.data).toStrictEqual({ test: "test" });
-
-    await job.updateProgress(50);
-    await wait(500);
     return { status: "ok" };
+  }
+
+  @BullWorkerListener("completed")
+  public async completed(job: BullWorkerListenerArgs["completed"]): Promise<void> {
+    calledEvents("completed");
+    console.debug(`[${job.id}] completed`);
   }
 }
 
@@ -40,7 +33,8 @@ export class TestService {
 }
 
 @Module({
-  providers: [TestBullWorker, TestService, TestBullQueue],
+  imports: [BullModule.registerQueue(queueName)],
+  providers: [TestBullWorker, TestService],
 })
 export class TestModule {}
 
@@ -50,7 +44,7 @@ export class TestModule {}
 export class ApplicationModule {}
 
 // https://docs.bullmq.io/guide/connections
-describe("Queue decorator", () => {
+describe("Worker decorator", () => {
   it("test", async () => {
     const app = await Test.createTestingModule({
       imports: [ApplicationModule],
@@ -61,9 +55,8 @@ describe("Queue decorator", () => {
     expect(service.service).toBeDefined();
     const job = await service.addJob();
     await expect(job.waitUntilFinished(await createQueueEvents(queueName))).resolves.toStrictEqual({ status: "ok" });
-
-    expect(calledEvents.mock.calls).toEqual([["waiting"]]);
-
+    await wait(500);
+    expect(calledEvents.mock.calls).toEqual([["completed"]]);
     await app.close();
   });
 });

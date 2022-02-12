@@ -1,5 +1,5 @@
 import { Processor, WorkerListener, WorkerOptions } from "bullmq";
-import { BullProcessMetadata, BullQueueBaseMetadata } from "./bull-base.interface";
+import { BullBaseMetadata, BullProcessMetadata } from "./bull-base.interface";
 
 /**
  * Worker interfaces
@@ -7,9 +7,6 @@ import { BullProcessMetadata, BullQueueBaseMetadata } from "./bull-base.interfac
 export interface BullWorkerOptions {
   queueName: string;
   options?: WorkerOptions;
-}
-export interface BullWorkerMetadata extends BullQueueBaseMetadata<BullWorkerOptions, BullWorkerEventProcessMetadata> {
-  processors: BullWorkerProcessMetadata[];
 }
 
 /**
@@ -20,9 +17,11 @@ export interface BullWorkerProcessMetadata {
   processor: Processor;
   options: WorkerOptions;
 }
+export interface BullWorkerMetadata
+  extends BullBaseMetadata<BullWorkerOptions, BullProcessMetadata<keyof WorkerListener>> {
+  processors: BullWorkerProcessMetadata[];
+}
 
-/**
- * Worker event process interfaces
- */
-
-export type BullWorkerEventProcessMetadata = BullProcessMetadata<keyof WorkerListener>;
+export type BullWorkerListenerArgs = {
+  [key in keyof WorkerListener]: Parameters<WorkerListener[key]>[0];
+};
