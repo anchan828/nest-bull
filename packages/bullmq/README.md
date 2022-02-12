@@ -110,6 +110,83 @@ export class ExampleBullWorker {
 }
 ```
 
+### Add Worker/Queue/QueueEvents listeners
+
+Listeners can be added via the decorator.
+
+#### Worker listeners
+
+All event names can be found [here](https://github.com/taskforcesh/bullmq/blob/6ded7bae22b0f369ebb68960d48780f547d43346/src/classes/worker.ts#L31).
+
+```ts
+import { BullWorker, BullWorkerProcess, BullWorkerListener, BullWorkerListenerArgs } from "@anchan828/nest-bullmq";
+import { APP_QUEUE } from "./app.constants";
+
+@BullWorker({ queueName: APP_QUEUE })
+export class ExampleBullWorker {
+  @BullWorkerProcess()
+  public async process(job: Job): Promise<{ status: string }> {
+    return { status: "ok" };
+  }
+
+  @BullWorkerListener("completed")
+  public async completed(job: BullWorkerListenerArgs["completed"]): Promise<void> {
+    calledEvents("completed");
+    console.debug(`[${job.id}] completed`);
+  }
+}
+```
+
+#### Queue listeners
+
+All event names can be found [here](https://github.com/taskforcesh/bullmq/blob/6ded7bae22b0f369ebb68960d48780f547d43346/src/classes/queue.ts#L11).
+
+```ts
+import { BullQueue, BullQueueListener, BullQueueListenerArgs } from "@anchan828/nest-bullmq";
+import { APP_QUEUE } from "./app.constants";
+
+@BullQueue({ queueName: APP_QUEUE })
+export class ExampleBullQueue {
+  @BullQueueListener("waiting")
+  public async waiting(job: BullQueueListenerArgs["waiting"]): Promise<void> {
+    calledEvents("waiting");
+    console.debug(`[${job.id}] waiting`);
+  }
+}
+```
+
+#### QueueEvents listeners
+
+All event names can be found [here](https://github.com/taskforcesh/bullmq/blob/6ded7bae22b0f369ebb68960d48780f547d43346/src/classes/queue-events.ts#L12).
+
+```ts
+import { BullQueueEvents, BullQueueEventsListener, BullQueueEventsListenerArgs } from "@anchan828/nest-bullmq";
+import { APP_QUEUE } from "./app.constants";
+
+@BullQueueEvents({ queueName: APP_QUEUE })
+export class ExampleBullQueueEvents {
+  @BullQueueEventsListener("added")
+  public async added(args: BullQueueEventsListenerArgs["added"]): Promise<void> {
+    console.debug(`[${args.jobId}] added`);
+  }
+
+  @BullQueueEventsListener("active")
+  public async active(args: BullQueueEventsListenerArgs["active"]): Promise<void> {
+    console.debug(`[${args.jobId}] active`);
+  }
+
+  @BullQueueEventsListener("completed")
+  public async completed(args: BullQueueEventsListenerArgs["completed"]): Promise<void> {
+    console.debug(`[${args.jobId}] completed`);
+  }
+
+  @BullQueueEventsListener("waiting")
+  public async waiting(args: BullQueueEventsListenerArgs["waiting"]): Promise<void> {
+    console.debug(`[${args.jobId}] waiting`);
+  }
+}
+```
+
 ## Examples
 
 There are [examples](./src/examples).

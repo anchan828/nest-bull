@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Queue, QueueBaseOptions, QueueEvents, QueueScheduler, Worker } from "bullmq";
+import { Queue, QueueBaseOptions, QueueEvents, QueueEventsListener, QueueScheduler, Worker } from "bullmq";
 
 function createJobMock(...args: any[]): any {
   return {
@@ -9,8 +9,7 @@ function createJobMock(...args: any[]): any {
     isFailed: (): Promise<boolean> => Promise.resolve(true),
     isActive: (): Promise<boolean> => Promise.resolve(true),
     isWaiting: (): Promise<boolean> => Promise.resolve(false),
-    getState: (): Promise<"active" | "delayed" | "completed" | "failed" | "waiting" | "unknown"> =>
-      Promise.resolve("completed"),
+    getState: (): Promise<keyof QueueEventsListener> => Promise.resolve("completed"),
     remove: (): Promise<void> => Promise.resolve(),
   };
 }

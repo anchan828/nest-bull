@@ -2,8 +2,11 @@ export {
   BullQueue,
   BullQueueEventProcess,
   BullQueueEvents,
+  BullQueueEventsListener,
   BullQueueInject,
+  BullQueueListener,
   BullWorker,
+  BullWorkerListener,
   BullWorkerProcess,
 } from "./bull.decorator";
 export { BullModule } from "./bull.module";
@@ -13,7 +16,10 @@ export {
   BullModuleAsyncOptions,
   BullModuleOptions,
   BullModuleOptionsFactory,
+  BullQueueEventsListenerArgs,
   BullQueueEventsOptions,
+  BullQueueListenerArgs,
   BullQueueOptions,
+  BullWorkerListenerArgs,
   BullWorkerOptions,
 } from "./interfaces";
