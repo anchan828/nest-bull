@@ -32,7 +32,7 @@
   "devDependencies": {
     "@nestjs/common": "8.4.1",
     "@types/bull": "3.15.8",
-    "bull": "4.8.0",
+    "bull": "4.8.1",
     "rxjs": "7.5.5"
   },
   "peerDependencies": {
