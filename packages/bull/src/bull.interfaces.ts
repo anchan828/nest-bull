@@ -1,7 +1,7 @@
 import { Type } from "@nestjs/common";
 import { ModuleMetadata } from "@nestjs/common/interfaces";
 import * as Bull from "bull";
-import { Redis } from "ioredis";
+import Redis from "ioredis";
 
 export type BullName = string | symbol;
 
