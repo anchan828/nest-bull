@@ -145,9 +145,9 @@ describe("QueueEvents decorator", () => {
       ["added"],
       ["waiting"],
       ["active"],
+      ["drained"],
       ["progress"],
       ["completed"],
-      ["drained"],
       ["removed"],
     ]);
 
