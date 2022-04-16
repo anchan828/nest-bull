@@ -1,6 +1,6 @@
 {
   "name": "@anchan828/nest-bullmq",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "The [BullMQ](https://github.com/taskforcesh/bullmq) module for [Nest](https://github.com/nestjs/nest).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -26,9 +26,9 @@
   },
   "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/bullmq#readme",
   "devDependencies": {
-    "@nestjs/common": "8.4.3",
-    "bullmq": "1.78.2",
-    "ioredis": "5.0.3",
+    "@nestjs/common": "8.4.4",
+    "bullmq": "1.80.3",
+    "ioredis": "5.0.4",
     "rxjs": "7.5.5"
   },
   "peerDependencies": {
