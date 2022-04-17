@@ -7,11 +7,11 @@
   "scripts": {
     "prepublishOnly": "rm -rf dist && npm run build && rm -f dist/*.tsbuildinfo && npm run copy:license",
     "copy:license": "cp ../../LICENSE ./",
-    "build": "node ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
-    "lint": "node ../../node_modules/eslint/bin/eslint --ignore-path ../../.eslintignore '**/*.ts'",
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint --ignore-path ../../.eslintignore '**/*.ts'",
     "lint:fix": "npm run lint -- --fix",
-    "watch": "node ../../node_modules/typescript/bin/tsc --watch",
-    "test": "node ../../node_modules/jest/bin/jest --coverage --runInBand --detectOpenHandles --forceExit --logHeapUsage",
+    "watch": "tsc --watch",
+    "test": "jest --coverage --runInBand --detectOpenHandles --forceExit --logHeapUsage",
     "test:debug": "node --inspect-brk ../../node_modules/jest/bin/jest --runInBand ---detectOpenHandles --logHeapUsage",
     "test:watch": "npm run test -- --watch"
   },

@@ -3,19 +3,19 @@
   "private": true,
   "version": "0.0.0",
   "description": "The [Bull](https://github.com/OptimalBits/bull) module for [Nest](https://github.com/nestjs/nest).",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "postinstall": "husky install && npm run bootstrap && npm run build",
-    "bootstrap": "lerna bootstrap --hoist",
-    "build": "lerna run build",
+    "postinstall": "husky install",
+    "build": "turbo run build",
     "format": "prettier --write '**/*.{js,json,yml,yaml,md}'",
-    "lint": "lerna run --parallel lint",
-    "lint:fix": "lerna run --parallel lint:fix",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
     "publish": "lerna publish --yes patch",
     "publish:minor": "lerna publish --yes minor",
     "publish:major": "lerna publish --yes major",
-    "test": "lerna run test && npx @anchan828/merge-coverage"
+    "test": "turbo run test"
   },
   "repository": {
     "type": "git",
@@ -44,15 +44,16 @@
     "fast-glob": "3.2.11",
     "husky": "7.0.4",
     "jest": "27.5.1",
-    "lerna": "4.0.0",
+    "@lerna-lite/cli": "1.0.5",
     "lint-staged": "12.3.8",
     "prettier": "2.6.2",
     "reflect-metadata": "0.1.13",
+    "rxjs": "7.5.5",
     "ts-jest": "27.1.4",
     "ts-node": "10.7.0",
+    "turbo": "1.2.4",
     "typescript": "4.6.3",
-    "ulid": "2.3.0",
-    "rxjs": "7.5.5"
+    "ulid": "2.3.0"
   },
   "volta": {
     "node": "16.14.2"
