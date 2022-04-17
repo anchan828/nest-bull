@@ -23,6 +23,10 @@ jobs:
       - name: Lint
         run: npm run lint
       - name: Test monorepo packages
-        run: npm test
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: npm test
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
