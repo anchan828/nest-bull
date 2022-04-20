@@ -2,29 +2,29 @@
   "name": "@anchan828/nest-bullmq",
   "version": "1.2.3",
   "description": "The [BullMQ](https://github.com/taskforcesh/bullmq) module for [Nest](https://github.com/nestjs/nest).",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "prepublishOnly": "rm -rf dist && npm run build && rm -f dist/*.tsbuildinfo && npm run copy:license",
-    "copy:license": "cp ../../LICENSE ./",
-    "build": "tsc -p tsconfig.build.json",
-    "lint": "eslint --ignore-path ../../.eslintignore '**/*.ts'",
-    "lint:fix": "npm run lint -- --fix",
-    "watch": "tsc --watch",
-    "test": "jest --coverage --runInBand --detectOpenHandles --forceExit --logHeapUsage",
-    "test:debug": "node --inspect-brk ../../node_modules/jest/bin/jest --runInBand ---detectOpenHandles --logHeapUsage",
-    "test:watch": "npm run test -- --watch"
+  "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/bullmq#readme",
+  "bugs": {
+    "url": "https://github.com/anchan828/nest-bull/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/anchan828/nest-bull.git"
   },
-  "author": "anchan828 <anchan828@gmail.com>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/anchan828/nest-bull/issues"
+  "author": "anchan828 <anchan828@gmail.com>",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "copy:license": "cp ../../LICENSE ./",
+    "lint": "eslint --ignore-path ../../.eslintignore '**/*.ts'",
+    "lint:fix": "npm run lint -- --fix",
+    "prepublishOnly": "rm -rf dist && npm run build && rm -f dist/*.tsbuildinfo && npm run copy:license",
+    "test": "jest --coverage --runInBand --detectOpenHandles --forceExit --logHeapUsage",
+    "test:debug": "node --inspect-brk ../../node_modules/jest/bin/jest --runInBand ---detectOpenHandles --logHeapUsage",
+    "test:watch": "npm run test -- --watch",
+    "watch": "tsc --watch"
   },
-  "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/bullmq#readme",
   "devDependencies": {
     "@nestjs/common": "8.4.4",
     "bullmq": "1.80.3",
