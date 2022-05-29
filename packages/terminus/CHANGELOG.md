@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.2.9 (2022-05-29)
+
+**Note:** Version bump only for package @anchan828/nest-bull-terminus
+
 ## 1.2.8 (2022-05-22)
 
 **Note:** Version bump only for package @anchan828/nest-bull-terminus
