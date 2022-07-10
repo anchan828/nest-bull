@@ -26,12 +26,12 @@
     "watch": "tsc --watch"
   },
   "devDependencies": {
-    "@nestjs/common": "8.4.7",
+    "@nestjs/common": "9.0.1",
     "bullmq": "1.86.5",
     "ioredis": "5.1.0",
     "rxjs": "7.5.5"
   },
   "peerDependencies": {
-    "@nestjs/common": "^8.0.0"
+    "@nestjs/common": "^8.0.0 || ^9.0.0"
   }
 }
