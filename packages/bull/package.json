@@ -1,6 +1,6 @@
 {
   "name": "@anchan828/nest-bull",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "The [Bull](https://github.com/OptimalBits/bull) module for [Nest](https://github.com/nestjs/nest).",
   "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/bull#readme",
   "bugs": {
