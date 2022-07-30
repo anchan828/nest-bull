@@ -33,7 +33,7 @@
     "@nestjs/common": "9.0.7",
     "@nestjs/terminus": "9.0.0",
     "@types/supertest": "2.0.12",
-    "bullmq": "1.86.9",
+    "bullmq": "1.86.10",
     "ioredis": "5.2.2",
     "rxjs": "7.5.6",
     "supertest": "6.2.4"
