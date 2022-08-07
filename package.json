@@ -30,7 +30,7 @@
   "devDependencies": {
     "@commitlint/cli": "17.0.3",
     "@commitlint/config-conventional": "17.0.3",
-    "@lerna-lite/cli": "1.9.1",
+    "@lerna-lite/cli": "1.10.0",
     "@nestjs/common": "9.0.8",
     "@nestjs/core": "9.0.8",
     "@nestjs/platform-express": "9.0.8",
