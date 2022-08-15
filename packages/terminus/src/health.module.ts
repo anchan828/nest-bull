@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { BullHealthCheckQueue, BullHealthIndicator } from "./bull.health";
-@Module({
-  providers: [BullHealthCheckQueue, BullHealthIndicator],
-  exports: [BullHealthCheckQueue, BullHealthIndicator],
-})
+
+const providers = [BullHealthCheckQueue, BullHealthIndicator];
+
+@Module({ providers, exports: providers })
 export class BullHealthModule {}
