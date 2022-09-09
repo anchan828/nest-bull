@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "deepmerge": "^4.2.2",
-    "fast-glob": "^3.2.11"
+    "fast-glob": "^3.2.12"
   },
   "devDependencies": {
     "@nestjs/common": "^9.0.11",
