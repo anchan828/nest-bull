@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Queue, QueueBaseOptions, QueueEvents, QueueEventsListener, QueueScheduler, Worker } from "bullmq";
+import { Queue, QueueBaseOptions, QueueEvents, QueueEventsListener, Worker } from "bullmq";
 
 function createJobMock(...args: any[]): any {
   return {
@@ -19,15 +19,6 @@ export function createQueueMock(queueName: string, options: QueueBaseOptions): Q
     opts: options,
     add: (...args: any[]) => Promise.resolve(createJobMock(...args)),
     addBulk: (args: any[]) => Promise.all(args.map((x) => createJobMock(x))),
-    on: () => {},
-    waitUntilReady: async () => {},
-  } as any;
-}
-
-export function createQueueSchedulerMock(queueName: string, options: QueueBaseOptions): QueueScheduler {
-  return {
-    name: queueName,
-    opts: options,
     on: () => {},
     waitUntilReady: async () => {},
   } as any;

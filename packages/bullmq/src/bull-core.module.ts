@@ -4,13 +4,7 @@ import { DiscoveryModule } from "@nestjs/core";
 import { MetadataScanner } from "@nestjs/core/metadata-scanner";
 import { BULL_MODULE_OPTIONS } from "./bull.constants";
 import { BullExplorerService } from "./bull.explorer.service";
-import {
-  createAsyncProviders,
-  createQueue,
-  createQueueEvents,
-  createQueueScheduler,
-  createWorker,
-} from "./bull.providers";
+import { createAsyncProviders, createQueue, createQueueEvents, createWorker } from "./bull.providers";
 import { BullService } from "./bull.service";
 import { mergeQueueBaseOptions } from "./bull.utils";
 import { BullModuleAsyncOptions, BullModuleOptions } from "./interfaces";
@@ -33,18 +27,13 @@ export class BullCoreModule implements OnModuleInit {
     const { workers, queueEvents, queues } = this.explorer.explore();
     for (const queue of queues) {
       const queueOptions = mergeQueueBaseOptions(this.options?.options, queue.options.options);
-      const queueSchedulerInstance = await createQueueScheduler(
-        queue.options.queueName,
-        queueOptions,
-        this.options.mock,
-      );
+
       const queueInstance = await createQueue(queue.options.queueName, queueOptions, this.options.mock);
 
       for (const event of queue.events) {
         queueInstance.on(event.type, event.processor);
       }
 
-      this.service.queueSchedulers[queue.options.queueName] = queueSchedulerInstance;
       this.service.queues[queue.options.queueName] = queueInstance;
     }
 
