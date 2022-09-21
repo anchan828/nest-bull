@@ -1,9 +1,9 @@
 import { Provider, Type } from "@nestjs/common";
 import { ClassProvider, FactoryProvider } from "@nestjs/common/interfaces";
-import { Processor, Queue, QueueBase, QueueBaseOptions, QueueEvents, QueueScheduler, Worker } from "bullmq";
+import { Processor, Queue, QueueBase, QueueBaseOptions, QueueEvents, Worker } from "bullmq";
 import { BullService, getBullQueueToken } from ".";
 import { BULL_MODULE_OPTIONS } from "./bull.constants";
-import { createQueueEventsMock, createQueueMock, createQueueSchedulerMock, createWorkerMock } from "./bull.mock";
+import { createQueueEventsMock, createQueueMock, createWorkerMock } from "./bull.mock";
 import { mergeQueueBaseOptions } from "./bull.utils";
 import { BullModuleAsyncOptions, BullModuleOptions, BullModuleOptionsFactory, BullQueueOptions } from "./interfaces";
 
@@ -24,18 +24,6 @@ export async function createQueue(queueName: string, options: QueueBaseOptions, 
   return createQueueBase(
     () => createQueueMock(queueName, options),
     () => new Queue(queueName, options),
-    mock,
-  );
-}
-
-export async function createQueueScheduler(
-  queueName: string,
-  options: QueueBaseOptions,
-  mock = false,
-): Promise<QueueScheduler> {
-  return createQueueBase(
-    () => createQueueSchedulerMock(queueName, options),
-    () => new QueueScheduler(queueName, options),
     mock,
   );
 }
@@ -112,9 +100,7 @@ export function createQueueProviders(queues: (string | BullQueueOptions)[]): Pro
       provide: getBullQueueToken(queueName),
       useFactory: async (options: BullModuleOptions, service: BullService): Promise<Queue> => {
         const mergedOptions = mergeQueueBaseOptions(options?.options, queueOptions);
-        const queueSchedulerInstance = await createQueueScheduler(queueName, mergedOptions, options.mock);
         const queueInstance = await createQueue(queueName, mergedOptions, options.mock);
-        service.queueSchedulers[queueName] = queueSchedulerInstance;
         service.queues[queueName] = queueInstance;
         return queueInstance;
       },
