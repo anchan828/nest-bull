@@ -141,7 +141,7 @@ describe("QueueEvents decorator", () => {
     await job.remove();
     await wait(1000);
 
-    expect(calledEvents.mock.calls).toEqual([["active"], ["drained"], ["progress"], ["completed"], ["removed"]]);
+    expect(calledEvents.mock.calls).toEqual([["active"], ["progress"], ["completed"], ["drained"], ["removed"]]);
 
     await app.close();
   });
