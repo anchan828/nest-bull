@@ -26,7 +26,7 @@
     "watch": "tsc --watch"
   },
   "devDependencies": {
-    "@nestjs/common": "^9.1.1",
+    "@nestjs/common": "^9.1.2",
     "bullmq": "^2.0.1",
     "ioredis": "^5.2.3",
     "rxjs": "^7.5.6"
