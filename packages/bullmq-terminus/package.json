@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@nestjs/axios": "^0.1.0",
-    "@nestjs/common": "^9.1.2",
+    "@nestjs/common": "^9.1.4",
     "@nestjs/terminus": "^9.1.2",
     "@types/supertest": "^2.0.12",
     "bullmq": "^2.1.3",
