@@ -34,7 +34,7 @@
     "@nestjs/terminus": "^9.1.2",
     "@types/bull": "^3.15.9",
     "@types/supertest": "^2.0.12",
-    "bull": "^4.10.0",
+    "bull": "^4.10.1",
     "rxjs": "^7.5.7",
     "supertest": "^6.3.0"
   },
