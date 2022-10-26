@@ -1,6 +1,6 @@
 {
   "name": "@anchan828/nest-bullmq",
-  "version": "3.0.6",
+  "version": "3.1.0",
   "description": "The [BullMQ](https://github.com/taskforcesh/bullmq) module for [Nest](https://github.com/nestjs/nest).",
   "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/bullmq#readme",
   "bugs": {
