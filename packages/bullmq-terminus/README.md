@@ -15,8 +15,6 @@ $ npm i --save @anchan828/nest-bullmq-terminus @nestjs/terminus @anchan828/nest-
 
 ## Quick Start
 
-1. Create Health Module
-
 ```ts
 import { BullHealthIndicator, BullHealthModule } from "@anchan828/nest-bullmq-terminus";
 
@@ -38,27 +36,6 @@ class BullHealthController {
 export class HealthModule {}
 ```
 
-2. Create bull queue/worker/queueEvents for checking health
-
-```ts
-import { BullHealthModule } from "@anchan828/nest-bullmq-terminus";
-
-@Module({
-  imports: [BullModule.forRoot(), BullHealthModule],
-})
-class AppModule {}
-```
-
-`BullHealthCheckWorker` is a simple queue that just returns `Promise.resolve(true)`.
-
-```ts
-export class BullHealthCheckWorker {
-  @BullWorkerProcess()
-  async process(): Promise<boolean> {
-    return Promise.resolve(true);
-  }
-}
-```
 
 ## License
 
