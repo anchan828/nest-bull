@@ -16,8 +16,6 @@ $ npm i --save-dev @types/bull
 
 ## Quick Start
 
-1. Create Health Module
-
 ```ts
 import { BullHealthCheckQueue, BullHealthIndicator, BullHealthModule } from "@anchan828/nest-bull-terminus";
 
@@ -37,33 +35,6 @@ class BullHealthController {
   imports: [BullHealthModule, TerminusModule],
 })
 export class HealthModule {}
-```
-
-2. Create Health Bull Queue
-
-```ts
-import { BullHealthCheckQueue } from "@anchan828/nest-bull-terminus";
-
-@Module({
-  imports: [
-    BullModule.forRoot({
-      queues: [BullHealthCheckQueue],
-    }),
-    HealthModule,
-  ],
-})
-class AppModule {}
-```
-
-`BullHealthCheckQueue` is a simple queue that just returns `Promise.resolve()`.
-
-```ts
-export class BullHealthCheckQueue {
-  @BullQueueProcess()
-  async process(): Promise<void> {
-    return Promise.resolve();
-  }
-}
 ```
 
 ## License
