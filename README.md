@@ -1,7 +1,6 @@
 # @anchan828/nest-bull-packages
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/dc0fc5af9c1f7bd6e0a4/maintainability)](https://codeclimate.com/github/anchan828/nest-bull/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/dc0fc5af9c1f7bd6e0a4/test_coverage)](https://codeclimate.com/github/anchan828/nest-bull/test_coverage)
+[![codecov](https://codecov.io/gh/anchan828/nest-bull/branch/master/graph/badge.svg?token=T9UwUKE5Z5)](https://codecov.io/gh/anchan828/nest-bull)
 
 The [Bull](https://github.com/OptimalBits/bull) module for [Nest](https://github.com/nestjs/nest).
 
