@@ -7,6 +7,7 @@ describe("createQueueEvents", () => {
     await expect(createQueueEvents("test", {}, true)).resolves.toStrictEqual({
       name: "test",
       on: expect.any(Function),
+      close: expect.any(Function),
       waitUntilReady: expect.any(Function),
     });
   });

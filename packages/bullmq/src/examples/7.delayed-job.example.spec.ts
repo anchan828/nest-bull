@@ -47,8 +47,10 @@ describe("Basic Example", () => {
     expect(service.queue).toBeDefined();
     const job = await service.addJob();
     const start = Date.now();
-    await expect(job.waitUntilFinished(await createQueueEvents(queueName))).resolves.toStrictEqual({ status: "ok" });
+    const events = await createQueueEvents(queueName);
+    await expect(job.waitUntilFinished(events)).resolves.toStrictEqual({ status: "ok" });
     expect(Date.now() - start).toBeGreaterThanOrEqual(5000);
+    await events.close();
     await app.close();
   });
 });

@@ -49,11 +49,12 @@ describe("Flow Example", () => {
         },
       ],
     });
-
-    await expect(jobNode.job.waitUntilFinished(await createQueueEvents(queueName))).resolves.toStrictEqual({
+    const events = await createQueueEvents(queueName);
+    await expect(jobNode.job.waitUntilFinished(events)).resolves.toStrictEqual({
       status: "ok",
     });
     expect(results).toEqual(["child-child-data", "child-data", "parent-data"]);
+    await events.close();
     await flow.close();
     await app.close();
   });

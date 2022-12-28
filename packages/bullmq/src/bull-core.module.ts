@@ -1,5 +1,5 @@
 import { DynamicModule, Global, Inject, Module } from "@nestjs/common";
-import { OnModuleInit } from "@nestjs/common/interfaces";
+import { OnApplicationShutdown, OnModuleInit } from "@nestjs/common/interfaces";
 import { DiscoveryModule } from "@nestjs/core";
 import { MetadataScanner } from "@nestjs/core/metadata-scanner";
 import { BULL_MODULE_OPTIONS } from "./bull.constants";
@@ -14,14 +14,17 @@ import { BullModuleAsyncOptions, BullModuleOptions } from "./interfaces";
   imports: [DiscoveryModule],
   providers: [MetadataScanner, BullExplorerService],
 })
-export class BullCoreModule implements OnModuleInit {
+export class BullCoreModule implements OnModuleInit, OnApplicationShutdown {
   constructor(
     @Inject(BULL_MODULE_OPTIONS)
     private readonly options: BullModuleOptions,
     private readonly explorer: BullExplorerService,
-
     private readonly service: BullService,
   ) {}
+
+  async onApplicationShutdown(): Promise<void> {
+    await this.service.close();
+  }
 
   async onModuleInit(): Promise<void> {
     const { workers, queueEvents, queues } = this.explorer.explore();
