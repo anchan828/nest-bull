@@ -54,9 +54,11 @@ describe("Worker decorator", () => {
     expect(service).toBeDefined();
     expect(service.service).toBeDefined();
     const job = await service.addJob();
-    await expect(job.waitUntilFinished(await createQueueEvents(queueName))).resolves.toStrictEqual({ status: "ok" });
+    const events = await createQueueEvents(queueName);
+    await expect(job.waitUntilFinished(events)).resolves.toStrictEqual({ status: "ok" });
     await wait(500);
     expect(calledEvents.mock.calls).toEqual([["completed"]]);
+    await events.close();
     await app.close();
   });
 });

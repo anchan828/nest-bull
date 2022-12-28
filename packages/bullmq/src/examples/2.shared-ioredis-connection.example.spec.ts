@@ -55,7 +55,9 @@ describe("Shared IORedis connection", () => {
     await wait(1000);
 
     const job = await service.addJob();
-    await expect(job.waitUntilFinished(await createQueueEvents(queueName))).resolves.toStrictEqual({ status: "ok" });
+    const events = await createQueueEvents(queueName);
+    await expect(job.waitUntilFinished(events)).resolves.toStrictEqual({ status: "ok" });
+    await events.close();
     await app.close();
     await connection.quit();
   });

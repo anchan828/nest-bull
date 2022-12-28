@@ -17,4 +17,14 @@ export class BullService {
       await instance.waitUntilReady();
     }
   }
+
+  public async close(): Promise<void> {
+    for (const instance of [
+      ...Object.values(this.queues),
+      ...Object.values(this.workers),
+      ...Object.values(this.queueEvents),
+    ]) {
+      await instance.close();
+    }
+  }
 }
