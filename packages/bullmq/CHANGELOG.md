@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 3.1.13 (2023-01-22)
+
+**Note:** Version bump only for package @anchan828/nest-bullmq
+
 ## 3.1.12 (2023-01-15)
 
 **Note:** Version bump only for package @anchan828/nest-bullmq
