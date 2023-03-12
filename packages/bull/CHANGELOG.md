@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 3.1.20 (2023-03-12)
+
+**Note:** Version bump only for package @anchan828/nest-bull
+
 ## 3.1.19 (2023-03-05)
 
 **Note:** Version bump only for package @anchan828/nest-bull
