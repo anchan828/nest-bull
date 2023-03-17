@@ -26,7 +26,7 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
-    "deepmerge": "^4.3.0",
+    "deepmerge": "^4.3.1",
     "fast-glob": "^3.2.12"
   },
   "devDependencies": {
