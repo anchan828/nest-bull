@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 3.1.21 (2023-03-19)
+
+### Bug Fixes
+
+* **deps:** update dependency deepmerge to ^4.3.1 ([9dcb692](https://github.com/anchan828/nest-bull/commit/9dcb69239354380ca0e2ff6d46c7c8899612f585))
+
 ## 3.1.20 (2023-03-12)
 
 **Note:** Version bump only for package @anchan828/nest-bullmq-terminus
