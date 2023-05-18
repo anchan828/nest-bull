@@ -57,7 +57,7 @@ export type BullModuleAsyncOptions = {
   /**
    * The factory which should be used to provide the Bull options
    */
-  useFactory?: (...args: unknown[]) => Promise<BullModuleOptions> | BullModuleOptions;
+  useFactory?: (...args: any[]) => Promise<BullModuleOptions> | BullModuleOptions;
   /**
    * The providers which should get injected
    */

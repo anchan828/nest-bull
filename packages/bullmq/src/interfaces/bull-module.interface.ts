@@ -24,7 +24,7 @@ export interface BullModuleOptions {
 export interface BullModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
   useClass?: Type<BullModuleOptionsFactory>;
   useExisting?: Type<BullModuleOptionsFactory>;
-  useFactory?: (...args: unknown[]) => Promise<BullModuleOptions> | BullModuleOptions;
+  useFactory?: (...args: any[]) => Promise<BullModuleOptions> | BullModuleOptions;
   inject?: Array<Type<BullModuleOptionsFactory> | string | any>;
 }
 
