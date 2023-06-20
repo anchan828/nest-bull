@@ -44,7 +44,7 @@ export abstract class BaseExplorerService<Options> {
 
   private getComponents(modules: Module[]): Array<Map<string, InstanceWrapper<Injectable>>> {
     return flatten(
-      modules.filter((module) => module.metatype !== BullCoreModule).map((module) => module.components),
+      modules.filter((module) => module.metatype !== BullCoreModule).map((module) => module.providers),
     ) as unknown as Array<Map<string, InstanceWrapper<Injectable>>>;
   }
 
