@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "./dist",
     "baseUrl": "./",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "declarationMap": true
   },
   "exclude": ["node_modules", "dist"]
 }
