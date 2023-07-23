@@ -1,6 +1,6 @@
 {
   "name": "@anchan828/nest-bullmq-terminus",
-  "version": "3.2.3",
+  "version": "3.2.4",
   "description": "The terminus of [BullMQ](https://github.com/taskforcesh/bullmq) module for [Nest](https://github.com/nestjs/nest).",
   "homepage": "https://github.com/anchan828/nest-bull/tree/master/packages/bullmq-terminus#readme",
   "bugs": {
@@ -26,7 +26,7 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
-    "@anchan828/nest-bullmq": "^3.2.3"
+    "@anchan828/nest-bullmq": "^3.2.4"
   },
   "devDependencies": {
     "@nestjs/axios": "^3.0.0",
