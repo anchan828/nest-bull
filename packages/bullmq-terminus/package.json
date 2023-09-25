@@ -32,7 +32,7 @@
     "@nestjs/axios": "^3.0.0",
     "@nestjs/common": "^10.2.6",
     "@nestjs/terminus": "^10.1.1",
-    "@types/supertest": "^2.0.12",
+    "@types/supertest": "^2.0.13",
     "bullmq": "^4.11.4",
     "ioredis": "^5.3.2",
     "rxjs": "^7.8.1",

@@ -33,7 +33,7 @@
     "@nestjs/common": "^10.2.6",
     "@nestjs/terminus": "^10.1.1",
     "@types/bull": "^3.15.9",
-    "@types/supertest": "^2.0.12",
+    "@types/supertest": "^2.0.13",
     "bull": "^4.11.3",
     "rxjs": "^7.8.1",
     "supertest": "^6.3.3"
