@@ -30,9 +30,9 @@
     "fast-glob": "^3.3.1"
   },
   "devDependencies": {
-    "@nestjs/common": "10.2.8",
+    "@nestjs/common": "10.2.10",
     "@types/bull": "3.15.9",
-    "bull": "4.11.4",
+    "bull": "4.11.5",
     "rxjs": "7.8.1"
   },
   "peerDependencies": {

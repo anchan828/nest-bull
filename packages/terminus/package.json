@@ -30,11 +30,11 @@
   },
   "devDependencies": {
     "@nestjs/axios": "3.0.1",
-    "@nestjs/common": "10.2.8",
-    "@nestjs/terminus": "10.1.1",
+    "@nestjs/common": "10.2.10",
+    "@nestjs/terminus": "10.2.0",
     "@types/bull": "3.15.9",
-    "@types/supertest": "2.0.15",
-    "bull": "4.11.4",
+    "@types/supertest": "2.0.16",
+    "bull": "4.11.5",
     "rxjs": "7.8.1",
     "supertest": "6.3.3"
   },
