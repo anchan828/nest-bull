@@ -32,8 +32,8 @@
     "@nestjs/axios": "3.0.1",
     "@nestjs/common": "10.2.10",
     "@nestjs/terminus": "10.2.0",
-    "@types/supertest": "2.0.16",
-    "bullmq": "4.15.2",
+    "@types/supertest": "6.0.2",
+    "bullmq": "5.1.1",
     "ioredis": "5.3.2",
     "rxjs": "7.8.1",
     "supertest": "6.3.3"
