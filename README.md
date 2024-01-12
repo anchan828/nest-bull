@@ -1,3 +1,6 @@
+# These packages have completed their mission. Please use @nestjs/bull or @nestjs/bullmq from now on.
+
+
 # @anchan828/nest-bull-packages
 
 [![codecov](https://codecov.io/gh/anchan828/nest-bull/branch/master/graph/badge.svg?token=T9UwUKE5Z5)](https://codecov.io/gh/anchan828/nest-bull)
